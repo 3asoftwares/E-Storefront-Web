@@ -3,6 +3,7 @@
 import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOrder, useCancelOrder } from '@/lib/hooks';
+import { useToast } from '@/lib/hooks/useToast';
 import { formatPrice } from '@3asoftwares/utils/client';
 import { Button, Confirm } from '@3asoftwares/ui';
 import {
@@ -36,6 +37,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
   const { id } = use(params);
   const router = useRouter();
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const { showToast } = useToast();
 
   const { data: order, isLoading, error } = useOrder(id);
   const { mutateAsync: cancelOrder } = useCancelOrder();
@@ -75,8 +77,9 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     try {
       await cancelOrder(id);
       setShowCancelConfirm(false);
+      showToast('Order cancelled successfully', 'success');
     } catch (error: any) {
-      alert(error.message || 'Failed to cancel order');
+      showToast(error.message || 'Failed to cancel order', 'error');
     }
   };
 

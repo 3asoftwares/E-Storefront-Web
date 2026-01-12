@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-gray-700 to-gray-900 text-white relative overflow-hidden pb-safe-bottom">
       <div className="relative max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8 py-10 xs:py-12 sm:py-16">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 xs:gap-8 mb-8 xs:mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-4 sm:gap-8 mb-4 xs:mb-10">
           {/* Brand Section */}
           <div className="col-span-2 sm:col-span-2 lg:col-span-1 mb-4 sm:mb-0">
             <div className="flex items-center gap-2 mb-3 xs:mb-4">
@@ -21,7 +21,7 @@ export default function Footer() {
                 3A Softwares
               </h3>
             </div>
-            <p className="text-gray-300 text-xs xs:text-sm leading-relaxed max-w-xs">
+            <p className="text-gray-300 text-xs xs:text-sm leading-relaxed max-full sm:max-w-xs">
               Your trusted online marketplace for quality products at competitive prices. Shop with
               confidence and style.
             </p>
@@ -57,14 +57,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/products?discount=true"
+                  href="/products?sortBy=newest"
                   className="text-gray-300 hover:text-indigo-400 transition-colors inline-flex items-center gap-2 group min-h-[32px]"
                 >
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     className="w-2.5 h-2.5 xs:w-3 xs:h-3 group-hover:translate-x-1 transition-transform"
                   />
-                  Deals
+                  New Arrivals
                 </Link>
               </li>
               <li>
@@ -145,14 +145,14 @@ export default function Footer() {
                 <FontAwesomeIcon icon={faMailForward} className="w-3 h-3 mt-0.5 flex-shrink-0" />
                 <a
                   href="mailto:3asoftwares@gmail.com"
-                  className="hover:text-blue-400 transition-colors break-all"
+                  className="hover:text-blue-400 transition-colors break-all min-h-4 sm:min-h-11"
                 >
                   3asoftwares@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <FontAwesomeIcon icon={faMobile} className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <a href="tel:1-800-4567" className="hover:text-blue-400 transition-colors">
+                <a href="tel:1-800-4567" className="hover:text-blue-400 transition-colors min-h-4 sm:min-h-11">
                   +91 7047026537
                 </a>
               </li>
@@ -169,27 +169,24 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 xs:gap-6">
             {/* Social Links */}
             <div className="flex gap-3 xs:gap-4">
-              <a
-                href="#"
-                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors min-h-[36px] min-w-[36px]"
+              <span
+                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 flex items-center justify-center min-h-[36px] min-w-[36px] cursor-default"
                 aria-label="Facebook"
               >
                 f
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors min-h-[36px] min-w-[36px]"
+              </span>
+              <span
+                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 flex items-center justify-center min-h-[36px] min-w-[36px] cursor-default"
                 aria-label="Twitter/X"
               >
                 𝕏
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 hover:bg-blue-600 flex items-center justify-center transition-colors min-h-[36px] min-w-[36px]"
+              </span>
+              <span
+                className="w-9 h-9 xs:w-10 xs:h-10 rounded-full bg-gray-800 flex items-center justify-center min-h-[36px] min-w-[36px] cursor-default"
                 aria-label="LinkedIn"
               >
                 in
-              </a>
+              </span>
             </div>
             
             {/* Copyright */}

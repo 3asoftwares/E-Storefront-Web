@@ -74,7 +74,7 @@ export default function Header() {
             </span>
           </Link>
 
-          <form className="hidden md:flex items-center flex-1 mx-4 lg:mx-8 max-w-xl">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 mx-4 lg:mx-8 max-w-xl">
             <div className="w-full relative">
               <Input
                 type="text"
@@ -84,8 +84,8 @@ export default function Header() {
                 className="!mb-0"
                 rightIcon={
                   <Button
+                    type="submit"
                     size="sm"
-                    onClick={handleSearch}
                     variant="ghost"
                     className="text-gray-400 hover:text-indigo-600 transition-colors"
                   >
@@ -145,14 +145,14 @@ export default function Header() {
                 </Button>
                 <Button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   className="block md:hidden"
                   fullWidth={false}
                 >
                   <FontAwesomeIcon icon={faUser} className="w-5 h-5 sm:w-6 sm:h-6" />
                 </Button>
-                <div className="absolute right-0 top-16 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 top-16 z-10 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     href="/profile"
                     className="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors border-b border-gray-100"
@@ -193,7 +193,7 @@ export default function Header() {
               variant="ghost"
               size="sm"
               fullWidth={false}
-              className="md:hidden p-1.5 xs:p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+              className="md:hidden p-1.5 sm:p-2 text-gray-600 hover:text-indigo-600 transition-colors"
             >
               <FontAwesomeIcon
                 icon={isMobileMenuOpen ? faTimes : faBars}
@@ -204,7 +204,7 @@ export default function Header() {
         </div>
 
         {/* Mobile Search Bar */}
-        <div className="md:hidden pb-2 xs:pb-3 sm:pb-4">
+        <form onSubmit={handleSearch} className="md:hidden pb-2 sm:pb-3 sm:pb-4">
           <div className="w-full relative">
             <Input
               type="text"
@@ -214,9 +214,9 @@ export default function Header() {
               className="!mb-0 text-base"
               rightIcon={
                 <Button
+                  type="submit"
                   size="sm"
                   variant="ghost"
-                  onClick={handleSearch}
                   className="text-gray-400 hover:text-indigo-600 transition-colors min-h-[44px] min-w-[44px]"
                 >
                   <FontAwesomeIcon icon={faSearch} className="w-5 h-5" />
@@ -224,7 +224,7 @@ export default function Header() {
               }
             />
           </div>
-        </div>
+        </form>
       </div>
 
       {/* Mobile Menu */}

@@ -39,9 +39,9 @@ export default function WishlistPage() {
         badge={
           wishlist.length > 0
             ? {
-                count: wishlist.length,
-                label: wishlist.length === 1 ? 'item' : 'items',
-              }
+              count: wishlist.length,
+              label: wishlist.length === 1 ? 'item' : 'items',
+            }
             : undefined
         }
         iconGradient="from-gray-700 to-gray-900"
@@ -151,7 +151,14 @@ export default function WishlistPage() {
                 onClick={() => {
                   if (wishlist.length === 0) return;
                   wishlist.forEach((item) => {
-                    handleAddToCart(item);
+                    addItem({
+                      productId: item.productId,
+                      id: item.productId,
+                      name: item.name,
+                      price: item.price,
+                      quantity: 1,
+                      image: item.image,
+                    });
                   });
                   showToast(`Added ${wishlist.length} items to cart!`, 'success');
                 }}

@@ -13,6 +13,7 @@ interface UpdateProfileResponse {
       id: string;
       name: string;
       email: string;
+      phone?: string;
       role: string;
       isActive: boolean;
       emailVerified: boolean;
@@ -22,7 +23,8 @@ interface UpdateProfileResponse {
 }
 
 interface UpdateProfileInput {
-  name: string;
+  name?: string;
+  phone?: string;
 }
 
 export function useUpdateProfile() {

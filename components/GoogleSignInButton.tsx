@@ -120,7 +120,7 @@ export default function GoogleSignInButton({
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       {isLoading ? (
         <div className="flex items-center justify-center h-10 w-full">
           <span className="loading loading-spinner loading-sm"></span>

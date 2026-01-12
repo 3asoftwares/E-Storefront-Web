@@ -132,7 +132,7 @@ export default function HomePage() {
               </div>
             ) : (
               <>
-                <ProductSlider itemsPerView={4} autoplay={true} autoplayDelay={5000}>
+                    <ProductSlider itemsPerView={4} autoplay={true} autoplayDelay={5000}>
                   {featuredProducts.map((product: any) => (
                     <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
                   ))}

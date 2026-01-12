@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import CategoryModal from './CategoryModal';
 import { useCategories } from '@/lib/hooks/useCategories';
+import { useToast } from '@/lib/hooks/useToast';
 import { Input } from '@3asoftwares/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +26,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   initialData = {},
 }) => {
   const { categories, loading: categoriesLoading } = useCategories();
+  const { showToast } = useToast();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: initialData.name || '',
@@ -59,7 +61,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.category) {
-      alert('Please fill in all required fields');
+      showToast('Please fill in all required fields', 'error');
       return;
     }
     onSubmit(formData);

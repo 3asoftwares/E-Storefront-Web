@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import Link from 'next/link';
 import { useToast } from '@/lib/hooks/useToast';
+import { useIsAuthenticated } from '@/lib/hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faShoppingCart,
@@ -27,6 +28,15 @@ export default function CartPage() {
   const router = useRouter();
   const { items, removeItem, updateQuantity, clearCart } = useCartStore();
   const { showToast } = useToast();
+  const { isAuthenticated } = useIsAuthenticated();
+
+  const handleCheckout = () => {
+    if (isAuthenticated) {
+      router.push('/checkout');
+    } else {
+      router.push('/login?redirect=/checkout');
+    }
+  };
 
   const subtotal = items.reduce(
     (sum: number, item: { price: number; quantity: number }) => sum + item.price * item.quantity,
@@ -224,7 +234,7 @@ export default function CartPage() {
                     <p className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900">{formatPrice(total)}</p>
                   </div>
 
-                  <Button onClick={() => router.push('/checkout')} className="min-h-[48px]">Proceed to Checkout</Button>
+                  <Button onClick={handleCheckout} className="min-h-[48px]">Proceed to Checkout</Button>
 
                   <div className="bg-gray-50 rounded-lg p-3 mb-3 xs:mb-4">
                     <p className="font-semibold text-gray-900 text-sm mb-2">We Accept:</p>

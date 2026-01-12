@@ -106,15 +106,15 @@ export function ProductSlider({
       )}
 
       {maxIndex > 0 && (
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-1 mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all ${
+              className={`transition-all min-h-4 min-w-4 ${
                 index === currentIndex
-                  ? 'w-8 h-2 bg-gradient-to-r from-black to-gray-400'
-                  : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                ? 'bg-gradient-to-r from-black to-gray-400'
+                : 'bg-gray-300 hover:bg-gray-400'
               } rounded-full`}
               aria-label={`Go to slide ${index + 1}`}
             />

@@ -5,14 +5,14 @@ import { faTruck, faBox, faMapMarkerAlt, faClock, faGlobe, faDollarSign, faCheck
 
 export default function ShippingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-teal-50 to-blue-50">
-      <div className="bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="inline-block p-4 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl shadow-lg mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div className="bg-white/95 backdrop-blur-lg border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col items-center w-full">
+            <div className="inline-block p-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl shadow-lg mb-4">
               <FontAwesomeIcon icon={faTruck} className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-teal-600 mb-4">
+            <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-300 mb-4">
               Shipping Information
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -23,10 +23,10 @@ export default function ShippingPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl shadow-2xl p-8 mb-12 text-white text-center">
+        <div className="bg-gradient-to-r from-black to-gray-400 rounded-2xl shadow-2xl p-8 mb-12 text-white text-center">
           <FontAwesomeIcon icon={faCheckCircle} className="w-16 h-16 mb-4" />
           <h2 className="text-3xl font-bold mb-3">Free Shipping Available!</h2>
-          <p className="text-xl text-green-100">
+          <p className="text-xl text-gray-200">
             Get free standard shipping on all orders over ₹500
           </p>
         </div>

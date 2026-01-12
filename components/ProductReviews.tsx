@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useProductReviews, useCreateReview, useMarkReviewHelpful } from '../lib/hooks/useReviews';
+import { useToast } from '@/lib/hooks/useToast';
 import { Button, Textarea } from '@3asoftwares/ui';
 import { Logger } from '@3asoftwares/utils/client';
 
@@ -27,6 +28,7 @@ export default function ProductReviews({
   const { data: reviewsData, isLoading, error } = useProductReviews(productId);
   const createReviewMutation = useCreateReview();
   const markHelpfulMutation = useMarkReviewHelpful();
+  const { showToast } = useToast();
 
   const reviews = reviewsData?.reviews || [];
 
@@ -42,10 +44,10 @@ export default function ProductReviews({
 
       setNewReview({ rating: 5, comment: '' });
       setShowReviewForm(false);
-      alert('Review submitted successfully! It will appear after moderation.');
+      showToast('Review submitted successfully! It will appear after moderation.', 'success');
     } catch (err) {
       Logger.error('Failed to submit review', err, 'Reviews');
-      alert('Failed to submit review. Please try again.');
+      showToast('Failed to submit review. Please try again.', 'error');
     }
   };
 

@@ -206,19 +206,19 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 safe:pt-safe-top">
-        <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-3 xs:py-4 sm:py-5">
+        <div className="max-w-7xl mx-auto px-3 xs:px-5 sm:px-6 lg:px-8 py-3 xs:py-4 sm:py-5">
           <div className="flex items-center justify-between gap-2">
             <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600">
               Discover Products
             </h1>
             <div className="px-2.5 xs:px-3 sm:px-4 py-1 xs:py-1.5 sm:py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full text-xs xs:text-sm font-bold text-indigo-700 whitespace-nowrap">
-              {data?.pagination.total || 0} Products
+              {data?.pagination.total || 0}<span className='hidden sm:block'> Products</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 xs:py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 xs:gap-6 lg:gap-8">
           {/* Filters - Collapsible on mobile */}
           <div className="lg:col-span-1">
@@ -228,12 +228,12 @@ export default function ProductsPage() {
                   <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
                   Filters
                 </span>
-                <FontAwesomeIcon 
-                  icon={faChevronDown} 
-                  className="text-gray-500 transition-transform group-open:rotate-180" 
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className="text-gray-500 transition-transform group-open:rotate-180"
                 />
               </summary>
-              <div className="mt-2 bg-white rounded-xl shadow-md p-4 xs:p-5 border border-gray-200">
+              <div className="mt-3 bg-white rounded-xl shadow-md p-4 xs:p-5 border border-gray-200">
                 {/* Mobile Filter Content */}
                 <Input
                   type="text"
@@ -430,7 +430,7 @@ export default function ProductsPage() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-4 sm:gap-6 lg:gap-8 mb-6 xs:mb-8">
+                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-8">
                   {sortedProducts.map((product) => (
                     <ProductCard
                       key={product.id}
@@ -444,7 +444,7 @@ export default function ProductsPage() {
                 </div>
 
                 {hasMore && allProducts.length > 0 && (
-                  <div className="flex justify-center mb-8 xs:mb-12">
+                  <div className="flex justify-center mb-2 sm:mb-12">
                     <Button
                       disabled={isLoading}
                       onClick={handleLoadMore}

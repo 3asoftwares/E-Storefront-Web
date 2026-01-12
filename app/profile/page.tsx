@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
+import { useToast } from '@/lib/hooks/useToast';
 import { Button, Input } from '@3asoftwares/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -33,7 +35,8 @@ import {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { userProfile, setUserProfile } = useCartStore();
+  const { userProfile, setUserProfile, wishlist, removeFromWishlist, addItem } = useCartStore();
+  const { showToast } = useToast();
   const { data: currentUser, refetch: refetchUser, isLoading: isLoadingUser } = useCurrentUser();
   const {
     sendVerificationEmail,
@@ -123,12 +126,16 @@ export default function ProfilePage() {
     setProfileMessage(null);
     setLoading(true);
     try {
-      const result = await updateProfile({ name: profileData.name });
+      const result = await updateProfile({ 
+        name: profileData.name,
+        phone: profileData.phone 
+      });
       if (result.success) {
         // Update local state with new data
         setUserProfile({
           ...userProfile,
           name: result.user?.name || profileData.name,
+          phone: result.user?.phone || profileData.phone,
         });
         setIsEditing(false);
         setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });
@@ -149,7 +156,7 @@ export default function ProfilePage() {
 
   const handleAddAddress = async () => {
     if (!newAddress.name || !newAddress.mobile || !newAddress.street || !newAddress.city || !newAddress.state || !newAddress.zip) {
-      alert('Please fill in all required fields (Name, Mobile, Street, City, State, ZIP)');
+      showToast('Please fill in all required fields (Name, Mobile, Street, City, State, ZIP)', 'error');
       return;
     }
 
@@ -169,12 +176,12 @@ export default function ProfilePage() {
       if (result?.success) {
         setNewAddress({ name: '', mobile: '', email: '', street: '', city: '', state: '', zip: '', country: '' });
         setIsAddingAddress(false);
-        alert('Address added successfully!');
+        showToast('Address added successfully!', 'success');
       } else {
-        alert(result?.message || 'Failed to add address');
+        showToast(result?.message || 'Failed to add address', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Failed to add address');
+      showToast(error.message || 'Failed to add address', 'error');
     }
   };
 
@@ -184,12 +191,12 @@ export default function ProfilePage() {
     try {
       const result = await deleteAddressMutation(addressId);
       if (result?.success) {
-        alert('Address deleted successfully!');
+        showToast('Address deleted successfully!', 'success');
       } else {
-        alert(result?.message || 'Failed to delete address');
+        showToast(result?.message || 'Failed to delete address', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Failed to delete address');
+      showToast(error.message || 'Failed to delete address', 'error');
     }
   };
 
@@ -197,12 +204,12 @@ export default function ProfilePage() {
     try {
       const result = await setDefaultAddressMutation(addressId);
       if (result?.success) {
-        alert('Default address updated!');
+        showToast('Default address updated!', 'success');
       } else {
-        alert(result?.message || 'Failed to set default address');
+        showToast(result?.message || 'Failed to set default address', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Failed to set default address');
+      showToast(error.message || 'Failed to set default address', 'error');
     }
   };
 
@@ -674,22 +681,79 @@ export default function ProfilePage() {
             {activeTab === 'wishlist' && (
               <div className="bg-white shadow-xl p-8 border border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">My Wishlist</h2>
-                <div className="text-center py-12">
-                  <div className="inline-block p-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-6">
-                    <FontAwesomeIcon icon={faHeart} className="w-16 h-16 text-gray-700" />
+                {wishlist.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="inline-block p-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-6">
+                      <FontAwesomeIcon icon={faHeart} className="w-16 h-16 text-gray-700" />
+                    </div>
+                    <p className="text-gray-700 mb-4 text-lg">
+                      Your wishlist is empty. Start adding your favorites!
+                    </p>
+                    <Button
+                      onClick={() => router.push('/products')}
+                      variant="primary"
+                      size="lg"
+                      fullWidth={false}
+                    >
+                      Discover Products →
+                    </Button>
                   </div>
-                  <p className="text-gray-700 mb-4 text-lg">
-                    View and manage your favorite products
-                  </p>
-                  <Button
-                    onClick={() => router.push('/wishlist')}
-                    variant="primary"
-                    size="lg"
-                    fullWidth={false}
-                  >
-                    Go to Wishlist →
-                  </Button>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-gray-600 mb-4">{wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} in your wishlist</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {wishlist.map((item) => (
+                        <div key={item.productId} className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:shadow-lg transition-shadow">
+                          <Link href={`/products/${item.productId}`}>
+                            <div className="aspect-square bg-gray-200 rounded-lg mb-3 overflow-hidden">
+                              {item.image ? (
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <FontAwesomeIcon icon={faHeart} className="w-12 h-12 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+                          </Link>
+                          <Link href={`/products/${item.productId}`} className="font-semibold text-gray-900 hover:text-indigo-600 line-clamp-2 block mb-2">
+                            {item.name}
+                          </Link>
+                          <p className="text-lg font-bold text-indigo-600 mb-3">${item.price.toFixed(2)}</p>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="primary"
+                              onClick={() => {
+                                addItem({
+                                  productId: item.productId,
+                                  id: item.productId,
+                                  name: item.name,
+                                  price: item.price,
+                                  quantity: 1,
+                                  image: item.image,
+                                });
+                                showToast('Added to cart!', 'success');
+                              }}
+                              className="flex-1"
+                            >
+                              Add to Cart
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                removeFromWishlist(item.productId);
+                                showToast('Removed from wishlist', 'info');
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

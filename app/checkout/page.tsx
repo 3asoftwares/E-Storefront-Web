@@ -308,10 +308,10 @@ export default function CheckoutPage() {
         couponCode: appliedCoupon?.valid ? couponCode.trim().toUpperCase() : undefined,
       };
 
-      const order = await createOrder(orderData);
+      await createOrder(orderData);
       clearCart();
       showToastMessage('Order placed successfully!', 'success');
-      router.push(`/orders/${order.id}`);
+      router.push('/orders');
     } catch (error: any) {
       Logger.error('Order creation error', error, 'Checkout');
       showToastMessage(error.message || 'Error creating order. Please try again.', 'error');
@@ -614,22 +614,15 @@ export default function CheckoutPage() {
                 </h3>
 
                 {appliedCoupon?.valid ? (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <div className="flex items-center justify-between">
+                  <div className="flex justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div className="flex text-left flex-col justify-center">
                       <div className="flex items-center gap-2">
-                        <FontAwesomeIcon icon={faCheck} className="text-green-600" />
+                        <FontAwesomeIcon icon={faCheck} size="sm" className="text-green-600" />
                         <span className="text-sm font-medium text-green-700">
                           {appliedCoupon.code}
                         </span>
                       </div>
-                      <button
-                        onClick={handleRemoveCoupon}
-                        className="text-red-500 hover:text-red-700 text-sm font-medium"
-                      >
-                        <FontAwesomeIcon icon={faTimes} />
-                      </button>
-                    </div>
-                    <div className="mt-2 text-xs text-green-600">
+                      <div className="text-xs text-green-600">
                       {appliedCoupon.discountType === 'percentage' ? (
                         <span>
                           {appliedCoupon.discountValue}% off - You save{' '}
@@ -639,6 +632,13 @@ export default function CheckoutPage() {
                         <span>Flat {formatPrice(appliedCoupon.discount)} off</span>
                       )}
                     </div>
+                    </div>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="text-red-500 hover:text-red-700 text-sm font-medium"
+                    >
+                      <FontAwesomeIcon icon={faTimes} size='lg' />
+                    </button>
                   </div>
                 ) : (
                   <div className="space-y-2">

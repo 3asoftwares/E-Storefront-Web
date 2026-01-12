@@ -6,14 +6,14 @@ import { Button } from '@3asoftwares/ui';
 
 export default function ReturnsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-      <div className="bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="inline-block p-4 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl shadow-lg mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div className="bg-white/95 backdrop-blur-lg border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col items-center w-full">
+            <div className="inline-block p-4 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl shadow-lg mb-4">
               <FontAwesomeIcon icon={faUndo} className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-amber-600 mb-4">
+            <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-300 mb-4">
               Returns & Refunds
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -24,7 +24,7 @@ export default function ReturnsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl shadow-2xl p-8 mb-12 text-white text-center">
+        <div className="bg-gradient-to-r from-black to-gray-400 rounded-2xl shadow-2xl p-8 mb-12 text-white text-center">
           <FontAwesomeIcon icon={faCheckCircle} className="w-16 h-16 mb-4" />
           <h2 className="text-3xl font-bold mb-3">30-Day Return Policy</h2>
           <p className="text-xl text-orange-100">
@@ -219,9 +219,9 @@ export default function ReturnsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl shadow-xl p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-black to-gray-400 rounded-2xl shadow-xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-3">Need Help with a Return?</h2>
-          <p className="text-orange-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
             Our customer support team is here to assist you with any questions about returns or
             refunds.
           </p>
