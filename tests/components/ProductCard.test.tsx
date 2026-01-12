@@ -145,17 +145,17 @@ describe('ProductCard Component', () => {
   describe('Variants', () => {
     it('should apply default height class', () => {
       const { container } = render(<ProductCard product={defaultProduct} variant="default" />);
-      expect(container.querySelector('.h-56')).toBeInTheDocument();
+      expect(container.querySelector('.sm\\:h-56')).toBeInTheDocument();
     });
 
     it('should apply compact height class', () => {
       const { container } = render(<ProductCard product={defaultProduct} variant="compact" />);
-      expect(container.querySelector('.h-32')).toBeInTheDocument();
+      expect(container.querySelector('.xs\\:h-32')).toBeInTheDocument();
     });
 
     it('should apply large height class', () => {
       const { container } = render(<ProductCard product={defaultProduct} variant="large" />);
-      expect(container.querySelector('.h-64')).toBeInTheDocument();
+      expect(container.querySelector('.sm\\:h-64')).toBeInTheDocument();
     });
   });
 
@@ -177,8 +177,8 @@ describe('ProductCard Component', () => {
     it('should have hover transformation classes', () => {
       const { container } = render(<ProductCard product={defaultProduct} />);
       const card = container.firstChild;
-      expect(card).toHaveClass('hover:-translate-y-2');
-      expect(card).toHaveClass('hover:shadow-2xl');
+      expect(card).toHaveClass('pointer:hover:-translate-y-2');
+      expect(card).toHaveClass('sm:hover:shadow-2xl');
     });
   });
 });

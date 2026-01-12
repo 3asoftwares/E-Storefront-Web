@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ProductReviews from '../../components/ProductReviews';
 import * as reviewHooks from '../../lib/hooks/useReviews';
+import { ToastProvider } from '../../lib/hooks/useToast';
 
 // Mock the review hooks
 jest.mock('../../lib/hooks/useReviews', () => ({
@@ -45,7 +46,9 @@ describe('ProductReviews Component', () => {
 
   const renderWithQueryClient = (component: React.ReactNode) => {
     return render(
-      <QueryClientProvider client={createQueryClient()}>{component}</QueryClientProvider>
+      <QueryClientProvider client={createQueryClient()}>
+        <ToastProvider>{component}</ToastProvider>
+      </QueryClientProvider>
     );
   };
 

@@ -30,10 +30,10 @@ describe('Footer Component', () => {
     expect(featuredLink).toHaveAttribute('href', '/products?featured=true');
   });
 
-  it('should have Deals link', () => {
+  it('should have New Arrivals link', () => {
     render(<Footer />);
-    const dealsLink = screen.getByRole('link', { name: /deals/i });
-    expect(dealsLink).toHaveAttribute('href', '/products?discount=true');
+    const newArrivalsLink = screen.getByRole('link', { name: /new arrivals/i });
+    expect(newArrivalsLink).toHaveAttribute('href', '/products?sortBy=newest');
   });
 
   it('should have About Us link', () => {
