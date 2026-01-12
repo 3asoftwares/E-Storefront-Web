@@ -1,24 +1,27 @@
 # =============================================================================
 # Continuous Deployment Workflow
 # Runs on: Push to main (after CI passes), Manual trigger
+# Deployment only happens after CI success on main branch
 # =============================================================================
 
 name: CD
 
 on:
-  push:
+  # Only trigger on main branch after CI workflow completes successfully
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - 'docs/**'
+  
+  # Manual trigger for deployments
   workflow_dispatch:
     inputs:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'staging'
+        default: 'production'
         type: choice
         options:
           - staging
@@ -26,195 +29,168 @@ on:
 
 env:
   NODE_VERSION: '20'
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   # ==========================================================================
-  # Build and Push Docker Image
+  # Check CI Status (for workflow_run trigger)
   # ==========================================================================
-  build-and-push:
-    name: Build & Push Docker Image
+  check-ci:
+    name: Verify CI Success
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    if: github.event_name == 'workflow_run'
     outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
-      image_digest: ${{ steps.build.outputs.digest }}
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix=
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.prod
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            NEXT_PUBLIC_ENV=production
-            NEXT_PUBLIC_AUTH_SERVICE_URL=${{ secrets.NEXT_PUBLIC_AUTH_SERVICE_URL }}
-            NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
-
-  # ==========================================================================
-  # Deploy to Staging
-  # ==========================================================================
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
-    environment:
-      name: staging
-      url: ${{ vars.STAGING_URL }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Staging Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            cd ${{ secrets.STAGING_DEPLOY_PATH }}
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up -d
-            docker system prune -f
-
-      - name: Health Check
+      - name: Check CI workflow conclusion
+        id: check
         run: |
-          sleep 30
-          curl -f ${{ vars.STAGING_URL }}/api/health || exit 1
-        continue-on-error: true
-
-      - name: Notify Deployment Status
-        if: always()
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Staging Deployment ${{ job.status }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Storefront Staging Deployment*\nStatus: ${{ job.status }}\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        continue-on-error: true
+          if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+            echo "CI passed, proceeding with deployment"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "CI failed or was cancelled, skipping deployment"
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
 
   # ==========================================================================
-  # Deploy to Production
-  # ==========================================================================
-  deploy-production:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [build-and-push, deploy-staging]
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'
-    environment:
-      name: production
-      url: ${{ vars.PRODUCTION_URL }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Production Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          script: |
-            cd ${{ secrets.PRODUCTION_DEPLOY_PATH }}
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up -d
-            docker system prune -f
-
-      - name: Health Check
-        run: |
-          sleep 30
-          curl -f ${{ vars.PRODUCTION_URL }}/api/health || exit 1
-        continue-on-error: true
-
-      - name: Notify Deployment Status
-        if: always()
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Production Deployment ${{ job.status }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Storefront Production Deployment*\nStatus: ${{ job.status }}\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        continue-on-error: true
-
-  # ==========================================================================
-  # Deploy to Vercel (Alternative)
+  # Deploy to Vercel Production
   # ==========================================================================
   deploy-vercel:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    needs: build-and-push
-    if: false  # Set to true if using Vercel
+    needs: check-ci
+    if: |
+      (github.event_name == 'workflow_run' && needs.check-ci.outputs.should_deploy == 'true') ||
+      (github.event_name == 'workflow_dispatch')
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: ./
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          NEXT_PUBLIC_ENV: production
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_AUTH_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_AUTH_SERVICE_URL }}
+          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          NEXT_PUBLIC_LOGO_URL: ${{ secrets.NEXT_PUBLIC_LOGO_URL }}
+
+      - name: Deploy to Vercel Production
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> $GITHUB_OUTPUT
+          echo "Deployed to: $url"
+
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================================================
+  # Deploy to Staging (Manual Only)
+  # ==========================================================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          NEXT_PUBLIC_ENV: staging
+          NEXT_PUBLIC_SITE_URL: ${{ vars.STAGING_URL }}
+          NEXT_PUBLIC_AUTH_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_AUTH_SERVICE_URL }}
+          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          NEXT_PUBLIC_LOGO_URL: ${{ secrets.NEXT_PUBLIC_LOGO_URL }}
+
+      - name: Deploy to Vercel Preview
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> $GITHUB_OUTPUT
+          echo "Deployed to: $url"
+
+      - name: Deployment Summary
+        run: |
+          echo "## Staging Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================================================
+  # Notify Deployment Status
+  # ==========================================================================
+  notify:
+    name: Notify Status
+    runs-on: ubuntu-latest
+    needs: [deploy-vercel]
+    if: always() && needs.deploy-vercel.result != 'skipped'
+    steps:
+      - name: Send Slack Notification
+        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Storefront Deployment ${{ needs.deploy-vercel.result }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Storefront Production Deployment*\nStatus: ${{ needs.deploy-vercel.result }}\nCommit: ${{ github.sha }}\nBranch: main"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true

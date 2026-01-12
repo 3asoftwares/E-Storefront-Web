@@ -1,10 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Note: 'standalone' is for Docker deployments; Vercel handles output automatically
   output: 'standalone',
   transpilePackages: ['@3asoftwares/ui', '@3asoftwares/types', '@3asoftwares/utils'],
-  // Enable turbopack with empty config to silence warning
-  turbopack: {},
+  // Turbopack configuration with workspace root to fix lockfile warning
+  turbopack: {
+    root: __dirname,
+  },
   // Fallback for Node.js modules that can't be bundled for browser
   webpack: (config, { isServer }) => {
     if (!isServer) {

@@ -32,11 +32,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('http://localhost:3003'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://e-storefront-web.vercel.app'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'http://localhost:3003',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://e-storefront-web.vercel.app',
     title: '3A Softwares - Your One-Stop E-Commerce Destination',
     description: 'Shop quality products at competitive prices with fast shipping and easy returns.',
     siteName: '3A Softwares',
