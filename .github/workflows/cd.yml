@@ -35,22 +35,26 @@ env:
 jobs:
   # ==========================================================================
   # Check CI Status (for workflow_run trigger)
+  # Includes verification that SonarQube analysis passed
   # ==========================================================================
   check-ci:
-    name: Verify CI Success
+    name: Verify CI & SonarQube Success
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_run'
     outputs:
       should_deploy: ${{ steps.check.outputs.should_deploy }}
     steps:
-      - name: Check CI workflow conclusion
+      - name: Check CI workflow conclusion (includes SonarQube)
         id: check
         run: |
           if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-            echo "CI passed, proceeding with deployment"
+            echo "✅ CI passed (lint, type-check, tests, build, SonarQube)"
+            echo "Proceeding with deployment..."
             echo "should_deploy=true" >> $GITHUB_OUTPUT
           else
-            echo "CI failed or was cancelled, skipping deployment"
+            echo "❌ CI failed or was cancelled"
+            echo "Possible failures: lint, type-check, tests, build, or SonarQube analysis"
+            echo "Deployment blocked - fix CI issues first"
             echo "should_deploy=false" >> $GITHUB_OUTPUT
           fi
 

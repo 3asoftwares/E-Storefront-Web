@@ -215,19 +215,19 @@ jobs:
             
             echo "Current coverage: ${COVERAGE}%"
             
-            # Check if coverage is below 15%
-            if (( $(echo "$COVERAGE < 15" | bc -l) )); then
-              echo "::error::Code coverage ${COVERAGE}% is below the required 15% threshold"
+            # Check if coverage is below 40%
+            if (( $(echo "$COVERAGE < 40" | bc -l) )); then
+              echo "::error::Code coverage ${COVERAGE}% is below the required 40% threshold"
               exit 1
             fi
             
-            echo "Coverage check passed: ${COVERAGE}% >= 15%"
+            echo "Coverage check passed: ${COVERAGE}% >= 40%"
           else
             echo "::warning::Coverage report not found, skipping threshold check"
           fi
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@ffc3010689be73b8e5ae0c57ce35968afd7909e8 # v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

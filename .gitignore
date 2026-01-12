@@ -13,6 +13,9 @@ out/
 build/
 dist/
 
+# Sonar chekpoints
+.scannerwork/
+
 # Testing
 coverage/
 
