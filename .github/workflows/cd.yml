@@ -1,21 +1,16 @@
 # =============================================================================
 # Continuous Deployment Workflow
 # Runs on: Push to main (after CI passes), Manual trigger
-# Deployment only happens after CI success on main branch
 # =============================================================================
 
 name: CD
 
 on:
-  # Only trigger on main branch after CI workflow completes successfully
   workflow_run:
     workflows: ["CI"]
-    types:
-      - completed
-    branches:
-      - main
+    types: [completed]
+    branches: [main]
   
-  # Manual trigger for deployments
   workflow_dispatch:
     inputs:
       environment:
@@ -23,9 +18,7 @@ on:
         required: true
         default: 'production'
         type: choice
-        options:
-          - staging
-          - production
+        options: [staging, production]
 
 env:
   NODE_VERSION: '20'
@@ -34,113 +27,19 @@ env:
 
 jobs:
   # ==========================================================================
-  # Check CI Status (for workflow_run trigger)
-  # Includes verification that SonarQube analysis passed
+  # Deploy to Production
   # ==========================================================================
-  check-ci:
-    name: Verify CI & SonarQube Success
+  deploy:
+    name: Deploy Production
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_run'
-    outputs:
-      should_deploy: ${{ steps.check.outputs.should_deploy }}
-    steps:
-      - name: Check CI workflow conclusion (includes SonarQube)
-        id: check
-        run: |
-          if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-            echo "✅ CI passed (lint, type-check, tests, build, SonarQube)"
-            echo "Proceeding with deployment..."
-            echo "should_deploy=true" >> $GITHUB_OUTPUT
-          else
-            echo "❌ CI failed or was cancelled"
-            echo "Possible failures: lint, type-check, tests, build, or SonarQube analysis"
-            echo "Deployment blocked - fix CI issues first"
-            echo "should_deploy=false" >> $GITHUB_OUTPUT
-          fi
-
-  # ==========================================================================
-  # Check Last Deployment Time
-  # ==========================================================================
-  check-deployment-cooldown:
-    name: Check Deployment Cooldown
-    runs-on: ubuntu-latest
-    needs: check-ci
     if: |
-      (github.event_name == 'workflow_run' && needs.check-ci.outputs.should_deploy == 'true') ||
-      (github.event_name == 'workflow_dispatch')
-    outputs:
-      can_deploy: ${{ steps.check-time.outputs.can_deploy }}
-      last_deployment: ${{ steps.check-time.outputs.last_deployment }}
-      hours_since: ${{ steps.check-time.outputs.hours_since }}
-    steps:
-      - name: Check last deployment time
-        id: check-time
-        run: |
-          # Get the last production deployment from Vercel API
-          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-            "https://api.vercel.com/v6/deployments?projectId=${{ secrets.VERCEL_PROJECT_ID }}&target=production&limit=1&state=READY")
-          
-          # Extract the created timestamp of the last deployment
-          LAST_DEPLOYMENT=$(echo "$RESPONSE" | jq -r '.deployments[0].createdAt // empty')
-          
-          if [ -z "$LAST_DEPLOYMENT" ] || [ "$LAST_DEPLOYMENT" == "null" ]; then
-            echo "No previous deployment found, allowing deployment"
-            echo "can_deploy=true" >> $GITHUB_OUTPUT
-            echo "last_deployment=none" >> $GITHUB_OUTPUT
-            echo "hours_since=N/A" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # Convert to Unix timestamp
-          LAST_DEPLOYMENT_TS=$(echo "$LAST_DEPLOYMENT" | xargs -I {} date -d {} +%s 2>/dev/null || echo "$((LAST_DEPLOYMENT / 1000))")
-          CURRENT_TS=$(date +%s)
-          
-          # Calculate hours since last deployment
-          DIFF_SECONDS=$((CURRENT_TS - LAST_DEPLOYMENT_TS))
-          DIFF_HOURS=$((DIFF_SECONDS / 3600))
-          
-          echo "Last deployment: $LAST_DEPLOYMENT"
-          echo "Hours since last deployment: $DIFF_HOURS"
-          
-          echo "last_deployment=$LAST_DEPLOYMENT" >> $GITHUB_OUTPUT
-          echo "hours_since=$DIFF_HOURS" >> $GITHUB_OUTPUT
-          
-          # Check if 6 hours have passed (21600 seconds)
-          if [ $DIFF_SECONDS -lt 21600 ]; then
-            echo "::warning::Last deployment was $DIFF_HOURS hours ago. Minimum cooldown is 6 hours."
-            echo "can_deploy=false" >> $GITHUB_OUTPUT
-          else
-            echo "Cooldown period passed. Deployment allowed."
-            echo "can_deploy=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Deployment Cooldown Summary
-        if: steps.check-time.outputs.can_deploy == 'false'
-        run: |
-          echo "## ⏳ Deployment Blocked - Cooldown Period" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Last Deployment:** ${{ steps.check-time.outputs.last_deployment }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Hours Since:** ${{ steps.check-time.outputs.hours_since }} hours" >> $GITHUB_STEP_SUMMARY
-          echo "**Required Cooldown:** 6 hours" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Please wait until 6 hours have passed since the last production deployment." >> $GITHUB_STEP_SUMMARY
-
-  # ==========================================================================
-  # Deploy to Vercel Production
-  # ==========================================================================
-  deploy-vercel:
-    name: Deploy to Vercel
-    runs-on: ubuntu-latest
-    needs: [check-ci, check-deployment-cooldown]
-    if: |
-      needs.check-deployment-cooldown.outputs.can_deploy == 'true' &&
-      ((github.event_name == 'workflow_run' && needs.check-ci.outputs.should_deploy == 'true') ||
-      (github.event_name == 'workflow_dispatch'))
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
     environment:
       name: production
       url: ${{ steps.deploy.outputs.url }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: main
@@ -154,10 +53,10 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment Information
+      - name: Pull Vercel Environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build Project Artifacts
+      - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           NEXT_PUBLIC_ENV: production
@@ -167,34 +66,30 @@ jobs:
           NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
           NEXT_PUBLIC_LOGO_URL: ${{ secrets.NEXT_PUBLIC_LOGO_URL }}
 
-      - name: Deploy to Vercel Production
+      - name: Deploy
         id: deploy
         run: |
           url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Deployed to: $url"
 
-      - name: Deployment Summary
+      - name: Summary
         run: |
-          echo "## Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Production Deployed" >> $GITHUB_STEP_SUMMARY
           echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 
   # ==========================================================================
   # Deploy to Staging (Manual Only)
   # ==========================================================================
   deploy-staging:
-    name: Deploy to Staging
+    name: Deploy Staging
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'
     environment:
       name: staging
       url: ${{ steps.deploy.outputs.url }}
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: main
@@ -208,10 +103,10 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Pull Vercel Environment Information
+      - name: Pull Vercel Environment
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build Project Artifacts
+      - name: Build
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
         env:
           NEXT_PUBLIC_ENV: staging
@@ -221,46 +116,34 @@ jobs:
           NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
           NEXT_PUBLIC_LOGO_URL: ${{ secrets.NEXT_PUBLIC_LOGO_URL }}
 
-      - name: Deploy to Vercel Preview
+      - name: Deploy
         id: deploy
         run: |
           url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Deployed to: $url"
 
-      - name: Deployment Summary
+      - name: Summary
         run: |
-          echo "## Staging Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎭 Staging Deployed" >> $GITHUB_STEP_SUMMARY
           echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 
   # ==========================================================================
-  # Notify Deployment Status
+  # Notify (Optional - requires SLACK_WEBHOOK_URL secret)
   # ==========================================================================
   notify:
-    name: Notify Status
+    name: Notify
     runs-on: ubuntu-latest
-    needs: [deploy-vercel]
-    if: always() && needs.deploy-vercel.result != 'skipped'
+    needs: [deploy]
+    if: always() && needs.deploy.result != 'skipped'
     steps:
-      - name: Send Slack Notification
+      - name: Slack Notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
             {
-              "text": "Storefront Deployment ${{ needs.deploy-vercel.result }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Storefront Production Deployment*\nStatus: ${{ needs.deploy-vercel.result }}\nCommit: ${{ github.sha }}\nBranch: main"
-                  }
-                }
-              ]
+              "text": "Storefront Deployment: ${{ needs.deploy.result }}",
+              "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "*Storefront*\nStatus: ${{ needs.deploy.result }}\nCommit: `${{ github.sha }}`"}}]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
