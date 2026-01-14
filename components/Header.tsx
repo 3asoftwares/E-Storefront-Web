@@ -25,6 +25,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { setUserProfile } = useCartStore();
   const [user, setUser] = useState<any>(null);
   const { items, wishlist } = useCartStore();
 
@@ -36,6 +37,8 @@ export default function Header() {
         accessToken: token,
       });
       window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      setUserProfile(null);
     }
 
     const userData = getCurrentUser();

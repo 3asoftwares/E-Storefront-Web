@@ -44,9 +44,9 @@ import {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { userProfile, setUserProfile, wishlist, removeFromWishlist, addItem } = useCartStore();
+  const { userProfile, setUserProfile, wishlist, removeFromWishlist, addItem, loadUserFromStorage } = useCartStore();
   const { showToast } = useToast();
-  const { data: currentUser, refetch: refetchUser, isLoading: isLoadingUser } = useCurrentUser();
+  const { data: currentUser, refetch: refetchUser, isLoading: isLoadingUser, isFetched } = useCurrentUser();
   const {
     sendVerificationEmail,
     isLoading: isSendingEmail,
@@ -86,17 +86,65 @@ export default function ProfilePage() {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Handle client-side hydration
+  useEffect(() => {
+    setIsHydrated(true);
+    // Try to load user from cookies/storage on mount
+    if (!userProfile) {
+      loadUserFromStorage();
+    }
+  }, []);
 
   // Refetch user on mount to get latest data
   useEffect(() => {
     refetchUser();
   }, [refetchUser]);
 
+  // Sync currentUser from auth hook to cart store userProfile
+  useEffect(() => {
+    if (currentUser && !userProfile) {
+      setUserProfile({
+        id: currentUser.id,
+        email: currentUser.email,
+        name: currentUser.name || currentUser.email.split('@')[0],
+        phone: (currentUser as any).phone,
+        addresses: [],
+      });
+    }
+  }, [currentUser, userProfile, setUserProfile]);
+
+  // Redirect to login if not authenticated (after hydration and loading is complete)
+  useEffect(() => {
+    // Wait for client-side hydration and query to complete
+    if (!isHydrated || isLoadingUser || !isFetched) {
+      return;
+    }
+
+    // Only redirect if there's truly no user
+    if (!currentUser && !userProfile) {
+      router.push('/login?redirect=/profile');
+    }
+  }, [isHydrated, isLoadingUser, isFetched, currentUser, userProfile, router]);
+
   const [profileData, setProfileData] = useState({
-    name: userProfile?.name || '',
-    email: userProfile?.email || '',
-    phone: userProfile?.phone || '',
+    name: '',
+    email: '',
+    phone: '',
   });
+
+  // Sync profile data when user data is available
+  useEffect(() => {
+    const profile = userProfile || currentUser;
+    if (profile && !profileData.email) {
+      setProfileData({
+        name: profile.name || '',
+        email: profile.email || '',
+        phone: (profile as any).phone || '',
+      });
+    }
+  }, [userProfile, currentUser, profileData.email]);
 
   const [newAddress, setNewAddress] = useState<Partial<Address>>({
     name: '',
@@ -134,18 +182,35 @@ export default function ProfilePage() {
     }
   };
 
-  useEffect(() => {
-    if (!userProfile) {
-      router.push('/login');
-    }
-  }, [userProfile, router]);
-
-  if (!userProfile) {
+  // Show loading while checking authentication or during hydration
+  if (!isHydrated || isLoadingUser || !isFetched) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
+  }
+
+  if (!userProfile && !currentUser) {
+  // This will trigger the redirect effect
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Use currentUser data if userProfile is not yet synced
+  const displayProfile = userProfile || (currentUser ? {
+    id: currentUser.id,
+    email: currentUser.email,
+    name: currentUser.name || currentUser.email.split('@')[0],
+    phone: (currentUser as any).phone,
+    addresses: [],
+  } : null);
+
+  if (!displayProfile) {
+    return null;
   }
 
   const handleSaveProfile = async () => {
@@ -158,11 +223,15 @@ export default function ProfilePage() {
       });
       if (result.success) {
         // Update local state with new data
-        setUserProfile({
-          ...userProfile,
-          name: result.user?.name || profileData.name,
-          phone: result.user?.phone || profileData.phone,
-        });
+        if (displayProfile) {
+          setUserProfile({
+            id: displayProfile.id,
+            email: displayProfile.email,
+            name: result.user?.name || profileData.name,
+            phone: result.user?.phone || profileData.phone,
+            addresses: displayProfile.addresses || [],
+          });
+        }
         setIsEditing(false);
         setProfileMessage({ type: 'success', text: 'Profile updated successfully!' });
         // Refetch user to ensure all data is in sync
@@ -266,7 +335,7 @@ export default function ProfilePage() {
         title="My Account"
         subtitle={
           <span>
-            Welcome back, <b>{userProfile.name}</b>
+            Welcome back, <b>{displayProfile.name}</b>
           </span>
         }
         iconGradient="from-gray-700 to-gray-900"
@@ -370,12 +439,12 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <p className="text-sm text-gray-600 mb-1">Full Name</p>
-                        <p className="text-lg font-semibold text-gray-900">{userProfile.name}</p>
+                        <p className="text-lg font-semibold text-gray-900">{displayProfile.name}</p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600 mb-1">Email</p>
                         <div className="flex items-center gap-2">
-                          <p className="text-lg font-semibold text-gray-900">{userProfile.email}</p>
+                          <p className="text-lg font-semibold text-gray-900">{displayProfile.email}</p>
                           {isEmailVerified ? (
                             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
                               <FontAwesomeIcon icon={faCheckCircle} className="w-3 h-3 mr-1" />
@@ -395,12 +464,12 @@ export default function ProfilePage() {
                       <div>
                         <p className="text-sm text-gray-600 mb-1">Phone</p>
                         <p className="text-lg font-semibold text-gray-900">
-                          {userProfile.phone || 'Not provided'}
+                          {displayProfile.phone || 'Not provided'}
                         </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600 mb-1">Account ID</p>
-                        <p className="text-lg font-semibold text-gray-900">{userProfile.id}</p>
+                        <p className="text-lg font-semibold text-gray-900">{displayProfile.id}</p>
                       </div>
                     </div>
 
@@ -518,9 +587,9 @@ export default function ProfilePage() {
                         onClick={() => {
                           setIsEditing(false);
                           setProfileData({
-                            name: userProfile.name,
-                            email: userProfile.email,
-                            phone: userProfile.phone || '',
+                            name: displayProfile.name,
+                            email: displayProfile.email,
+                            phone: displayProfile.phone || '',
                           });
                         }}
                         variant="outline"
@@ -904,9 +973,9 @@ export default function ProfilePage() {
                                 description: newTicket.description,
                                 category: newTicket.category || 'general',
                                 priority: newTicket.priority || 'medium',
-                                customerName: userProfile?.name || '',
-                                customerEmail: userProfile?.email || '',
-                                customerId: userProfile?.id,
+                                customerName: displayProfile?.name || '',
+                                customerEmail: displayProfile?.email || '',
+                                customerId: displayProfile?.id,
                               });
                               setNewTicket({ subject: '', description: '', category: 'general', priority: 'medium' });
                               setIsCreatingTicket(false);

@@ -70,13 +70,13 @@ Cypress.Commands.add('clearCart', () => {
 });
 
 // Check if element is in viewport
-Cypress.Commands.add('isInViewport', { prevSubject: true }, (subject) => {
+Cypress.Commands.add('isInViewport', { prevSubject: 'element' }, (subject) => {
   const bottom = Cypress.$(cy.state('window')).height()!;
   const rect = subject[0].getBoundingClientRect();
-  
+
   expect(rect.top).to.be.lessThan(bottom);
   expect(rect.bottom).to.be.greaterThan(0);
-  
+
   return cy.wrap(subject);
 });
 

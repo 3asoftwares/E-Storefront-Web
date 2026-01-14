@@ -7,13 +7,14 @@ import { useLogin } from '@/lib/hooks/useAuth';
 import { useCartStore } from '@/store/cartStore';
 import { Button, Input } from '@3asoftwares/ui';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
   const { login, isLoading, error: loginError } = useLogin();
-  const { setUserProfile } = useCartStore();
+  const { userProfile, setUserProfile } = useCartStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -50,7 +51,6 @@ export default function LoginPage() {
       const result = await login({ email, password });
 
       if (result?.user) {
-        // Check if user has customer role - only customers can use the storefront
         if (result.user.role && result.user.role !== 'customer') {
           setError('Access denied. Only customer accounts can access the storefront. Please use the appropriate portal for your role.');
           return;
@@ -69,6 +69,12 @@ export default function LoginPage() {
       setError(loginError?.message || 'Login failed');
     }
   };
+
+  useEffect(() => {
+    if (userProfile) {
+      router.push(redirectUrl);
+    }
+  }, [userProfile]);
 
   return (
     <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4 py-8">
