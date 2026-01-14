@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -45,7 +46,7 @@ interface ProductCardProps {
  };
 
 
-export const ProductCard: React.FC<ProductCardProps> = ({
+const ProductCardComponent: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
   onWishlistToggle,
@@ -53,15 +54,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   showWishlistButton = false,
   variant = 'default',
 }) => {
-  const isOutOfStock = product.stock === 0;
+  const isOutOfStock = useMemo(() => product.stock === 0, [product.stock]);
   const { items } = useCartStore();
-  const isInCart = items.some((item) => item.id === product.id);
+  const isInCart = useMemo(
+    () => items.some((item) => item.id === product.id),
+    [items, product.id]
+  );
 
-  const heightClasses = {
-    default: 'h-40 xs:h-48 sm:h-56',
-    compact: 'h-28 xs:h-32',
-    large: 'h-52 xs:h-60 sm:h-64',
-  };
+  const heightClasses = useMemo(
+    () => ({
+      default: 'h-40 xs:h-48 sm:h-56',
+      compact: 'h-28 xs:h-32',
+      large: 'h-52 xs:h-60 sm:h-64',
+    }),
+    []
+  );
+
+  const handleAddToCart = useCallback(() => {
+    onAddToCart?.(product);
+  }, [onAddToCart, product]);
+
+  const handleWishlistToggle = useCallback(() => {
+    onWishlistToggle?.(product);
+  }, [onWishlistToggle, product]);
 
 
   return (
@@ -87,7 +102,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {showWishlistButton && onWishlistToggle && (
           <button
-            onClick={() => onWishlistToggle(product)}
+            onClick={handleWishlistToggle}
             className="absolute top-2 right-2 xs:top-3 xs:right-3 w-9 h-9 xs:w-10 xs:h-10 min-w-[36px] min-h-[36px] bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white shadow-lg transition-all active:scale-95"
             title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
           >
@@ -146,7 +161,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <span className="text-xs xs:text-sm">In Cart</span>
               </Button>
             ) : (
-              <Button size="sm" variant="outline" onClick={() => onAddToCart(product)} className="w-full xs:w-auto min-h-[44px] active:scale-95 transition-transform">
+                  <Button size="sm" variant="outline" onClick={handleAddToCart} className="w-full xs:w-auto min-h-[44px] active:scale-95 transition-transform">
                 <FontAwesomeIcon icon={faShoppingCart} className="mr-1.5 xs:mr-2" />
                 <span className="text-xs xs:text-sm">Add to Cart</span>
               </Button>
@@ -157,3 +172,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </div>
   );
 };
+
+// Memoized export to prevent unnecessary re-renders
+export const ProductCard = React.memo(ProductCardComponent);

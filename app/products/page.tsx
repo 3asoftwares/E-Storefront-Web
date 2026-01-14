@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { useProducts } from '@/lib/hooks';
 import { useCategories } from '@/lib/hooks/useCategories';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 import type { ProductGraphQL } from '@3asoftwares/types';
 import { useToast } from '@/lib/hooks/useToast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,60 +26,35 @@ const SORT_OPTIONS = [
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [search, setSearch] = useState('');
   const [tempSearch, setTempSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [featured, setFeatured] = useState(false);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [tempPriceRange, setTempPriceRange] = useState({ min: 0, max: 0 });
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const searchDebounceRef = useRef<NodeJS.Timeout>();
-  const priceDebounceRef = useRef<NodeJS.Timeout>();
   const { addItem, isInWishlist, addToWishlist, removeFromWishlist } = useCartStore();
   const { showToast } = useToast();
+
+  // Debounced values - automatically updates after delay
+  const search = useDebounce(tempSearch, 500);
+  const priceRange = useDebounce(tempPriceRange, 500);
 
   // Fetch categories from store
   const { categories: categoryList = [] } = useCategories();
 
-  // Build CATEGORIES options from fetched categories
-  const CATEGORIES = [
-    { value: 'All', label: 'All Categories' },
-    ...categoryList.map((cat: { name: string }) => ({
-      value: cat.name,
-      label: cat.name,
-    })),
-  ];
-
-  useEffect(() => {
-    if (searchDebounceRef.current) {
-      clearTimeout(searchDebounceRef.current);
-    }
-    searchDebounceRef.current = setTimeout(() => {
-      setSearch(tempSearch);
-    }, 500);
-    return () => {
-      if (searchDebounceRef.current) {
-        clearTimeout(searchDebounceRef.current);
-      }
-    };
-  }, [tempSearch]);
-
-  useEffect(() => {
-    if (priceDebounceRef.current) {
-      clearTimeout(priceDebounceRef.current);
-    }
-    priceDebounceRef.current = setTimeout(() => {
-      setPriceRange(tempPriceRange);
-    }, 500);
-    return () => {
-      if (priceDebounceRef.current) {
-        clearTimeout(priceDebounceRef.current);
-      }
-    };
-  }, [tempPriceRange]);
+  // Build CATEGORIES options from fetched categories - memoized
+  const CATEGORIES = useMemo(
+    () => [
+      { value: 'All', label: 'All Categories' },
+      ...categoryList.map((cat: { name: string }) => ({
+        value: cat.name,
+        label: cat.name,
+      })),
+    ],
+    [categoryList]
+  );
 
   useEffect(() => {
     const searchQuery = searchParams.get('search');
@@ -87,10 +63,8 @@ export default function ProductsPage() {
 
     if (searchQuery) {
       const decodedSearch = decodeURIComponent(searchQuery);
-      setSearch(decodedSearch);
       setTempSearch(decodedSearch);
     } else {
-      setSearch('');
       setTempSearch('');
     }
 
@@ -173,7 +147,7 @@ export default function ProductsPage() {
     setPage((prev) => prev + 1);
   };
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = useCallback((product: any) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -184,9 +158,9 @@ export default function ProductsPage() {
       sellerId: product.sellerId,
     });
     showToast(`${product.name} added to cart!`, 'success');
-  };
+  }, [addItem, showToast]);
 
-  const handleWishlistToggle = (product: any) => {
+  const handleWishlistToggle = useCallback((product: any) => {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id);
       showToast('Removed from wishlist', 'info');
@@ -200,7 +174,7 @@ export default function ProductsPage() {
       });
       showToast('Added to wishlist', 'success');
     }
-  };
+  }, [isInWishlist, removeFromWishlist, addToWishlist, showToast]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
@@ -298,10 +272,8 @@ export default function ProductsPage() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    setSearch('');
                     setTempSearch('');
                     setCategory('All');
-                    setPriceRange({ min: 0, max: 0 });
                     setTempPriceRange({ min: 0, max: 0 });
                     setSortBy('newest');
                     setFeatured(false);
@@ -397,10 +369,8 @@ export default function ProductsPage() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    setSearch('');
                     setTempSearch('');
                     setCategory('All');
-                    setPriceRange({ min: 0, max: 0 });
                     setTempPriceRange({ min: 0, max: 0 });
                     setSortBy('newest');
                     setFeatured(false);

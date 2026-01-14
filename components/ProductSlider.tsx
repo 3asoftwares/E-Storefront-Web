@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,7 +11,7 @@ interface ProductSliderProps {
   autoplayDelay?: number;
 }
 
-export function ProductSlider({ 
+function ProductSliderComponent({ 
   children, 
   itemsPerView = 4, 
   autoplay = false, 
@@ -20,26 +20,30 @@ export function ProductSlider({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [responsive, setResponsive] = useState(itemsPerView);
   const totalItems = children.length;
-  const maxIndex = Math.max(0, Math.ceil(totalItems / responsive) - 1);
+
+  const maxIndex = useMemo(
+    () => Math.max(0, Math.ceil(totalItems / responsive) - 1),
+    [totalItems, responsive]
+  );
+
+  const handleResize = useCallback(() => {
+    const width = window.innerWidth;
+    if (width < 640) {
+      setResponsive(1);
+    } else if (width < 768) {
+      setResponsive(2);
+    } else if (width < 1024) {
+      setResponsive(3);
+    } else {
+      setResponsive(itemsPerView);
+    }
+  }, [itemsPerView]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 640) {
-        setResponsive(1); 
-      } else if (width < 768) {
-        setResponsive(2); 
-      } else if (width < 1024) {
-        setResponsive(3); 
-      } else {
-        setResponsive(itemsPerView); 
-      }
-    };
-
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [itemsPerView]);
+  }, [handleResize]);
 
   useEffect(() => {
     if (!autoplay) return;
@@ -51,17 +55,33 @@ export function ProductSlider({
     return () => clearInterval(interval);
   }, [autoplay, autoplayDelay, maxIndex]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  };
+  }, [maxIndex]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  }, [maxIndex]);
 
-  const goToSlide = (index: number) => {
+  const goToSlide = useCallback((index: number) => {
     setCurrentIndex(index);
-  };
+  }, []);
+
+  const slides = useMemo(
+    () =>
+      Array.from({ length: Math.ceil(totalItems / responsive) }).map((_, slideIndex) => (
+        <div
+          key={slideIndex}
+          className="w-full flex-shrink-0 grid gap-6"
+          style={{
+            gridTemplateColumns: `repeat(${responsive}, minmax(0, 1fr))`,
+          }}
+        >
+          {children.slice(slideIndex * responsive, slideIndex * responsive + responsive)}
+        </div>
+      )),
+    [totalItems, responsive, children]
+  );
 
   return (
     <div className="relative">
@@ -72,17 +92,7 @@ export function ProductSlider({
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
         >
-          {Array.from({ length: Math.ceil(totalItems / responsive) }).map((_, slideIndex) => (
-            <div
-              key={slideIndex}
-              className="w-full flex-shrink-0 grid gap-6"
-              style={{
-                gridTemplateColumns: `repeat(${responsive}, minmax(0, 1fr))`,
-              }}
-            >
-              {children.slice(slideIndex * responsive, slideIndex * responsive + responsive)}
-            </div>
-          ))}
+          {slides}
         </div>
       </div>
 
@@ -124,3 +134,6 @@ export function ProductSlider({
     </div>
   );
 }
+
+// Memoized export to prevent unnecessary re-renders
+export const ProductSlider = React.memo(ProductSliderComponent);

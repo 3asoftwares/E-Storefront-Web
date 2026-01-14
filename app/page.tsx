@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { useCallback, useMemo } from 'react';
 import { useCartStore } from '../store/cartStore';
 import { useCategories, useProducts } from '@/lib/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,11 +23,19 @@ import { Button } from '@3asoftwares/ui';
 import {
   ProductCard,
   ProductCardCompact,
-  ProductSlider,
   LoadingProductGrid,
   SectionHeader,
 } from '@/components';
 import { useToast } from '@/lib/hooks/useToast';
+
+// Code Splitting - Lazy load ProductSlider component
+const ProductSlider = dynamic(
+  () => import('@/components').then((mod) => ({ default: mod.ProductSlider })),
+  {
+    loading: () => <LoadingProductGrid count={4} />,
+    ssr: true,
+  }
+);
 
 export default function HomePage() {
   const { addItem, recentlyViewed } = useCartStore();
@@ -45,7 +55,7 @@ export default function HomePage() {
   const { data: categoriesData, isLoading: isLoadingCategories } = useCategories();
   const categories: any = Array.isArray(categoriesData) ? categoriesData : categoriesData?.data || [];
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = useCallback((product: any) => {
     addItem({
       productId: product.id,
       id: product.id,
@@ -54,7 +64,7 @@ export default function HomePage() {
       quantity: 1,
     });
     showToast(`${product.name} added to cart!`, 'success');
-  };
+  }, [addItem, showToast]);
 
   return (
     <>

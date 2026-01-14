@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
@@ -44,20 +44,36 @@ export default function Header() {
     }
   }, [searchParams]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
       setSearchQuery('');
     }
-  };
+  }, [searchQuery, router]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     clearAuthCookies();
     setUser(null);
     setIsMenuOpen(false);
     router.push('/');
-  };
+  }, [router]);
+
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const cartItemCount = useMemo(() => {
+    return items.length > 9 ? '9+' : items.length;
+  }, [items.length]);
+
+  const wishlistCount = useMemo(() => {
+    return wishlist.length > 9 ? '9+' : wishlist.length;
+  }, [wishlist.length]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-sm safe:pt-safe-top">
@@ -108,7 +124,7 @@ export default function Header() {
               />
               {wishlist.length > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 xs:top-0 xs:-right-0.5 w-4 h-4 xs:w-5 xs:h-5 bg-gradient-to-br from-pink-500 to-red-500 text-white text-[10px] xs:text-xs rounded-full flex items-center justify-center font-bold shadow-lg">
-                  {wishlist.length > 9 ? '9+' : wishlist.length}
+                  {wishlistCount}
                 </span>
               )}
             </Link>
@@ -124,7 +140,7 @@ export default function Header() {
               />
               {items.length > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 xs:top-0 xs:-right-0.5 w-4 h-4 xs:w-5 xs:h-5 bg-gray-700 text-white text-[10px] xs:text-xs rounded-full flex items-center justify-center font-bold shadow-lg">
-                  {items.length > 9 ? '9+' : items.length}
+                  {cartItemCount}
                 </span>
               )}
             </Link>
@@ -189,7 +205,7 @@ export default function Header() {
             )}
 
             <Button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={toggleMobileMenu}
               variant="ghost"
               size="sm"
               fullWidth={false}
@@ -233,42 +249,42 @@ export default function Header() {
           <nav className="divide-y divide-gray-100">
             <Link
               href="/"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               Home
             </Link>
             <Link
               href="/products"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               Products
             </Link>
             <Link
               href="/orders"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               Orders
             </Link>
             <Link
               href="/about"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               About
             </Link>
             <Link
               href="/contact"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               Contact
             </Link>
             <Link
               href="/cart"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
             >
               <FontAwesomeIcon icon={faShoppingCart} className="mr-3 w-5 h-5" />
@@ -278,7 +294,7 @@ export default function Header() {
               <>
                 <Link
                   href="/profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                   className="flex items-center px-4 xs:px-5 py-4 text-gray-700 hover:bg-indigo-50 active:bg-indigo-100 font-medium min-h-[52px]"
                 >
                   <FontAwesomeIcon icon={faUser} className="mr-3 w-5 h-5" />
@@ -298,7 +314,7 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                 className="flex items-center px-4 xs:px-5 py-4 text-indigo-600 font-semibold hover:bg-indigo-50 active:bg-indigo-100 min-h-[52px]"
               >
                 Sign In

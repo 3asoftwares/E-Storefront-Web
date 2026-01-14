@@ -23,7 +23,7 @@ RUN \
 COPY . .
 
 # Expose port
-EXPOSE 3003
+EXPOSE 3004
 
 # Environment
 ENV NODE_ENV=development

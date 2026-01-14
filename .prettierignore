@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+coverage
+
+# Public assets
+public
+
+# Minified files
+*.min.js
+*.min.css
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.generated.*
+
+# Cache
+.cache
+.turbo
+
+# Environment
+.env*
+
+# IDE
+.idea
+.vscode

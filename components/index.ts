@@ -9,3 +9,4 @@ export { ProductSlider } from './ProductSlider';
 export { FeaturedProducts } from './FeaturedProducts';
 export { FeaturedCategories } from './FeaturedCategories';
 export { Recommendations } from './Recommendations';
+export { LazyImage } from './LazyImage';
