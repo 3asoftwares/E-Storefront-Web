@@ -14,22 +14,55 @@ import type {
 } from '@3asoftwares/types';
 import { storeAuth, clearAuth as clearAuthCookies, getAccessToken } from '@3asoftwares/utils/client';
 
+// Helper function to extract error message from GraphQL errors
+const extractErrorMessage = (error: any, fallback: string): string => {
+  if (!error) return fallback;
+  return (
+    error?.graphQLErrors?.[0]?.message ||
+    error?.networkError?.result?.errors?.[0]?.message ||
+    error?.message ||
+    fallback
+  );
+};
+
+// Helper function to handle GraphQL mutation with proper error handling
+const handleMutation = async <TData, TResult>(
+  mutationFn: () => Promise<{ data?: TData | null; errors?: readonly any[] }>,
+  extractResult: (data: TData) => TResult | undefined,
+  fallbackError: string
+): Promise<TResult> => {
+  try {
+    const { data, errors } = await mutationFn();
+
+    if (errors?.length) {
+      throw new Error(errors[0].message);
+    }
+
+    const result = data ? extractResult(data) : undefined;
+    if (!result) {
+      throw new Error(fallbackError);
+    }
+
+    return result;
+  } catch (error: any) {
+    throw new Error(extractErrorMessage(error, fallbackError));
+  }
+};
+
 export function useLogin() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (input: LoginInput) => {
-      const { data } = await apolloClient.mutate<LoginResponse>({
-        mutation: GQL_QUERIES.LOGIN_MUTATION,
-        variables: { input },
-      });
-
-      if (!data?.login) {
-        throw new Error('Login failed');
-      }
-
-      return data.login;
-    },
+    mutationFn: (input: LoginInput) =>
+      handleMutation(
+        () => apolloClient.mutate<LoginResponse>({
+          mutation: GQL_QUERIES.LOGIN_MUTATION,
+          variables: { input },
+          errorPolicy: 'all',
+        }),
+        (data) => data.login,
+        'Login failed'
+      ),
     onSuccess: (data) => {
       if (typeof window !== 'undefined') {
         storeAuth({
@@ -56,18 +89,16 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (input: RegisterInput) => {
-      const { data } = await apolloClient.mutate<RegisterResponse>({
-        mutation: GQL_QUERIES.REGISTER_MUTATION,
-        variables: { input },
-      });
-
-      if (!data?.register) {
-        throw new Error('Registration failed');
-      }
-
-      return data.register;
-    },
+    mutationFn: (input: RegisterInput) =>
+      handleMutation(
+        () => apolloClient.mutate<RegisterResponse>({
+          mutation: GQL_QUERIES.REGISTER_MUTATION,
+          variables: { input },
+          errorPolicy: 'all',
+        }),
+        (data) => data.register,
+        'Registration failed'
+      ),
     onSuccess: (data) => {
       if (typeof window !== 'undefined') {
         storeAuth({
@@ -106,18 +137,16 @@ export function useGoogleAuth() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (input: GoogleAuthInput) => {
-      const { data } = await apolloClient.mutate<GoogleAuthResponse>({
-        mutation: GQL_QUERIES.GOOGLE_AUTH_MUTATION,
-        variables: { input },
-      });
-
-      if (!data?.googleAuth) {
-        throw new Error('Google authentication failed');
-      }
-
-      return data.googleAuth;
-    },
+    mutationFn: (input: GoogleAuthInput) =>
+      handleMutation(
+        () => apolloClient.mutate<GoogleAuthResponse>({
+          mutation: GQL_QUERIES.GOOGLE_AUTH_MUTATION,
+          variables: { input },
+          errorPolicy: 'all',
+        }),
+        (data) => data.googleAuth,
+        'Google authentication failed'
+      ),
     onSuccess: (data) => {
       if (typeof window !== 'undefined') {
         storeAuth({
@@ -145,11 +174,15 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      await apolloClient.mutate({
-        mutation: GQL_QUERIES.LOGOUT_MUTATION,
-      });
-    },
+    mutationFn: () =>
+      handleMutation(
+        () => apolloClient.mutate({
+          mutation: GQL_QUERIES.LOGOUT_MUTATION,
+          errorPolicy: 'all',
+        }),
+        () => true,
+        'Logout failed'
+      ),
     onSuccess: () => {
       if (typeof window !== 'undefined') {
         clearAuthCookies();

@@ -83,9 +83,14 @@ function VerifyEmailContent() {
             setMessage(verifyData.message || 'Failed to verify email');
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         setStatus('error');
-        setMessage('An error occurred while verifying your email. Please try again.');
+        // Extract error message from GraphQL response
+        const graphqlError = error?.graphQLErrors?.[0]?.message
+          || error?.networkError?.result?.errors?.[0]?.message
+          || error?.message
+          || 'An error occurred while verifying your email. Please try again.';
+        setMessage(graphqlError);
       }
     };
 

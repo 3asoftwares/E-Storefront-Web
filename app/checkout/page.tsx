@@ -174,7 +174,12 @@ export default function CheckoutPage() {
         showToastMessage(result?.message || 'Failed to add address', 'error');
       }
     } catch (error: any) {
-      showToastMessage(error.message || 'Failed to add address', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to add address';
+      showToastMessage(graphqlError, 'error');
     }
   };
 
@@ -208,7 +213,12 @@ export default function CheckoutPage() {
         setAppliedCoupon(null);
       }
     } catch (error: any) {
-      setCouponError('Failed to validate coupon. Please try again.');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to validate coupon. Please try again.';
+      setCouponError(graphqlError);
       setAppliedCoupon(null);
     } finally {
       setCouponLoading(false);
@@ -314,7 +324,12 @@ export default function CheckoutPage() {
       router.push('/orders');
     } catch (error: any) {
       Logger.error('Order creation error', error, 'Checkout');
-      showToastMessage(error.message || 'Error creating order. Please try again.', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Error creating order. Please try again.';
+      showToastMessage(graphqlError, 'error');
     }
   };
 

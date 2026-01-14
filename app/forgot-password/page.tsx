@@ -34,8 +34,13 @@ export default function ForgotPasswordPage() {
       } else {
         setError(result.message);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send reset email');
+    } catch (err: any) {
+      // Extract error message from GraphQL response
+      const graphqlError = err?.graphQLErrors?.[0]?.message
+        || err?.networkError?.result?.errors?.[0]?.message
+        || err?.message
+        || 'Failed to send reset email';
+      setError(graphqlError);
     }
   };
 

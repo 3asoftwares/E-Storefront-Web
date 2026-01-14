@@ -185,7 +185,7 @@ export default function ProductsPage() {
             <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600">
               Discover Products
             </h1>
-            <div className="px-2.5 xs:px-3 sm:px-4 py-1 xs:py-1.5 sm:py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full text-xs xs:text-sm font-bold text-indigo-700 whitespace-nowrap">
+            <div className="flex gap-1 px-2.5 xs:px-3 sm:px-4 py-1 xs:py-1.5 sm:py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full text-xs xs:text-sm font-bold text-indigo-700 whitespace-nowrap">
               {data?.pagination.total || 0}<span className='hidden sm:block'> Products</span>
             </div>
           </div>

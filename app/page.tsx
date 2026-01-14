@@ -141,7 +141,7 @@ export default function HomePage() {
                 <p>No products available at the moment.</p>
               </div>
             ) : (
-              <>
+                  <div>
                     <ProductSlider itemsPerView={4} autoplay={true} autoplayDelay={5000}>
                   {featuredProducts.map((product: any) => (
                     <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
@@ -156,7 +156,7 @@ export default function HomePage() {
                     Explore All Products →
                   </Link>
                 </div>
-              </>
+                  </div>
             )}
           </div>
         </section>

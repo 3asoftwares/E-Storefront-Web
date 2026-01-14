@@ -17,15 +17,45 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
+
+  const validateForm = () => {
+    const errors: { email?: string; password?: string } = {};
+
+    if (!email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const result = await login({ email, password });
 
       if (result?.user) {
+        // Check if user has customer role - only customers can use the storefront
+        if (result.user.role && result.user.role !== 'customer') {
+          setError('Access denied. Only customer accounts can access the storefront. Please use the appropriate portal for your role.');
+          return;
+        }
+
         setUserProfile({
           id: result.user.id,
           email: result.user.email,
@@ -35,8 +65,8 @@ export default function LoginPage() {
       }
 
       router.push(redirectUrl);
-    } catch (err) {
-      setError(loginError?.message || (err instanceof Error ? err.message : 'Login failed'));
+    } catch (err: any) {
+      setError(loginError?.message || 'Login failed');
     }
   };
 
@@ -76,38 +106,50 @@ export default function LoginPage() {
 
             {/* Right side - Form */}
             <div className="px-8 py-10 lg:py-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
-              <p className="text-gray-600 mb-6">Enter your credentials to access your account</p>
-              
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">Sign In</h2>
+              <p className="text-gray-600 mb-4">Enter your credentials to access your account</p>
+
               {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-red-700 text-sm font-medium">{error}</p>
                 </div>
               )}
 
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                label="Email Address"
-                placeholder="your@email.com"
-              />
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                label="Password"
-                placeholder="••••••••"
-              />
-              
+              <div className="mb-4">
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: undefined }));
+                  }}
+                  required
+                  label="Email Address"
+                  placeholder="your@email.com"
+                  error={fieldErrors.email}
+                />
+              </div>
+              <div className="mb-4">
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (fieldErrors.password) setFieldErrors(prev => ({ ...prev, password: undefined }));
+                  }}
+                  required
+                  label="Password"
+                  placeholder="••••••••"
+                  error={fieldErrors.password}
+                />
+              </div>
+
               <div className="flex justify-end mb-4">
-                <Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-900">
+                <Link href="/forgot-password" className="min-h-5 text-sm text-gray-600 hover:text-gray-900">
                   Forgot password?
                 </Link>
               </div>
-              
+
               <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>

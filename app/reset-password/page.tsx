@@ -62,8 +62,13 @@ function ResetPasswordContent() {
       } else {
         setError(result.message);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to reset password');
+    } catch (err: any) {
+      // Extract error message from GraphQL response
+      const graphqlError = err?.graphQLErrors?.[0]?.message
+        || err?.networkError?.result?.errors?.[0]?.message
+        || err?.message
+        || 'Failed to reset password';
+      setError(graphqlError);
     }
   };
 

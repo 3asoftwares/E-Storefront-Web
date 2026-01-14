@@ -40,15 +40,26 @@ export default function GoogleSignInButton({
   const router = useRouter();
   const { googleAuth, isLoading, error } = useGoogleAuth();
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const handleCredentialResponse = useCallback(
     async (response: any) => {
       try {
-        await googleAuth({ idToken: response.credential });
+        setAuthError(null);
+        const result = await googleAuth({ idToken: response.credential });
+
+        // Check if user has customer role - only customers can use the storefront
+        if (result?.user?.role && result.user.role !== 'customer') {
+          setAuthError('Access denied. Only customer accounts can access the storefront.');
+          onError?.(new Error('Access denied. Only customer accounts can access the storefront.'));
+          return;
+        }
+
         onSuccess?.();
         router.push(redirectTo);
       } catch (err: any) {
         console.error('Google auth error:', err);
+        setAuthError(err.message || 'Google authentication failed');
         onError?.(err);
       }
     },
@@ -112,9 +123,11 @@ export default function GoogleSignInButton({
     }
   }, [isScriptLoaded, handleCredentialResponse, text, theme, size, width]);
 
-  if (error) {
+  if (error || authError) {
     return (
-      <div className="text-error text-sm text-center">Google sign-in failed. Please try again.</div>
+      <div className="text-red-600 text-sm text-center p-3 bg-red-50 rounded-lg border border-red-200">
+        {authError || 'Google sign-in failed. Please try again.'}
+      </div>
     );
   }
 

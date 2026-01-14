@@ -79,7 +79,12 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       setShowCancelConfirm(false);
       showToast('Order cancelled successfully', 'success');
     } catch (error: any) {
-      showToast(error.message || 'Failed to cancel order', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to cancel order';
+      showToast(graphqlError, 'error');
     }
   };
 

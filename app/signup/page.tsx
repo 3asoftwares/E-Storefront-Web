@@ -18,10 +18,53 @@ export default function SignupPage() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear field error when user starts typing
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors: typeof fieldErrors = {};
+
+    if (!formData.name.trim()) {
+      errors.name = 'Full name is required';
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      errors.password = 'Password must contain uppercase, lowercase, and number';
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +72,7 @@ export default function SignupPage() {
     setError('');
     setSuccess('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (!validateForm()) {
       return;
     }
 
@@ -42,14 +84,18 @@ export default function SignupPage() {
       });
       setSuccess('Account created! Redirecting to home...');
       setTimeout(() => router.push('/'), 2000);
-    } catch (err) {
-      setError(registerError?.message || (err instanceof Error ? err.message : 'Signup failed'));
+    } catch (err: any) {
+      const graphqlError = err?.graphQLErrors?.[0]?.message
+        || err?.networkError?.result?.errors?.[0]?.message
+        || err?.message
+        || 'Signup failed';
+      setError(graphqlError);
     }
   };
 
-  return (
+  return (  
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-6xl">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left side - Branding */}
@@ -98,46 +144,58 @@ export default function SignupPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  label="Full Name"
-                  placeholder="John Doe"
-                />
-                <Input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  label="Email Address"
-                  placeholder="your@email.com"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    label="Full Name"
+                    placeholder="John Doe"
+                    error={fieldErrors.name}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    label="Email Address"
+                    placeholder="your@email.com"
+                    error={fieldErrors.email}
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  label="Password"
-                  placeholder="••••••••"
-                />
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  label="Confirm Password"
-                  placeholder="••••••••"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <Input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    label="Password"
+                    placeholder="••••••••"
+                    error={fieldErrors.password}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    label="Confirm Password"
+                    placeholder="••••••••"
+                    error={fieldErrors.confirmPassword}
+                  />
+                </div>
               </div>
 
               <Button disabled={isLoading} onClick={handleSubmit}>

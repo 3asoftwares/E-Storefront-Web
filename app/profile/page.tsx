@@ -20,6 +20,9 @@ import {
   faSpinner,
   faTrash,
   faStar,
+  faTicket,
+  faClock,
+  faComment,
 } from '@fortawesome/free-solid-svg-icons';
 import { PageHeader } from '@/components';
 import { useSendVerificationEmail, useVerifyEmail } from '@/lib/hooks/useEmailVerification';
@@ -32,6 +35,12 @@ import {
   useSetDefaultAddress,
   type Address,
 } from '@/lib/hooks/useAddresses';
+import {
+  useMyTickets,
+  useCreateTicket,
+  type Ticket,
+  type CreateTicketInput,
+} from '@/lib/hooks/useTickets';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -53,7 +62,19 @@ export default function ProfilePage() {
   const { mutateAsync: setDefaultAddressMutation, isPending: settingDefault } =
     useSetDefaultAddress();
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'wishlist'>('profile');
+  // Ticket hooks
+  const [ticketPage, setTicketPage] = useState(1);
+  const { data: ticketsData, isLoading: ticketsLoading } = useMyTickets(ticketPage, 10);
+  const { mutateAsync: createTicketMutation, isPending: creatingTicket } = useCreateTicket();
+  const [isCreatingTicket, setIsCreatingTicket] = useState(false);
+  const [newTicket, setNewTicket] = useState<Partial<CreateTicketInput>>({
+    subject: '',
+    description: '',
+    category: 'general',
+    priority: 'medium',
+  });
+
+  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'wishlist' | 'tickets'>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -101,9 +122,14 @@ export default function ProfilePage() {
         setVerificationMessage({ type: 'error', text: result.message });
       }
     } catch (error: any) {
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to send verification email';
       setVerificationMessage({
         type: 'error',
-        text: error.message || 'Failed to send verification email',
+        text: graphqlError,
       });
     }
   };
@@ -145,9 +171,14 @@ export default function ProfilePage() {
         setProfileMessage({ type: 'error', text: result.message || 'Failed to update profile' });
       }
     } catch (error: any) {
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to update profile';
       setProfileMessage({
         type: 'error',
-        text: error.message || 'Failed to update profile',
+        text: graphqlError,
       });
     } finally {
       setLoading(false);
@@ -181,7 +212,12 @@ export default function ProfilePage() {
         showToast(result?.message || 'Failed to add address', 'error');
       }
     } catch (error: any) {
-      showToast(error.message || 'Failed to add address', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to add address';
+      showToast(graphqlError, 'error');
     }
   };
 
@@ -196,7 +232,12 @@ export default function ProfilePage() {
         showToast(result?.message || 'Failed to delete address', 'error');
       }
     } catch (error: any) {
-      showToast(error.message || 'Failed to delete address', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to delete address';
+      showToast(graphqlError, 'error');
     }
   };
 
@@ -209,7 +250,12 @@ export default function ProfilePage() {
         showToast(result?.message || 'Failed to set default address', 'error');
       }
     } catch (error: any) {
-      showToast(error.message || 'Failed to set default address', 'error');
+      // Extract error message from GraphQL response
+      const graphqlError = error?.graphQLErrors?.[0]?.message
+        || error?.networkError?.result?.errors?.[0]?.message
+        || error?.message
+        || 'Failed to set default address';
+      showToast(graphqlError, 'error');
     }
   };
 
@@ -264,6 +310,16 @@ export default function ProfilePage() {
                 >
                   <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
                   Wishlist
+                </button>
+                <button
+                  onClick={() => setActiveTab('tickets')}
+                  className={`px-6 py-4 text-left font-semibold transition flex items-center gap-3 ${activeTab === 'tickets'
+                    ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900 border-l-4 border-gray-900'
+                    : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                >
+                  <FontAwesomeIcon icon={faTicket} className="w-5 h-5" />
+                  Support Tickets
                 </button>
               </nav>
             </div>
@@ -752,6 +808,259 @@ export default function ProfilePage() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'tickets' && (
+              <div className="bg-white shadow-xl p-8 border border-gray-200">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Support Tickets</h2>
+                  {!isCreatingTicket && (
+                    <Button
+                      onClick={() => setIsCreatingTicket(true)}
+                      variant="primary"
+                      size="md"
+                      fullWidth={false}
+                      className="flex items-center gap-2"
+                    >
+                      <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+                      Create Ticket
+                    </Button>
+                  )}
+                </div>
+
+                {isCreatingTicket && (
+                  <div className="mb-8 p-6 bg-gray-50 rounded-lg border-2 border-gray-300">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Create New Ticket</h3>
+                    <div className="space-y-4">
+                      <Input
+                        size="md"
+                        type="text"
+                        placeholder="Subject *"
+                        value={newTicket.subject || ''}
+                        onChange={(e: any) =>
+                          setNewTicket({ ...newTicket, subject: e.target.value })
+                        }
+                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                          <select
+                            value={newTicket.category || 'general'}
+                            onChange={(e) =>
+                              setNewTicket({ ...newTicket, category: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            <option value="general">General</option>
+                            <option value="order">Order Issue</option>
+                            <option value="billing">Billing</option>
+                            <option value="technical">Technical</option>
+                            <option value="account">Account</option>
+                            <option value="feature">Feature Request</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                          <select
+                            value={newTicket.priority || 'medium'}
+                            onChange={(e) =>
+                              setNewTicket({ ...newTicket, priority: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                        <textarea
+                          placeholder="Describe your issue in detail..."
+                          value={newTicket.description || ''}
+                          onChange={(e) =>
+                            setNewTicket({ ...newTicket, description: e.target.value })
+                          }
+                          rows={5}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div className="flex gap-3 pt-4">
+                        <Button
+                          onClick={async () => {
+                            if (!newTicket.subject || !newTicket.description) {
+                              showToast('Please fill in subject and description', 'error');
+                              return;
+                            }
+                            try {
+                              await createTicketMutation({
+                                subject: newTicket.subject,
+                                description: newTicket.description,
+                                category: newTicket.category || 'general',
+                                priority: newTicket.priority || 'medium',
+                                customerName: userProfile?.name || '',
+                                customerEmail: userProfile?.email || '',
+                                customerId: userProfile?.id,
+                              });
+                              setNewTicket({ subject: '', description: '', category: 'general', priority: 'medium' });
+                              setIsCreatingTicket(false);
+                              showToast('Ticket created successfully!', 'success');
+                            } catch (error: any) {
+                              // Extract error message from GraphQL response
+                              const graphqlError = error?.graphQLErrors?.[0]?.message
+                                || error?.networkError?.result?.errors?.[0]?.message
+                                || error?.message
+                                || 'Failed to create ticket';
+                              showToast(graphqlError, 'error');
+                            }
+                          }}
+                          disabled={creatingTicket}
+                          className="flex-1"
+                        >
+                          {creatingTicket ? (
+                            <>
+                              <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin mr-2" />
+                              Creating...
+                            </>
+                          ) : (
+                            'Create Ticket'
+                          )}
+                        </Button>
+                        <Button
+                          onClick={() => setIsCreatingTicket(false)}
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {ticketsLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <FontAwesomeIcon icon={faSpinner} className="w-8 h-8 animate-spin text-indigo-600" />
+                    <span className="ml-3 text-gray-600">Loading tickets...</span>
+                  </div>
+                ) : ticketsData?.tickets && ticketsData.tickets.length > 0 ? (
+                  <div className="space-y-4">
+                    <p className="text-gray-600 mb-4">
+                      {ticketsData.pagination.total} ticket(s) found
+                    </p>
+                    {ticketsData.tickets.map((ticket: Ticket) => (
+                      <div
+                        key={ticket.id}
+                        className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-xs font-mono text-gray-500">
+                                #{ticket.ticketId}
+                              </span>
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${ticket.status === 'open'
+                                  ? 'bg-green-100 text-green-800'
+                                  : ticket.status === 'in_progress'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : ticket.status === 'pending'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : ticket.status === 'resolved'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : 'bg-gray-100 text-gray-800'
+                                  }`}
+                              >
+                                {ticket.status.replace('_', ' ')}
+                              </span>
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${ticket.priority === 'urgent'
+                                  ? 'bg-red-100 text-red-800'
+                                  : ticket.priority === 'high'
+                                    ? 'bg-orange-100 text-orange-800'
+                                    : ticket.priority === 'medium'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : 'bg-gray-100 text-gray-800'
+                                  }`}
+                              >
+                                {ticket.priority}
+                              </span>
+                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                {ticket.category}
+                              </span>
+                            </div>
+                            <h4 className="font-semibold text-gray-900 mb-1">{ticket.subject}</h4>
+                            <p className="text-gray-600 text-sm line-clamp-2">{ticket.description}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                          <div className="flex items-center text-xs text-gray-500">
+                            <FontAwesomeIcon icon={faClock} className="w-3 h-3 mr-1" />
+                            {new Date(ticket.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </div>
+                          {ticket.resolution && (
+                            <span className="text-xs text-green-600 flex items-center gap-1">
+                              <FontAwesomeIcon icon={faCheckCircle} className="w-3 h-3" />
+                              Resolved
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Pagination */}
+                    {ticketsData.pagination.pages > 1 && (
+                      <div className="flex justify-center gap-2 pt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setTicketPage((p) => Math.max(1, p - 1))}
+                          disabled={ticketPage === 1}
+                        >
+                          Previous
+                        </Button>
+                        <span className="flex items-center px-4 text-sm text-gray-600">
+                          Page {ticketPage} of {ticketsData.pagination.pages}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setTicketPage((p) => Math.min(ticketsData.pagination.pages, p + 1))}
+                          disabled={ticketPage >= ticketsData.pagination.pages}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="inline-block p-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-6">
+                      <FontAwesomeIcon icon={faTicket} className="w-16 h-16 text-gray-700" />
+                    </div>
+                    <p className="text-gray-700 mb-4 text-lg">
+                      No support tickets yet. Need help with something?
+                    </p>
+                    <Button
+                      onClick={() => setIsCreatingTicket(true)}
+                      variant="primary"
+                      size="lg"
+                      fullWidth={false}
+                    >
+                      Create Your First Ticket
+                    </Button>
                   </div>
                 )}
               </div>

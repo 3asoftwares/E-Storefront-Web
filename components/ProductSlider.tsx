@@ -87,7 +87,7 @@ function ProductSliderComponent({
     <div className="relative">
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-out"
+          className="flex transition-transform duration-500 ease-out px-6 py-5"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
