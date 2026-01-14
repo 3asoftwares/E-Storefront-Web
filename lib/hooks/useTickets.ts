@@ -77,7 +77,7 @@ export interface AddTicketCommentResponse {
   addTicketComment: Ticket;
 }
 
-export function useMyTickets(page: number = 1, limit: number = 10) {
+export function useMyTickets(page: number = 1, limit: number = 10, enabled: boolean = true) {
   return useQuery({
     queryKey: ['myTickets', page, limit],
     queryFn: async () => {
@@ -89,7 +89,7 @@ export function useMyTickets(page: number = 1, limit: number = 10) {
 
       return data.myTickets;
     },
-    enabled: !!getAccessToken(),
+    enabled: enabled && !!getAccessToken(),
     staleTime: 1000 * 30,
   });
 }

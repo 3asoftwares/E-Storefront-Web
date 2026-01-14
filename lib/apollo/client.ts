@@ -1,13 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink, from, ApolloLink } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
-import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev';
-import { getAccessToken, clearAuth, Logger } from '@3asoftwares/utils/client';
+import { getAccessToken } from '@3asoftwares/utils/client';
 
-// Load Apollo Client error messages in development
-if (process.env.NEXT_PUBLIC_ENV !== 'production') {
-  loadDevMessages();
-  loadErrorMessages();
-}
 const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:4000/graphql';
 
 const httpLink = new HttpLink({
@@ -28,35 +21,8 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path, extensions }) => {
-      Logger.error(
-        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
-          locations
-        )}, Path: ${path}`,
-        undefined,
-        'Apollo'
-      );
-
-      // Handle authentication errors
-      if (extensions?.code === 'UNAUTHENTICATED') {
-        if (typeof window !== 'undefined') {
-          clearAuth();
-        }
-        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
-        }
-      }
-    });
-  }
-
-  if (networkError) {
-  }
-});
-
 export const apolloClient = new ApolloClient({
-  link: from([errorLink, authLink, httpLink]),
+  link: from([authLink, httpLink]),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {

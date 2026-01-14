@@ -62,9 +62,11 @@ export default function ProfilePage() {
   const { mutateAsync: setDefaultAddressMutation, isPending: settingDefault } =
     useSetDefaultAddress();
 
+  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'wishlist' | 'tickets'>('profile');
+
   // Ticket hooks
   const [ticketPage, setTicketPage] = useState(1);
-  const { data: ticketsData, isLoading: ticketsLoading } = useMyTickets(ticketPage, 10);
+  const { data: ticketsData, isLoading: ticketsLoading } = useMyTickets(ticketPage, 10, activeTab === 'tickets');
   const { mutateAsync: createTicketMutation, isPending: creatingTicket } = useCreateTicket();
   const [isCreatingTicket, setIsCreatingTicket] = useState(false);
   const [newTicket, setNewTicket] = useState<Partial<CreateTicketInput>>({
@@ -74,7 +76,6 @@ export default function ProfilePage() {
     priority: 'medium',
   });
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'addresses' | 'wishlist' | 'tickets'>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [loading, setLoading] = useState(false);
