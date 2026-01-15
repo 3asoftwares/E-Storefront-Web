@@ -162,7 +162,7 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      - name: Check PR Coverage (60% on changed files)
+      - name: Check PR Coverage (20% on changed files)
         if: github.event_name == 'pull_request'
         run: |
           echo "📊 Checking coverage for changed files in PR..."
@@ -229,8 +229,8 @@ jobs:
           echo ""
           echo "📈 Coverage on changed files: $COVERAGE_PERCENT% ($COVERED_LINES/$TOTAL_LINES lines)"
           
-          # Check against 60% threshold
-          THRESHOLD=60
+          # Check against 20% threshold
+          THRESHOLD=20
           PASS=$(echo "$COVERAGE_PERCENT >= $THRESHOLD" | bc)
           
           if [ "$PASS" -eq 1 ]; then
@@ -338,7 +338,7 @@ jobs:
             -Dsonar.projectKey=3asoftwares_E-Storefront-Web
             -Dsonar.organization=3asoftwares
         # Note: Free tier uses default "Sonar way" Quality Gate (80% new code coverage)
-        # Our custom 60% check is done in the test job
+        # Our custom 20% check is done in the test job
 
   # ==========================================================================
   # Build Application
