@@ -6,11 +6,13 @@ import { getCurrentUser, storeAuth, clearAuth } from '@3asoftwares/utils/client'
 // Mock the cart store
 const mockItems = [{ id: 'prod1', name: 'Test', price: 10, quantity: 1 }];
 const mockWishlist = [{ productId: 'wish1' }];
+const mockSetUserProfile = jest.fn();
 
 jest.mock('@/store/cartStore', () => ({
   useCartStore: jest.fn(() => ({
     items: mockItems,
     wishlist: mockWishlist,
+    setUserProfile: mockSetUserProfile,
   })),
 }));
 
@@ -34,6 +36,7 @@ describe('Header Component', () => {
     (useCartStore as unknown as jest.Mock).mockReturnValue({
       items: mockItems,
       wishlist: mockWishlist,
+      setUserProfile: mockSetUserProfile,
     });
   });
 
