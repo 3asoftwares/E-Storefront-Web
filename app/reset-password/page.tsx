@@ -207,7 +207,7 @@ function ResetPasswordContent() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   label="New Password"
-                  placeholder="••••••••"
+                  placeholder="Enter new password"
                 />
                 <button
                   type="button"
@@ -225,7 +225,7 @@ function ResetPasswordContent() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   label="Confirm New Password"
-                  placeholder="••••••••"
+                  placeholder="Confirm new password"
                 />
                 <button
                   type="button"

@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     if (!email.trim()) {
       errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (email.length > 254 || !/^[^\s@]{1,64}@[^\s@]{1,253}\.[^\s@]{2,63}$/.test(email)) {
       errors.email = 'Please enter a valid email address';
     }
 
@@ -145,7 +145,7 @@ export default function LoginPage() {
                   }}
                   required
                   label="Password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   error={fieldErrors.password}
                 />
               </div>

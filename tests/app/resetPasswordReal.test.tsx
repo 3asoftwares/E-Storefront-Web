@@ -112,7 +112,8 @@ describe('ResetPasswordPage', () => {
         mockSearchParamsGet.mockReturnValue('valid-token');
 
         render(<ResetPasswordPage />);
-        expect(screen.getAllByPlaceholderText('••••••••')).toHaveLength(2);
+        expect(screen.getByPlaceholderText('Enter new password')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Confirm new password')).toBeInTheDocument();
     });
 
     it('should show error when passwords do not match', async () => {
@@ -121,9 +122,8 @@ describe('ResetPasswordPage', () => {
 
         render(<ResetPasswordPage />);
 
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        fireEvent.change(passwordInputs[0], { target: { value: 'Password123' } });
-        fireEvent.change(passwordInputs[1], { target: { value: 'Different123' } });
+        fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Confirm new password'), { target: { value: 'Different123' } });
 
         const form = document.querySelector('form');
         if (form) {
@@ -140,9 +140,8 @@ describe('ResetPasswordPage', () => {
 
         render(<ResetPasswordPage />);
 
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        fireEvent.change(passwordInputs[0], { target: { value: 'short' } });
-        fireEvent.change(passwordInputs[1], { target: { value: 'short' } });
+        fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'short' } });
+        fireEvent.change(screen.getByPlaceholderText('Confirm new password'), { target: { value: 'short' } });
 
         const form = document.querySelector('form');
         if (form) {
@@ -160,9 +159,8 @@ describe('ResetPasswordPage', () => {
 
         render(<ResetPasswordPage />);
 
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        fireEvent.change(passwordInputs[0], { target: { value: 'Password123' } });
-        fireEvent.change(passwordInputs[1], { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Confirm new password'), { target: { value: 'Password123' } });
 
         const form = document.querySelector('form');
         if (form) {
@@ -184,9 +182,8 @@ describe('ResetPasswordPage', () => {
 
         render(<ResetPasswordPage />);
 
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        fireEvent.change(passwordInputs[0], { target: { value: 'Password123' } });
-        fireEvent.change(passwordInputs[1], { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Confirm new password'), { target: { value: 'Password123' } });
 
         const form = document.querySelector('form');
         if (form) {
@@ -228,9 +225,8 @@ describe('ResetPasswordPage', () => {
 
         render(<ResetPasswordPage />);
 
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        fireEvent.change(passwordInputs[0], { target: { value: 'Password123' } });
-        fireEvent.change(passwordInputs[1], { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Enter new password'), { target: { value: 'Password123' } });
+        fireEvent.change(screen.getByPlaceholderText('Confirm new password'), { target: { value: 'Password123' } });
 
         const form = document.querySelector('form');
         if (form) {

@@ -84,8 +84,9 @@ describe('SignupPage', () => {
         render(<SignupPage />);
         expect(screen.getByPlaceholderText('John Doe')).toBeInTheDocument();
         expect(screen.getByPlaceholderText('your@email.com')).toBeInTheDocument();
-        // Password fields use bullet placeholders
-        expect(screen.getAllByPlaceholderText('••••••••')).toHaveLength(2);
+        // Password fields
+        expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Confirm your password')).toBeInTheDocument();
     });
 
     it('should render sign up button', () => {
@@ -109,9 +110,8 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        const passwordInput = passwordInputs[0];
-        const confirmInput = passwordInputs[1];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
+        const confirmInput = screen.getByPlaceholderText('Confirm your password');
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });
         fireEvent.change(emailInput, { target: { value: 'test@example.com', name: 'email' } });
@@ -156,7 +156,7 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getAllByPlaceholderText('••••••••')[0];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const submitButton = screen.getByRole('button', { name: 'Create Account' });
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });
@@ -174,9 +174,8 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        const passwordInput = passwordInputs[0];
-        const confirmInput = passwordInputs[1];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
+        const confirmInput = screen.getByPlaceholderText('Confirm your password');
         const submitButton = screen.getByRole('button', { name: 'Create Account' });
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });
@@ -197,9 +196,8 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        const passwordInput = passwordInputs[0];
-        const confirmInput = passwordInputs[1];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
+        const confirmInput = screen.getByPlaceholderText('Confirm your password');
         const submitButton = screen.getByRole('button', { name: 'Create Account' });
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });
@@ -225,9 +223,8 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        const passwordInput = passwordInputs[0];
-        const confirmInput = passwordInputs[1];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
+        const confirmInput = screen.getByPlaceholderText('Confirm your password');
         const submitButton = screen.getByRole('button', { name: 'Create Account' });
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });
@@ -259,9 +256,8 @@ describe('SignupPage', () => {
 
         const nameInput = screen.getByPlaceholderText('John Doe');
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
-        const passwordInput = passwordInputs[0];
-        const confirmInput = passwordInputs[1];
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
+        const confirmInput = screen.getByPlaceholderText('Confirm your password');
         const submitButton = screen.getByRole('button', { name: 'Create Account' });
 
         fireEvent.change(nameInput, { target: { value: 'Test User', name: 'name' } });

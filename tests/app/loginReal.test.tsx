@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 
 // Mock useRouter and useSearchParams
@@ -94,7 +94,7 @@ describe('LoginPage', () => {
 
     it('should render password input', () => {
         render(<LoginPage />);
-        expect(screen.getByPlaceholderText('••••••••')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument();
     });
 
     it('should render Sign In button', () => {
@@ -128,7 +128,7 @@ describe('LoginPage', () => {
 
     it('should update password on change', () => {
         render(<LoginPage />);
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
 
         fireEvent.change(passwordInput, { target: { value: 'password123' } });
 
@@ -138,7 +138,7 @@ describe('LoginPage', () => {
     it('should show validation error for empty email', async () => {
         render(<LoginPage />);
 
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(passwordInput, { target: { value: 'password123' } });
@@ -153,7 +153,7 @@ describe('LoginPage', () => {
         render(<LoginPage />);
 
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(emailInput, { target: { value: 'invalidemail' } });
@@ -169,7 +169,7 @@ describe('LoginPage', () => {
         render(<LoginPage />);
 
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -187,7 +187,7 @@ describe('LoginPage', () => {
         render(<LoginPage />);
 
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -209,7 +209,7 @@ describe('LoginPage', () => {
         render(<LoginPage />);
 
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -228,7 +228,7 @@ describe('LoginPage', () => {
         render(<LoginPage />);
 
         const emailInput = screen.getByPlaceholderText('your@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const passwordInput = screen.getByPlaceholderText('Enter your password');
         const signInButton = screen.getByRole('button', { name: 'Sign In' });
 
         fireEvent.change(emailInput, { target: { value: 'admin@example.com' } });
