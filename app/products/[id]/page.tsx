@@ -99,26 +99,26 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex gap-2 text-sm text-gray-600">
-        <a href="/" className="hover:text-blue-600">
+      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-3 xs:py-4 flex gap-2 text-xs xs:text-sm text-gray-600 overflow-x-auto">
+        <a href="/" className="hover:text-blue-600 whitespace-nowrap">
           Home
         </a>
         <span>/</span>
-        <a href="/products" className="hover:text-blue-600">
+        <a href="/products" className="hover:text-blue-600 whitespace-nowrap">
           Products
         </a>
         <span>/</span>
-        <span>{product?.category || 'Product'}</span>
+        <span className="truncate">{product?.category || 'Product'}</span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-lg shadow-lg p-8">
+      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-6 sm:gap-8 bg-white rounded-lg xs:rounded-xl shadow-md xs:shadow-lg p-4 xs:p-5 sm:p-6 md:p-8">
           <div>
-            <div className="mb-4 relative">
+            <div className="mb-3 xs:mb-4 relative">
               <img
                 src={images[selectedImage]}
                 alt={product?.name || 'Product'}
-                className="w-full h-96 object-cover rounded-lg bg-gray-200"
+                className="w-full h-64 xs:h-72 sm:h-80 md:h-96 object-cover rounded-lg bg-gray-200"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const parent = e.currentTarget.parentElement;
@@ -153,10 +153,10 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
 
-            <div className="flex items-center mb-4">
-              <div className="flex text-yellow-400 text-lg">
+            <div className="flex items-center mb-3 xs:mb-4 flex-wrap gap-1">
+              <div className="flex text-yellow-400 text-base xs:text-lg">
                 {[...Array(5)].map((_, i) => (
                   <FontAwesomeIcon
                     key={i}
@@ -167,30 +167,30 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-gray-600 ml-2">
+              <span className="text-gray-600 ml-2 text-sm xs:text-base">
                 {(product.rating || 0).toFixed(1)} ({product.reviewCount || 0} reviews)
               </span>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4 xs:mb-6">
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-2xl xs:text-3xl font-bold text-gray-900">
                   {formatPrice(product.price)}
                 </span>
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4 xs:mb-6">
               {product.stock > 0 ? (
-                <div className="text-green-600 font-semibold">
+                <div className="text-green-600 font-semibold text-sm xs:text-base">
                   {product.stock > 10 ? 'In Stock' : `Only ${product.stock} left in stock`}
                 </div>
               ) : (
-                <div className="text-red-600 font-semibold">Out of Stock</div>
+                  <div className="text-red-600 font-semibold text-sm xs:text-base">Out of Stock</div>
               )}
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4 xs:mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
               <div className="flex items-center gap-2">
                 <Button
@@ -199,6 +199,7 @@ export default function ProductDetailPage() {
                   variant="outline"
                   size="md"
                   fullWidth={false}
+                  className="min-h-[44px] min-w-[44px]"
                 >
                   <FontAwesomeIcon icon={faMinus} />
                 </Button>
@@ -209,7 +210,7 @@ export default function ProductDetailPage() {
                   min="1"
                   size="md"
                   max={product.stock}
-                  className="w-16 text-center !mb-0"
+                  className="w-14 xs:w-16 text-center !mb-0"
                 />
                 <Button
                   onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
@@ -217,32 +218,33 @@ export default function ProductDetailPage() {
                   variant="outline"
                   size="md"
                   fullWidth={false}
+                  className="min-h-[44px] min-w-[44px]"
                 >
                   <FontAwesomeIcon icon={faPlus} />
                 </Button>
               </div>
             </div>
 
-            <div className="flex gap-3 mb-8">
-              <Button onClick={handleAddToCart} disabled={product.stock === 0} className="flex-1">
+            <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 mb-6 xs:mb-8">
+              <Button onClick={handleAddToCart} disabled={product.stock === 0} className="flex-1 min-h-[48px]">
                 Add to Cart
               </Button>
               <Button
                 onClick={handleWishlistToggle}
                 variant={isInWishlist(product.id) ? 'secondary' : 'outline'}
-                className="flex-1"
+                className="flex-1 min-h-[48px]"
               >
                 {isInWishlist(product.id) ? '♥ Wishlist' : '♡ Add to Wishlist'}
               </Button>
             </div>
 
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-700 line-clamp-4">{product.description}</p>
-              <p className="text-gray-700 line-clamp-4">{product.tags.join(', ')}</p>
+            <div className="border-t pt-4 xs:pt-6">
+              <h3 className="text-base xs:text-lg font-semibold text-gray-900 mb-2">Description</h3>
+              <p className="text-gray-700 text-sm xs:text-base line-clamp-4">{product.description}</p>
+              <p className="text-gray-700 text-sm xs:text-base line-clamp-4 mt-2">{product.tags.join(', ')}</p>
             </div>
 
-            <div className="border-t mt-6 pt-6 text-sm text-gray-600">
+            <div className="border-t mt-4 xs:mt-6 pt-4 xs:pt-6 text-xs xs:text-sm text-gray-600">
               <p>
                 Category: <span className="text-gray-900 font-medium">{product.category}</span>
               </p>
@@ -256,7 +258,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-8 xs:mt-10 sm:mt-12">
           <ProductReviews
             productId={product.id}
             averageRating={product.rating || 0}

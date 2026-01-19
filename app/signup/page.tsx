@@ -99,18 +99,18 @@ export default function SignupPage() {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left side - Branding */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-700 px-8 py-12 lg:py-16 text-center lg:text-left flex flex-col justify-center">
-              <div className="flex items-center justify-center lg:justify-start gap-3 mb-6">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-700 px-5 xs:px-6 sm:px-8 py-8 xs:py-10 sm:py-12 lg:py-16 text-center lg:text-left flex flex-col justify-center">
+              <div className="flex items-center justify-center lg:justify-start gap-2 xs:gap-3 mb-4 xs:mb-5 sm:mb-6">
                 <img
                   src={process.env.NEXT_PUBLIC_LOGO_URL}
                   alt="3A Softwares"
-                  className="w-12 h-12 object-contain"
+                  className="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 object-contain"
                 />
-                <h1 className="text-3xl font-bold text-white">
+                <h1 className="text-2xl xs:text-2xl sm:text-3xl font-bold text-white">
                   3A Softwares
                 </h1>
               </div>
-              <p className="text-gray-300 text-lg mb-8">Create your account to get started</p>
+              <p className="text-gray-300 text-base xs:text-lg mb-5 xs:mb-6 sm:mb-8">Create your account to get started</p>
               <div className="hidden lg:block space-y-4 text-gray-400">
                 <div className="flex items-center gap-3">
                   <span className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center text-white">✓</span>
@@ -128,23 +128,23 @@ export default function SignupPage() {
             </div>
 
             {/* Right side - Form */}
-            <div className="px-8 py-10 lg:py-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
-              <p className="text-gray-600 mb-6">Fill in your details to get started</p>
+            <div className="px-5 xs:px-6 sm:px-8 py-6 xs:py-8 sm:py-10 lg:py-12">
+              <h2 className="text-xl xs:text-2xl font-bold text-gray-900 mb-1 xs:mb-2">Create Account</h2>
+              <p className="text-gray-600 mb-4 xs:mb-6 text-sm xs:text-base">Fill in your details to get started</p>
               
               {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                <div className="mb-4 xs:mb-6 p-3 xs:p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-xs xs:text-sm font-medium">{error}</p>
                 </div>
               )}
 
               {success && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-green-700 text-sm font-medium">{success}</p>
+                <div className="mb-4 xs:mb-6 p-3 xs:p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-green-700 text-xs xs:text-sm font-medium">{success}</p>
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 mb-3 xs:mb-4">
                 <div>
                   <Input
                     type="text"
@@ -171,7 +171,7 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4 mb-3 xs:mb-4">
                 <div>
                   <Input
                     type="password"
@@ -198,11 +198,11 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <Button disabled={isLoading} onClick={handleSubmit}>
+              <Button disabled={isLoading} onClick={handleSubmit} className="min-h-[48px]">
                 {isLoading ? 'Creating account...' : 'Create Account'}
               </Button>
 
-              <div className="relative my-6">
+              <div className="relative my-4 xs:my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-200"></div>
                 </div>

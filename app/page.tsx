@@ -120,7 +120,7 @@ export default function HomePage() {
         </section>
 
         {/* Featured Products Section */}
-        <section className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200/50 py-12 xs:py-16 sm:py-20">
+        <section className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200/50 py-8 xs:py-16 sm:py-20">
           <div className="max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8">
             <SectionHeader
               badge={{
@@ -161,8 +161,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="bg-white py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="bg-white py-10 xs:py-14 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8">
             <SectionHeader
               badge={{
                 icon: <FontAwesomeIcon icon={faStar} className="mr-2" />,
@@ -178,11 +178,11 @@ export default function HomePage() {
             {isLoadingNew ? (
               <LoadingProductGrid count={6} variant="compact" />
             ) : newArrivals.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-8 xs:py-12 text-gray-500">
                 <p>No new arrivals at the moment.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                  <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4">
                 {newArrivals.slice(0, 6).map((product: any) => (
                   <ProductCardCompact key={product.id} product={product} />
                 ))}
@@ -192,14 +192,14 @@ export default function HomePage() {
         </section>
 
         {recentlyViewed.length > 0 && (
-          <section className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200/50 py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-3">Recently Viewed</h2>
-                <p className="text-lg text-gray-600">Continue where you left off</p>
+          <section className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200/50 py-10 xs:py-14 sm:py-20">
+            <div className="max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8">
+              <div className="mb-6 xs:mb-8 sm:mb-12 text-center">
+                <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900 mb-2 xs:mb-3">Recently Viewed</h2>
+                <p className="text-sm xs:text-base sm:text-lg text-gray-600">Continue where you left off</p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4">
                 {recentlyViewed.slice(0, 6).map((item) => (
                   <ProductCardCompact
                     key={item.productId}
@@ -216,26 +216,26 @@ export default function HomePage() {
           </section>
         )}
 
-        <section className="bg-white border-t border-gray-200 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop by Category</h2>
-              <p className="text-lg text-gray-600">Find exactly what you're looking for</p>
+        <section className="bg-white border-t border-gray-200 py-10 xs:py-14 sm:py-20">
+          <div className="max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8">
+            <div className="mb-6 xs:mb-8 sm:mb-12 text-center">
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900 mb-2 xs:mb-3">Shop by Category</h2>
+              <p className="text-sm xs:text-base sm:text-lg text-gray-600">Find exactly what you're looking for</p>
             </div>
 
             {isLoadingCategories ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="h-40 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg animate-pulse"
+                    className="h-28 xs:h-32 sm:h-40 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg animate-pulse"
                   />
                 ))}
               </div>
             ) : categories.length === 0 ? (
-              <div className="text-center text-gray-500 py-12">No categories available</div>
+                <div className="text-center text-gray-500 py-8 xs:py-12">No categories available</div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
                 {categories.slice(0, 4).map((category: any, index: number) => {
                   const categoryConfig: Record<number, { icon: any; color: string }> = {
                     0: { icon: faLaptop, color: 'from-orange-100 to-orange-50' },
@@ -253,12 +253,12 @@ export default function HomePage() {
                       href={`/products?category=${encodeURIComponent(
                         category.slug || category.name
                       )}`}
-                      className={`bg-gradient-to-br ${config.color} rounded-lg p-8 text-center hover:shadow-xl transition-all transform hover:scale-105 group`}
+                      className={`bg-gradient-to-br ${config.color} rounded-lg xs:rounded-xl p-4 xs:p-6 sm:p-8 text-center hover:shadow-xl transition-all transform pointer:hover:scale-105 active:scale-95 group min-h-[100px] xs:min-h-[120px] sm:min-h-[140px] flex flex-col items-center justify-center`}
                     >
-                      <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
+                      <div className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl mb-2 xs:mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                         <FontAwesomeIcon icon={config.icon} className="text-gray-700" />
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900">{category.name}</h3>
+                      <h3 className="text-xs xs:text-sm sm:text-base md:text-lg font-semibold text-gray-900 line-clamp-2">{category.name}</h3>
                     </Link>
                   );
                 })}
@@ -267,14 +267,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="bg-gradient-to-r from-gray-900 to-black text-white py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
-            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+        <section className="bg-gradient-to-r from-gray-900 to-black text-white py-10 xs:py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 xs:px-5 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold mb-2 xs:mb-3 sm:mb-4">Join Our Community</h2>
+            <p className="text-gray-300 mb-5 xs:mb-6 sm:mb-8 max-w-2xl mx-auto text-sm xs:text-base">
               Get exclusive deals, early access to new products, and special offers delivered to
               your inbox.
             </p>
-            <Button variant="secondary" size="lg" fullWidth={false}>
+            <Button variant="secondary" size="lg" fullWidth={false} className="min-h-[48px]">
               Subscribe Now
             </Button>
           </div>

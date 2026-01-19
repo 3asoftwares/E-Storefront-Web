@@ -23,7 +23,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 }) => {
   return (
       <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 pt-4 xs:pt-6 sm:pt-8">
-        <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 xs:gap-4 mb-2">
+      <div className="flex xs:items-center justify-between gap-2 xs:gap-4 mb-2">
           <div className="flex items-center gap-2 xs:gap-3 sm:gap-4">
             <div className={`p-2.5 xs:p-3 sm:p-4 bg-gradient-to-br ${iconGradient} rounded-xl xs:rounded-2xl shadow-lg flex-shrink-0`}>
               <FontAwesomeIcon icon={icon} className="w-4 h-4 xs:w-5 xs:h-5 text-white" />

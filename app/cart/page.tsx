@@ -64,7 +64,7 @@ export default function CartPage() {
           titleGradient="from-gray-900 to-black"
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 xs:py-8 sm:py-12">
           {items.length === 0 ? (
             <EmptyState
               icon={faShoppingCart}
@@ -165,7 +165,7 @@ export default function CartPage() {
                     </div>
                   ))}
 
-                  <div className="p-6 bg-gray-50 border-t border-gray-100 text-right">
+                    <div className="p-4 xs:p-5 sm:p-6 bg-gray-50 border-t border-gray-100 text-right">
                     <Button
                       onClick={() => {
                         if (confirm('Are you sure you want to clear the cart?')) {
@@ -176,7 +176,7 @@ export default function CartPage() {
                       variant="ghost"
                       size="sm"
                       fullWidth={false}
-                      className="text-red-600 hover:text-red-700 text-sm font-medium hover:underline"
+                        className="text-red-600 hover:text-red-700 text-xs xs:text-sm font-medium hover:underline min-h-[44px]"
                     >
                       Clear Cart
                     </Button>
