@@ -1,6 +1,6 @@
 # =============================================================================
 # Continuous Integration Workflow
-# Runs on: Push to main/develop, Pull Requests
+# Runs on: Pull Requests to main, Push to main (merge)
 # =============================================================================
 
 name: CI
@@ -9,13 +9,10 @@ on:
   push:
     branches:
       - main
-      - develop
-      - 'feature/**'
-      - 'release/**'
   pull_request:
     branches:
       - main
-      - develop
+    types: [opened, synchronize, reopened]
 
 env:
   NODE_VERSION: '20'

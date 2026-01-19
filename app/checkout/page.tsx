@@ -335,14 +335,14 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md text-center border border-gray-200">
-          <div className="inline-block p-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6">
-            <FontAwesomeIcon icon={faShoppingCart} className="w-16 h-16 text-indigo-600" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30 flex items-center justify-center px-4">
+        <div className="bg-white rounded-xl xs:rounded-2xl shadow-lg xs:shadow-2xl p-6 xs:p-8 sm:p-12 max-w-md w-full text-center border border-gray-200">
+          <div className="inline-block p-4 xs:p-5 sm:p-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-4 xs:mb-5 sm:mb-6">
+            <FontAwesomeIcon icon={faShoppingCart} className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 text-indigo-600" />
           </div>
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-3">Cart is Empty</h1>
-          <p className="text-gray-600 mb-8 text-lg">Add items to your cart before checking out.</p>
-          <Button variant="ghost" onClick={() => router.push('/products')}>
+          <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2 xs:mb-3">Cart is Empty</h1>
+          <p className="text-gray-600 mb-6 xs:mb-8 text-sm xs:text-base sm:text-lg">Add items to your cart before checking out.</p>
+          <Button variant="ghost" onClick={() => router.push('/products')} className="min-h-[48px]">
             Continue Shopping
           </Button>
         </div>
@@ -359,11 +359,11 @@ export default function CheckoutPage() {
         iconGradient="from-gray-700 to-gray-900"
         titleGradient="from-gray-900 to-black"
       />
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 xs:gap-5 sm:gap-6 lg:gap-8">
+          <div className="lg:col-span-2 space-y-4 xs:space-y-5 sm:space-y-6">
+            <div className="bg-white rounded-xl xs:rounded-2xl shadow-lg xs:shadow-xl p-4 xs:p-5 sm:p-6 border border-gray-200">
+              <h2 className="text-lg xs:text-xl font-bold text-gray-900 mb-4 xs:mb-5 flex items-center gap-2">
                 <FontAwesomeIcon icon={faShippingFast} className="text-indigo-600" />
                 Shipping Address
               </h2>
@@ -443,8 +443,8 @@ export default function CheckoutPage() {
               </Button>
 
               {useNewAddress && (
-                <div className="space-y-4 pt-4 border-t">
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3 xs:space-y-4 pt-4 border-t">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
                     <Input
                       size="md"
                       type="text"
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
                     value={newAddress.street}
                     onChange={(e: any) => setNewAddress({ ...newAddress, street: e.target.value })}
                   />
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
                     <Input
                       type="text"
                       placeholder="City"
@@ -488,7 +488,7 @@ export default function CheckoutPage() {
                       onChange={(e: any) => setNewAddress({ ...newAddress, state: e.target.value })}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
                     <Input
                       type="text"
                       placeholder="ZIP Code"
@@ -545,7 +545,7 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
               <Radio
                 name="delivery"
                 label="Delivery Method"
@@ -567,7 +567,7 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
               <Radio
                 name="payment"
                 label="Payment Method"
@@ -594,36 +594,36 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Notes</h2>
+            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
+              <h2 className="text-base xs:text-lg font-semibold text-gray-900 mb-3 xs:mb-4">Order Notes</h2>
               <textarea
                 value={orderNotes}
                 onChange={(e: any) => setOrderNotes(e.target.value)}
                 placeholder="Add any special instructions for delivery..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 xs:px-4 xs:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                 rows={3}
               />
             </div>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h2>
+            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6 lg:sticky lg:top-24">
+              <h2 className="text-base xs:text-lg font-semibold text-gray-900 mb-4 xs:mb-6">Order Summary</h2>
 
-              <div className="space-y-2 mb-6 pb-6 border-b max-h-48 overflow-y-auto">
+              <div className="space-y-2 mb-4 xs:mb-6 pb-4 xs:pb-6 border-b max-h-36 xs:max-h-48 overflow-y-auto">
                 {items.map((item: any) => (
-                  <div key={item.id} className="flex justify-between text-sm text-gray-700">
-                    <span>
+                  <div key={item.id} className="flex justify-between text-xs xs:text-sm text-gray-700">
+                    <span className="line-clamp-1 flex-1 mr-2">
                       {item.name} x {item.quantity}
                     </span>
-                    <span className="font-medium">{formatPrice(item.price * item.quantity)}</span>
+                    <span className="font-medium whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
 
               {/* Coupon Code Section */}
-              <div className="mb-6 pb-6 border-b">
-                <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+              <div className="mb-4 xs:mb-6 pb-4 xs:pb-6 border-b">
+                <h3 className="text-xs xs:text-sm font-medium text-gray-700 mb-2 xs:mb-3 flex items-center gap-2">
                   <FontAwesomeIcon icon={faTag} className="text-indigo-600" />
                   Have a coupon?
                 </h3>
@@ -688,7 +688,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-3 mb-6 pb-6 border-b text-sm">
+              <div className="space-y-2 xs:space-y-3 mb-4 xs:mb-6 pb-4 xs:pb-6 border-b text-xs xs:text-sm">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
@@ -716,18 +716,18 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <div className="flex justify-between items-baseline mb-6">
-                <span className="font-semibold text-gray-700">Total</span>
-                <span className="text-3xl font-bold text-gray-900">{formatPrice(total)}</span>
+              <div className="flex justify-between items-baseline mb-4 xs:mb-6">
+                <span className="font-semibold text-gray-700 text-sm xs:text-base">Total</span>
+                <span className="text-2xl xs:text-3xl font-bold text-gray-900">{formatPrice(total)}</span>
               </div>
 
-              <Button onClick={handleSubmitOrder} disabled={loading}>
+              <Button onClick={handleSubmitOrder} disabled={loading} className="min-h-[48px]">
                 {loading ? 'Processing...' : 'Place Order'}
               </Button>
 
               <Button
                 variant="ghost"
-                className="mt-2 !no-underline"
+                className="mt-2 !no-underline min-h-[44px]"
                 onClick={() => router.push('/cart')}
               >
                 ← Back to Cart

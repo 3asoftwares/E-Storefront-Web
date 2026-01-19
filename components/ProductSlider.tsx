@@ -72,7 +72,7 @@ function ProductSliderComponent({
       Array.from({ length: Math.ceil(totalItems / responsive) }).map((_, slideIndex) => (
         <div
           key={slideIndex}
-          className="w-full flex-shrink-0 grid gap-6"
+          className="w-full flex-shrink-0 grid gap-3 xs:gap-4 sm:gap-5 md:gap-6 px-1 xs:px-2 sm:px-0"
           style={{
             gridTemplateColumns: `repeat(${responsive}, minmax(0, 1fr))`,
           }}
@@ -84,10 +84,10 @@ function ProductSliderComponent({
   );
 
   return (
-    <div className="relative">
+    <div className="relative px-2 xs:px-4 sm:px-6 md:px-8">
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-out px-6 py-5"
+          className="flex transition-transform duration-500 ease-out py-3 xs:py-4 sm:py-5"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -100,30 +100,30 @@ function ProductSliderComponent({
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 xs:-translate-x-2 sm:-translate-x-4 md:-translate-x-6 w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110 active:scale-95"
             aria-label="Previous slide"
           >
-            <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4 md:w-5 md:h-5" />
+            <FontAwesomeIcon icon={faChevronLeft} className="w-3 h-3 xs:w-4 xs:h-4 md:w-5 md:h-5" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 xs:translate-x-2 sm:translate-x-4 md:translate-x-6 w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110 active:scale-95"
             aria-label="Next slide"
           >
-            <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4 md:w-5 md:h-5" />
+            <FontAwesomeIcon icon={faChevronRight} className="w-3 h-3 xs:w-4 xs:h-4 md:w-5 md:h-5" />
           </button>
         </>
       )}
 
       {maxIndex > 0 && (
-        <div className="flex justify-center gap-1 mt-8">
+        <div className="flex justify-center gap-1.5 xs:gap-2 mt-4 xs:mt-6 sm:mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all min-h-4 min-w-4 ${
+              className={`transition-all min-h-[10px] min-w-[10px] xs:min-h-3 xs:min-w-3 sm:min-h-4 sm:min-w-4 ${
                 index === currentIndex
-                ? 'bg-gradient-to-r from-black to-gray-400'
+                ? 'bg-gradient-to-r from-black to-gray-400 scale-110'
                 : 'bg-gray-300 hover:bg-gray-400'
               } rounded-full`}
               aria-label={`Go to slide ${index + 1}`}

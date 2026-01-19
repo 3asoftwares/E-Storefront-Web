@@ -144,36 +144,36 @@ export default function FAQPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       <div className="bg-white/95 backdrop-blur-lg border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col items-center w-full">
+        <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 xs:py-8">
+          <div className="flex flex-col items-center w-full text-center">
             <img
               src={process.env.NEXT_PUBLIC_LOGO_URL}
               alt={'3A Softwares'}
-              className="object-contain w-28"
+              className="object-contain w-20 xs:w-24 sm:w-28"
             />
-            <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-300 mb-4">
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-300 mb-3 xs:mb-4">
               Frequently Asked Questions
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base xs:text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-2">
               Find answers to common questions about orders, shipping, returns, and more
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl shadow-xl p-4 mb-8 border border-gray-200">
+      <div className="max-w-4xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 xs:py-8">
+        <div className="bg-white rounded-xl xs:rounded-2xl shadow-xl p-3 xs:p-4 mb-6 xs:mb-8 border border-gray-200">
           <Input
             type="text"
             placeholder="Search for answers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            leftIcon={<FontAwesomeIcon icon={faSearch} className="text-gray-400 w-5 h-5" />}
+            leftIcon={<FontAwesomeIcon icon={faSearch} className="text-gray-400 w-4 h-4 xs:w-5 xs:h-5" />}
             className="mb-0"
           />
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-2 xs:gap-3 mb-6 xs:mb-8">
           {categories.map((category) => (
             <Button
               key={category}
@@ -188,38 +188,38 @@ export default function FAQPage() {
         </div>
 
         {filteredFAQs.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-200">
-            <FontAwesomeIcon icon={faQuestionCircle} className="w-16 h-16 text-gray-400 mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">No results found</h3>
-            <p className="text-gray-600">Try adjusting your search or category filter</p>
+          <div className="bg-white rounded-xl xs:rounded-2xl shadow-xl p-8 xs:p-10 sm:p-12 text-center border border-gray-200">
+            <FontAwesomeIcon icon={faQuestionCircle} className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 text-gray-400 mb-3 xs:mb-4" />
+            <h3 className="text-lg xs:text-xl font-bold text-gray-900 mb-2">No results found</h3>
+            <p className="text-gray-600 text-sm xs:text-base">Try adjusting your search or category filter</p>
           </div>
         ) : (
-          <div className="space-y-4">
+            <div className="space-y-3 xs:space-y-4">
             {filteredFAQs.map((faq) => (
               <div
                 key={faq.id}
-                className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white rounded-lg xs:rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
               >
                 <button
                   onClick={() => toggleFAQ(faq.id)}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full px-4 xs:px-5 sm:px-6 py-4 xs:py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[56px] xs:min-h-[64px]"
                 >
-                  <div className="flex-1">
-                    <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full mb-2">
+                  <div className="flex-1 pr-2 xs:pr-3">
+                    <span className="inline-block px-2 xs:px-3 py-0.5 xs:py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full mb-1.5 xs:mb-2">
                       {faq.category}
                     </span>
-                    <h3 className="text-lg font-bold text-gray-900">{faq.question}</h3>
+                    <h3 className="text-base xs:text-lg font-bold text-gray-900">{faq.question}</h3>
                   </div>
                   <FontAwesomeIcon
                     icon={openId === faq.id ? faChevronUp : faChevronDown}
-                    className={`w-5 h-5 text-gray-400 ml-4 transition-transform ${
+                    className={`w-4 h-4 xs:w-5 xs:h-5 text-gray-400 ml-2 xs:ml-4 transition-transform flex-shrink-0 ${
                       openId === faq.id ? 'transform rotate-180' : ''
                     }`}
                   />
                 </button>
                 {openId === faq.id && (
-                  <div className="px-6 py-5 bg-gray-50 border-t border-gray-200">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  <div className="px-4 xs:px-5 sm:px-6 py-4 xs:py-5 bg-gray-50 border-t border-gray-200">
+                    <p className="text-gray-600 leading-relaxed text-sm xs:text-base">{faq.answer}</p>
                   </div>
                 )}
               </div>
@@ -227,9 +227,9 @@ export default function FAQPage() {
           </div>
         )}
 
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-xl p-8 mt-12 text-white text-center">
-          <h2 className="text-2xl font-bold mb-3">Still have questions?</h2>
-          <p className="text-purple-100 mb-6">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl xs:rounded-2xl shadow-xl p-5 xs:p-6 sm:p-8 mt-8 xs:mt-10 sm:mt-12 text-white text-center">
+          <h2 className="text-xl xs:text-2xl font-bold mb-2 xs:mb-3">Still have questions?</h2>
+          <p className="text-purple-100 mb-4 xs:mb-6 text-sm xs:text-base">
             Our customer support team is always here to help you!
           </p>
           <Button
@@ -237,6 +237,7 @@ export default function FAQPage() {
             variant="secondary"
             size="lg"
             fullWidth={false}
+            className="min-h-[48px]"
           >
             Contact Support
           </Button>

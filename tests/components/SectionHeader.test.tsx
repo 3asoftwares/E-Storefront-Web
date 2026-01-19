@@ -97,6 +97,6 @@ describe('SectionHeader Component', () => {
     const { container } = render(<SectionHeader title="Featured Products" />);
 
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('mb-12');
+    expect(wrapper).toHaveClass('mb-6');
   });
 });

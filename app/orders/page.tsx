@@ -91,7 +91,7 @@ export default function OrdersPage() {
         titleGradient="from-gray-900 to-black"
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
         {orders.length === 0 ? (
           <EmptyState
             icon={faShoppingBag}
@@ -103,19 +103,19 @@ export default function OrdersPage() {
             iconBgColor="from-gray-100 to-gray-200"
           />
         ) : (
-          <div className="space-y-4">
+            <div className="space-y-3 xs:space-y-4">
             {orders.map((order: any) => (
               <div
                 key={order.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                className="bg-white rounded-lg xs:rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
               >
-                <div className="p-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <div className="p-4 xs:p-5 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 xs:mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-base xs:text-lg font-semibold text-gray-900">
                         Order #{order.orderNumber}
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-xs xs:text-sm text-gray-600 mt-1">
                         {new Date(order.createdAt).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -139,32 +139,32 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 pb-6 border-b">
+                  <div className="grid grid-cols-2 xs:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 mb-4 xs:mb-5 sm:mb-6 pb-4 xs:pb-5 sm:pb-6 border-b">
                     <div>
-                      <p className="text-sm text-gray-600">Items</p>
-                      <p className="text-lg font-semibold text-gray-900">
+                      <p className="text-xs xs:text-sm text-gray-600">Items</p>
+                      <p className="text-base xs:text-lg font-semibold text-gray-900">
                         {order.items.reduce((sum: number, item: any) => sum + item.quantity, 0)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Total Amount</p>
-                      <p className="text-lg font-semibold text-gray-900">
+                      <p className="text-xs xs:text-sm text-gray-600">Total Amount</p>
+                      <p className="text-base xs:text-lg font-semibold text-gray-900">
                         {formatPrice(order.total)}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Order Date</p>
-                      <p className="text-lg font-semibold text-gray-900">
+                    <div className="col-span-2 xs:col-span-1">
+                      <p className="text-xs xs:text-sm text-gray-600">Order Date</p>
+                      <p className="text-base xs:text-lg font-semibold text-gray-900">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <p className="text-sm font-semibold text-gray-900 mb-3">
+                  <div className="mb-4 xs:mb-5 sm:mb-6">
+                    <p className="text-xs xs:text-sm font-semibold text-gray-900 mb-2 xs:mb-3">
                       Items ({order.items.length})
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2 xs:gap-3">
                       {order.items.slice(0, 3).map((item: any, idx: number) => (
                         <div
                           key={idx}
@@ -182,10 +182,10 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
                     <Button
                       onClick={() => router.push(`/orders/${order.id}`)}
-                      className="flex-1"
+                      className="flex-1 min-h-[44px]"
                       size="sm"
                     >
                       View Details
