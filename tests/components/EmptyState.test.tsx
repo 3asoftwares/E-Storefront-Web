@@ -58,6 +58,6 @@ describe('EmptyState Component', () => {
     const { container } = render(<EmptyState {...defaultProps} />);
 
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('bg-white', 'rounded-2xl', 'shadow-2xl');
+    expect(wrapper).toHaveClass('bg-white', 'rounded-xl', 'shadow-lg');
   });
 });

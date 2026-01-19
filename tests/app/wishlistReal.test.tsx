@@ -122,14 +122,14 @@ describe('WishlistPage', () => {
 
         it('should render Add to Cart buttons', () => {
             render(<WishlistPage />);
-            const addToCartButtons = screen.getAllByRole('button', { name: /Add to Cart/i });
+            const addToCartButtons = screen.getAllByRole('button', { name: /^Add$/i });
             expect(addToCartButtons.length).toBe(2);
         });
 
         it('should call addItem when Add to Cart is clicked', () => {
             render(<WishlistPage />);
 
-            const addToCartButtons = screen.getAllByRole('button', { name: /Add to Cart/i });
+            const addToCartButtons = screen.getAllByRole('button', { name: /^Add$/i });
             fireEvent.click(addToCartButtons[0]);
 
             expect(mockAddItem).toHaveBeenCalledWith({
@@ -146,15 +146,16 @@ describe('WishlistPage', () => {
         it('should call removeFromWishlist when remove button is clicked', () => {
             render(<WishlistPage />);
 
-            // The heart button for removing (second button for each item)
+            // The heart button for removing (button with no text, after Add button)
             const buttons = screen.getAllByRole('button');
-            // Find buttons that only have heart icon (no text)
-            const removeButtons = buttons.filter(btn =>
-                btn.textContent?.trim() === '' || !btn.textContent?.includes('Add to Cart')
-            );
+            // Find buttons that only have heart icon (empty text content)
+            const removeButtons = buttons.filter(btn => {
+                const text = btn.textContent?.trim() || '';
+                return text === '' && !btn.textContent?.includes('Add All');
+            });
 
-            // Click the first remove button (not the Add All to Cart)
-            if (removeButtons.length > 1) {
+            // Click the first remove button
+            if (removeButtons.length > 0) {
                 fireEvent.click(removeButtons[0]);
                 expect(mockRemoveFromWishlist).toHaveBeenCalled();
                 expect(mockShowToast).toHaveBeenCalledWith('Removed from wishlist', 'info');
