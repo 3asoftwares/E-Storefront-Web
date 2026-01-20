@@ -69,23 +69,13 @@ describe('PageHeader Component', () => {
 
   describe('Custom Gradients', () => {
     it('should apply custom icon gradient', () => {
-      render(
-        <PageHeader
-          {...defaultProps}
-          iconGradient="from-red-500 to-orange-500"
-        />
-      );
+      render(<PageHeader {...defaultProps} iconGradient="from-red-500 to-orange-500" />);
       // Component should render without errors with custom gradient
       expect(screen.getByText('Test Title')).toBeInTheDocument();
     });
 
     it('should apply custom title gradient', () => {
-      render(
-        <PageHeader
-          {...defaultProps}
-          titleGradient="from-green-600 to-blue-600"
-        />
-      );
+      render(<PageHeader {...defaultProps} titleGradient="from-green-600 to-blue-600" />);
       expect(screen.getByText('Test Title')).toBeInTheDocument();
     });
   });

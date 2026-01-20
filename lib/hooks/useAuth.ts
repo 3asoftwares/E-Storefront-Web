@@ -1,5 +1,3 @@
-
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { apolloClient } from '../apollo/client';
@@ -12,7 +10,11 @@ import type {
   RegisterResponse,
   MeResponse,
 } from '@3asoftwares/types';
-import { storeAuth, clearAuth as clearAuthCookies, getAccessToken } from '@3asoftwares/utils/client';
+import {
+  storeAuth,
+  clearAuth as clearAuthCookies,
+  getAccessToken,
+} from '@3asoftwares/utils/client';
 
 // Helper function to extract error message from GraphQL errors
 const extractErrorMessage = (error: any, fallback: string): string => {
@@ -55,11 +57,12 @@ export function useLogin() {
   const mutation = useMutation({
     mutationFn: (input: LoginInput) =>
       handleMutation(
-        () => apolloClient.mutate<LoginResponse>({
-          mutation: GQL_QUERIES.LOGIN_MUTATION,
-          variables: { input },
-          errorPolicy: 'all',
-        }),
+        () =>
+          apolloClient.mutate<LoginResponse>({
+            mutation: GQL_QUERIES.LOGIN_MUTATION,
+            variables: { input },
+            errorPolicy: 'all',
+          }),
         (data) => data.login,
         'Login failed'
       ),
@@ -91,11 +94,12 @@ export function useRegister() {
   const mutation = useMutation({
     mutationFn: (input: RegisterInput) =>
       handleMutation(
-        () => apolloClient.mutate<RegisterResponse>({
-          mutation: GQL_QUERIES.REGISTER_MUTATION,
-          variables: { input },
-          errorPolicy: 'all',
-        }),
+        () =>
+          apolloClient.mutate<RegisterResponse>({
+            mutation: GQL_QUERIES.REGISTER_MUTATION,
+            variables: { input },
+            errorPolicy: 'all',
+          }),
         (data) => data.register,
         'Registration failed'
       ),
@@ -139,11 +143,12 @@ export function useGoogleAuth() {
   const mutation = useMutation({
     mutationFn: (input: GoogleAuthInput) =>
       handleMutation(
-        () => apolloClient.mutate<GoogleAuthResponse>({
-          mutation: GQL_QUERIES.GOOGLE_AUTH_MUTATION,
-          variables: { input },
-          errorPolicy: 'all',
-        }),
+        () =>
+          apolloClient.mutate<GoogleAuthResponse>({
+            mutation: GQL_QUERIES.GOOGLE_AUTH_MUTATION,
+            variables: { input },
+            errorPolicy: 'all',
+          }),
         (data) => data.googleAuth,
         'Google authentication failed'
       ),
@@ -176,10 +181,11 @@ export function useLogout() {
   const mutation = useMutation({
     mutationFn: () =>
       handleMutation(
-        () => apolloClient.mutate({
-          mutation: GQL_QUERIES.LOGOUT_MUTATION,
-          errorPolicy: 'all',
-        }),
+        () =>
+          apolloClient.mutate({
+            mutation: GQL_QUERIES.LOGOUT_MUTATION,
+            errorPolicy: 'all',
+          }),
         () => true,
         'Logout failed'
       ),

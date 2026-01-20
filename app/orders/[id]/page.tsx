@@ -44,18 +44,18 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Order Not Found</h1>
-          <p className="text-gray-600 mb-6">We couldn't find this order.</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="max-w-md rounded-lg bg-white p-8 text-center shadow-md">
+          <h1 className="mb-2 text-2xl font-bold text-gray-900">Order Not Found</h1>
+          <p className="mb-6 text-gray-600">We couldn&apos;t find this order.</p>
           <Button onClick={() => router.push('/orders')} variant="primary" size="md">
             Back to Orders
           </Button>
@@ -80,18 +80,19 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       showToast('Order cancelled successfully', 'success');
     } catch (error: any) {
       // Extract error message from GraphQL response
-      const graphqlError = error?.graphQLErrors?.[0]?.message
-        || error?.networkError?.result?.errors?.[0]?.message
-        || error?.message
-        || 'Failed to cancel order';
+      const graphqlError =
+        error?.graphQLErrors?.[0]?.message ||
+        error?.networkError?.result?.errors?.[0]?.message ||
+        error?.message ||
+        'Failed to cancel order';
       showToast(graphqlError, 'error');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow-sm border-b">
-        <div className="flex justify-between max-w-7xl mx-auto px-4 py-6">
+      <div className="border-b bg-white shadow-sm">
+        <div className="mx-auto flex max-w-7xl justify-between px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900">Order #{order.orderNumber}</h1>
           <Button
             onClick={() => router.push('/orders')}
@@ -105,35 +106,35 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Status</h2>
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="space-y-8 lg:col-span-2">
+            <div className="rounded-lg bg-white p-8 shadow-md">
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Order Status</h2>
               <div className="relative">
                 <div className="flex items-center">
                   {STATUS_STEPS.map((step, idx) => (
-                    <div key={step.key} className="flex-1 relative">
+                    <div key={step.key} className="relative flex-1">
                       <div className="flex flex-col items-center">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition ${
+                          className={`flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold transition ${
                             isCompleted(idx)
                               ? 'bg-green-500 text-white'
                               : idx === currentStepIndex
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-300 text-gray-600'
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-300 text-gray-600'
                           }`}
                         >
                           <FontAwesomeIcon icon={step.icon} />
                         </div>
-                        <p className="text-sm font-medium text-gray-900 mt-2 text-center">
+                        <p className="mt-2 text-center text-sm font-medium text-gray-900">
                           {step.label}
                         </p>
                       </div>
 
                       {idx < STATUS_STEPS.length - 1 && (
                         <div
-                          className={`absolute top-6 left-1/2 right-0 h-0.5 ${
+                          className={`absolute left-1/2 right-0 top-6 h-0.5 ${
                             isCompleted(idx + 1) ? 'bg-green-500' : 'bg-gray-300'
                           }`}
                           style={{ width: 'calc(100% - 24px)' }}
@@ -145,7 +146,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               </div>
 
               {order.estimatedDelivery && (
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
                   <p className="text-sm text-blue-800">
                     <span className="font-semibold">Estimated Delivery: </span>
                     {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
@@ -158,16 +159,16 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Items</h2>
+            <div className="rounded-lg bg-white p-8 shadow-md">
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Order Items</h2>
 
               <div className="space-y-4">
                 {order.items.map((item: any, idx: number) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg"
+                    className="flex items-center gap-4 rounded-lg border border-gray-200 p-4"
                   >
-                    <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-2xl">
+                    <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-200 text-2xl">
                       📦
                     </div>
 
@@ -188,16 +189,18 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Shipping Address</h2>
+            <div className="rounded-lg bg-white p-8 shadow-md">
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Shipping Address</h2>
 
-              <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="rounded-lg bg-gray-50 p-4">
                 {order.shippingAddress.name && (
                   <p className="font-semibold text-gray-900">{order.shippingAddress.name}</p>
                 )}
                 {(order.shippingAddress.mobile || order.shippingAddress.email) && (
-                  <p className="text-gray-600 text-sm mb-2">
-                    {order.shippingAddress.mobile && <span className="mr-3">📱 {order.shippingAddress.mobile}</span>}
+                  <p className="mb-2 text-sm text-gray-600">
+                    {order.shippingAddress.mobile && (
+                      <span className="mr-3">📱 {order.shippingAddress.mobile}</span>
+                    )}
                     {order.shippingAddress.email && <span>✉️ {order.shippingAddress.email}</span>}
                   </p>
                 )}
@@ -212,10 +215,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h2>
+            <div className="sticky top-24 rounded-lg bg-white p-6 shadow-md">
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Order Summary</h2>
 
-              <div className="space-y-3 mb-6 pb-6 border-b">
+              <div className="mb-6 space-y-3 border-b pb-6">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
                   <span>{formatPrice(order.subtotal)}</span>
@@ -233,7 +236,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                     <span>
                       Discount
                       {order.couponCode && (
-                        <span className="ml-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                        <span className="ml-1 rounded bg-green-100 px-2 py-0.5 text-xs text-green-700">
                           {order.couponCode}
                         </span>
                       )}
@@ -243,25 +246,25 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                 )}
               </div>
 
-              <div className="flex justify-between items-baseline mb-6">
+              <div className="mb-6 flex items-baseline justify-between">
                 <span className="font-semibold text-gray-700">Total</span>
                 <span className="text-2xl font-bold text-gray-900">{formatPrice(order.total)}</span>
               </div>
 
-              <div className="space-y-3 text-sm text-gray-600 pt-6 border-t">
+              <div className="space-y-3 border-t pt-6 text-sm text-gray-600">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase">Order Date</p>
+                  <p className="text-xs uppercase text-gray-500">Order Date</p>
                   <p className="font-medium text-gray-900">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 uppercase">Order Number</p>
+                  <p className="text-xs uppercase text-gray-500">Order Number</p>
                   <p className="font-medium text-gray-900">{order.orderNumber}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 uppercase">Status</p>
-                  <p className="font-medium text-gray-900 capitalize">{order.orderStatus}</p>
+                  <p className="text-xs uppercase text-gray-500">Status</p>
+                  <p className="font-medium capitalize text-gray-900">{order.orderStatus}</p>
                 </div>
               </div>
 
@@ -271,9 +274,9 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                 </Button>
 
                 {isCancelled ? (
-                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
                     <div className="flex items-center justify-center gap-2 text-red-700">
-                      <FontAwesomeIcon icon={faBan} className="w-4 h-4" />
+                      <FontAwesomeIcon icon={faBan} className="h-4 w-4" />
                       <span className="font-medium">Order Cancelled</span>
                     </div>
                   </div>
@@ -284,7 +287,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                         onClick={() => setShowCancelConfirm(true)}
                         variant="primary"
                         size="md"
-                        className="!text-red-600 !hover:text-red-700 !bg-red-100 !hover:bg-red-50 !border-red-600"
+                        className="!hover:text-red-700 !hover:bg-red-50 !border-red-600 !bg-red-100 !text-red-600"
                       >
                         <FontAwesomeIcon icon={faBan} className="" />
                         Cancel Order

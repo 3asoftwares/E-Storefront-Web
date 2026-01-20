@@ -103,7 +103,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           />
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="absolute right-3 top-2.5 size-4 text-gray-400 pointer-events-none"
+            className="pointer-events-none absolute right-3 top-2.5 size-4 text-gray-400"
           />
         </div>
         <div className="mb-4 max-h-64 overflow-y-auto rounded-lg border border-gray-200">
@@ -136,7 +136,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         {showCustomInput && searchTerm && !categoryExists && (
           <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
             <p className="mb-2 text-xs font-medium text-blue-900">
-              Create new category: <span className="font-semibold">"{searchTerm}"</span>
+              Create new category: <span className="font-semibold">&quot;{searchTerm}&quot;</span>
             </p>
             <div className="flex gap-2">
               <Input

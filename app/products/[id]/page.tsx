@@ -37,18 +37,20 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 max-w-md">
-          <h1 className="text-xl font-semibold text-red-800 mb-2">Product Not Found</h1>
-          <p className="text-red-700 mb-4">The product you're looking for doesn't exist.</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="max-w-md rounded-lg border border-red-200 bg-red-50 p-8">
+          <h1 className="mb-2 text-xl font-semibold text-red-800">Product Not Found</h1>
+          <p className="mb-4 text-red-700">
+            The product you&apos;re looking for doesn&apos;t exist.
+          </p>
           <Button
             variant="ghost"
             className="!no-underline"
@@ -99,26 +101,27 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-3 xs:py-4 flex gap-2 text-xs xs:text-sm text-gray-600 overflow-x-auto">
-        <a href="/" className="hover:text-blue-600 whitespace-nowrap">
+      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-3 py-3 text-xs text-gray-600 xs:px-4 xs:py-4 xs:text-sm sm:px-6 lg:px-8">
+        <a href="/" className="whitespace-nowrap hover:text-blue-600">
           Home
         </a>
         <span>/</span>
-        <a href="/products" className="hover:text-blue-600 whitespace-nowrap">
+        <a href="/products" className="whitespace-nowrap hover:text-blue-600">
           Products
         </a>
         <span>/</span>
         <span className="truncate">{product?.category || 'Product'}</span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-6 sm:gap-8 bg-white rounded-lg xs:rounded-xl shadow-md xs:shadow-lg p-4 xs:p-5 sm:p-6 md:p-8">
+      <div className="mx-auto max-w-7xl px-3 py-4 xs:px-4 xs:py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="grid grid-cols-1 gap-4 rounded-lg bg-white p-4 shadow-md xs:gap-6 xs:rounded-xl xs:p-5 xs:shadow-lg sm:gap-8 sm:p-6 md:p-8 lg:grid-cols-2">
           <div>
-            <div className="mb-3 xs:mb-4 relative">
+            <div className="relative mb-3 xs:mb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={images[selectedImage]}
                 alt={product?.name || 'Product'}
-                className="w-full h-64 xs:h-72 sm:h-80 md:h-96 object-cover rounded-lg bg-gray-200"
+                className="h-64 w-full rounded-lg bg-gray-200 object-cover xs:h-72 sm:h-80 md:h-96"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const parent = e.currentTarget.parentElement;
@@ -141,11 +144,12 @@ export default function ProductDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`w-16 h-16 rounded border-2 overflow-hidden ${
+                    className={`h-16 w-16 overflow-hidden rounded border-2 ${
                       selectedImage === idx ? 'border-blue-500' : 'border-gray-300'
                     }`}
                   >
-                    <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt={`View ${idx + 1}`} className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -153,10 +157,12 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+            <h1 className="mb-2 text-xl font-bold text-gray-900 xs:text-2xl sm:text-3xl">
+              {product.name}
+            </h1>
 
-            <div className="flex items-center mb-3 xs:mb-4 flex-wrap gap-1">
-              <div className="flex text-yellow-400 text-base xs:text-lg">
+            <div className="mb-3 flex flex-wrap items-center gap-1 xs:mb-4">
+              <div className="flex text-base text-yellow-400 xs:text-lg">
                 {[...Array(5)].map((_, i) => (
                   <FontAwesomeIcon
                     key={i}
@@ -167,14 +173,14 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-gray-600 ml-2 text-sm xs:text-base">
+              <span className="ml-2 text-sm text-gray-600 xs:text-base">
                 {(product.rating || 0).toFixed(1)} ({product.reviewCount || 0} reviews)
               </span>
             </div>
 
             <div className="mb-4 xs:mb-6">
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl xs:text-3xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-gray-900 xs:text-3xl">
                   {formatPrice(product.price)}
                 </span>
               </div>
@@ -182,16 +188,16 @@ export default function ProductDetailPage() {
 
             <div className="mb-4 xs:mb-6">
               {product.stock > 0 ? (
-                <div className="text-green-600 font-semibold text-sm xs:text-base">
+                <div className="text-sm font-semibold text-green-600 xs:text-base">
                   {product.stock > 10 ? 'In Stock' : `Only ${product.stock} left in stock`}
                 </div>
               ) : (
-                  <div className="text-red-600 font-semibold text-sm xs:text-base">Out of Stock</div>
+                <div className="text-sm font-semibold text-red-600 xs:text-base">Out of Stock</div>
               )}
             </div>
 
             <div className="mb-4 xs:mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Quantity</label>
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -210,7 +216,7 @@ export default function ProductDetailPage() {
                   min="1"
                   size="md"
                   max={product.stock}
-                  className="w-14 xs:w-16 text-center !mb-0"
+                  className="!mb-0 w-14 text-center xs:w-16"
                 />
                 <Button
                   onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
@@ -225,32 +231,40 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 mb-6 xs:mb-8">
-              <Button onClick={handleAddToCart} disabled={product.stock === 0} className="flex-1 min-h-[48px]">
+            <div className="mb-6 flex flex-col gap-2 xs:mb-8 xs:flex-row xs:gap-3">
+              <Button
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                className="min-h-[48px] flex-1"
+              >
                 Add to Cart
               </Button>
               <Button
                 onClick={handleWishlistToggle}
                 variant={isInWishlist(product.id) ? 'secondary' : 'outline'}
-                className="flex-1 min-h-[48px]"
+                className="min-h-[48px] flex-1"
               >
                 {isInWishlist(product.id) ? '♥ Wishlist' : '♡ Add to Wishlist'}
               </Button>
             </div>
 
             <div className="border-t pt-4 xs:pt-6">
-              <h3 className="text-base xs:text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-700 text-sm xs:text-base line-clamp-4">{product.description}</p>
-              <p className="text-gray-700 text-sm xs:text-base line-clamp-4 mt-2">{product.tags.join(', ')}</p>
+              <h3 className="mb-2 text-base font-semibold text-gray-900 xs:text-lg">Description</h3>
+              <p className="line-clamp-4 text-sm text-gray-700 xs:text-base">
+                {product.description}
+              </p>
+              <p className="mt-2 line-clamp-4 text-sm text-gray-700 xs:text-base">
+                {product.tags.join(', ')}
+              </p>
             </div>
 
-            <div className="border-t mt-4 xs:mt-6 pt-4 xs:pt-6 text-xs xs:text-sm text-gray-600">
+            <div className="mt-4 border-t pt-4 text-xs text-gray-600 xs:mt-6 xs:pt-6 xs:text-sm">
               <p>
-                Category: <span className="text-gray-900 font-medium">{product.category}</span>
+                Category: <span className="font-medium text-gray-900">{product.category}</span>
               </p>
               <p className="mt-1">
                 Sold by:{' '}
-                <span className="text-gray-900 font-medium">
+                <span className="font-medium text-gray-900">
                   {product.seller?.name || 'Unknown Seller'}
                 </span>
               </p>

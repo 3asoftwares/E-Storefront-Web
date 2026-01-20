@@ -60,7 +60,9 @@ jest.mock('../../app/about/page', () => ({
       </section>
       <section data-testid="contact-cta">
         <h2>Get in Touch</h2>
-        <a href="/contact" data-testid="contact-link">Contact Us</a>
+        <a href="/contact" data-testid="contact-link">
+          Contact Us
+        </a>
       </section>
     </div>
   ),

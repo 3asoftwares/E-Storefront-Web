@@ -68,9 +68,9 @@ describe('CategoryModal Component', () => {
     it('should filter categories based on search term', () => {
       render(<CategoryModal {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText('Search categories...');
-      
+
       fireEvent.change(searchInput, { target: { value: 'elec' } });
-      
+
       expect(screen.getByText('Electronics')).toBeInTheDocument();
       expect(screen.queryByText('Clothing')).not.toBeInTheDocument();
       expect(screen.queryByText('Books')).not.toBeInTheDocument();
@@ -79,9 +79,9 @@ describe('CategoryModal Component', () => {
     it('should filter by description as well', () => {
       render(<CategoryModal {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText('Search categories...');
-      
+
       fireEvent.change(searchInput, { target: { value: 'fashion' } });
-      
+
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.queryByText('Electronics')).not.toBeInTheDocument();
     });
@@ -89,10 +89,10 @@ describe('CategoryModal Component', () => {
     it('should show all categories when search is cleared', () => {
       render(<CategoryModal {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText('Search categories...');
-      
+
       fireEvent.change(searchInput, { target: { value: 'elec' } });
       fireEvent.change(searchInput, { target: { value: '' } });
-      
+
       expect(screen.getByText('Electronics')).toBeInTheDocument();
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.getByText('Books')).toBeInTheDocument();
@@ -141,9 +141,9 @@ describe('CategoryModal Component', () => {
     it('should show custom input option when search has no matches', () => {
       render(<CategoryModal {...defaultProps} />);
       const searchInput = screen.getByPlaceholderText('Search categories...');
-      
+
       fireEvent.change(searchInput, { target: { value: 'NewCategory' } });
-      
+
       // Should show option to create custom category
       expect(screen.queryByText('Electronics')).not.toBeInTheDocument();
     });

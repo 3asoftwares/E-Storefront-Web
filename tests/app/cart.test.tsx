@@ -69,7 +69,9 @@ jest.mock('../../app/cart/page', () => ({
             <span>$377.97</span>
           </div>
           <button data-testid="checkout-button">Proceed to Checkout</button>
-          <a href="/products" data-testid="continue-shopping">Continue Shopping</a>
+          <a href="/products" data-testid="continue-shopping">
+            Continue Shopping
+          </a>
         </div>
       </div>
     </div>

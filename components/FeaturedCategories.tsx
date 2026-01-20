@@ -1,5 +1,3 @@
-
-
 const categories = [
   { name: 'Electronics', image: '/images/electronics.jpg' },
   { name: 'Fitness', image: '/images/fitness.jpg' },
@@ -8,11 +6,12 @@ const categories = [
 ];
 
 export const FeaturedCategories: React.FC = () => (
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+  <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
     {categories.map((cat) => (
-      <div key={cat.name} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-        <img src={cat.image} alt={cat.name} className="w-20 h-20 object-cover mb-2 rounded-full" />
-        <span className="font-semibold text-lg">{cat.name}</span>
+      <div key={cat.name} className="flex flex-col items-center rounded-lg bg-white p-4 shadow">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={cat.image} alt={cat.name} className="mb-2 h-20 w-20 rounded-full object-cover" />
+        <span className="text-lg font-semibold">{cat.name}</span>
       </div>
     ))}
   </div>

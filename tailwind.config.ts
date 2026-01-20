@@ -11,25 +11,25 @@ const config: Config = {
   theme: {
     // Custom breakpoints for better responsive design
     screens: {
-      'xs': '375px',    // Small phones
-      'sm': '640px',    // Large phones / Small tablets
-      'md': '768px',    // Tablets
-      'lg': '1024px',   // Small laptops
-      'xl': '1280px',   // Desktops
-      '2xl': '1536px',  // Large desktops
-      '3xl': '1920px',  // Extra large screens
+      xs: '375px', // Small phones
+      sm: '640px', // Large phones / Small tablets
+      md: '768px', // Tablets
+      lg: '1024px', // Small laptops
+      xl: '1280px', // Desktops
+      '2xl': '1536px', // Large desktops
+      '3xl': '1920px', // Extra large screens
       // Touch-specific breakpoints
-      'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
-      'stylus': { 'raw': '(hover: none) and (pointer: fine)' },
-      'pointer': { 'raw': '(hover: hover) and (pointer: fine)' },
+      touch: { raw: '(hover: none) and (pointer: coarse)' },
+      stylus: { raw: '(hover: none) and (pointer: fine)' },
+      pointer: { raw: '(hover: hover) and (pointer: fine)' },
       // Orientation breakpoints
-      'portrait': { 'raw': '(orientation: portrait)' },
-      'landscape': { 'raw': '(orientation: landscape)' },
+      portrait: { raw: '(orientation: portrait)' },
+      landscape: { raw: '(orientation: landscape)' },
       // Height breakpoints for PWA
-      'short': { 'raw': '(max-height: 600px)' },
-      'tall': { 'raw': '(min-height: 800px)' },
+      short: { raw: '(max-height: 600px)' },
+      tall: { raw: '(min-height: 800px)' },
       // Safe area (for notched devices)
-      'safe': { 'raw': '(env(safe-area-inset-top) > 0px)' },
+      safe: { raw: '(env(safe-area-inset-top) > 0px)' },
     },
     extend: {
       colors: {
@@ -52,7 +52,7 @@ const config: Config = {
       },
       // Touch target sizing
       spacing: {
-        'touch': '44px', // Minimum touch target size
+        touch: '44px', // Minimum touch target size
         'touch-lg': '48px',
         'safe-top': 'env(safe-area-inset-top)',
         'safe-bottom': 'env(safe-area-inset-bottom)',
@@ -60,14 +60,14 @@ const config: Config = {
         'safe-right': 'env(safe-area-inset-right)',
       },
       minHeight: {
-        'touch': '44px',
+        touch: '44px',
         'screen-safe': 'calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))',
       },
       minWidth: {
-        'touch': '44px',
+        touch: '44px',
       },
       padding: {
-        'safe': 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)',
+        safe: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)',
       },
       // Animation for PWA feel
       animation: {

@@ -64,10 +64,11 @@ function ResetPasswordContent() {
       }
     } catch (err: any) {
       // Extract error message from GraphQL response
-      const graphqlError = err?.graphQLErrors?.[0]?.message
-        || err?.networkError?.result?.errors?.[0]?.message
-        || err?.message
-        || 'Failed to reset password';
+      const graphqlError =
+        err?.graphQLErrors?.[0]?.message ||
+        err?.networkError?.result?.errors?.[0]?.message ||
+        err?.message ||
+        'Failed to reset password';
       setError(graphqlError);
     }
   };
@@ -75,11 +76,11 @@ function ResetPasswordContent() {
   // Show loading while validating token
   if (isValidating) {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+          <div className="overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
             <div className="flex flex-col items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+              <div className="mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
               <p className="text-gray-600">Validating reset link...</p>
             </div>
           </div>
@@ -91,23 +92,23 @@ function ResetPasswordContent() {
   // Show error if token is invalid
   if (!token || (!isValidating && !isValid)) {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
             <div className="bg-gradient-to-r from-red-600 to-red-500 px-8 py-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                <FontAwesomeIcon icon={faExclamationTriangle} className="text-white text-3xl" />
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                <FontAwesomeIcon icon={faExclamationTriangle} className="text-3xl text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Invalid Reset Link</h1>
-              <p className="text-red-100 text-sm">This password reset link is invalid or expired</p>
+              <h1 className="mb-2 text-2xl font-bold text-white">Invalid Reset Link</h1>
+              <p className="text-sm text-red-100">This password reset link is invalid or expired</p>
             </div>
 
             <div className="px-8 py-10">
-              <div className="text-center mb-6">
-                <p className="text-gray-600 mb-4">
+              <div className="mb-6 text-center">
+                <p className="mb-4 text-gray-600">
                   The password reset link you clicked is no longer valid. This can happen if:
                 </p>
-                <ul className="text-left text-sm text-gray-500 space-y-2 mb-6">
+                <ul className="mb-6 space-y-2 text-left text-sm text-gray-500">
                   <li>• The link has expired (links are valid for 1 hour)</li>
                   <li>• The link has already been used</li>
                   <li>• The link was copied incorrectly</li>
@@ -137,19 +138,19 @@ function ResetPasswordContent() {
   // Show success message
   if (success) {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
             <div className="bg-gradient-to-r from-green-600 to-green-500 px-8 py-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                <FontAwesomeIcon icon={faCheckCircle} className="text-white text-3xl" />
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Password Reset!</h1>
-              <p className="text-green-100 text-sm">Your password has been successfully changed</p>
+              <h1 className="mb-2 text-2xl font-bold text-white">Password Reset!</h1>
+              <p className="text-sm text-green-100">Your password has been successfully changed</p>
             </div>
 
             <div className="px-8 py-10">
-              <div className="text-center mb-6">
+              <div className="mb-6 text-center">
                 <p className="text-gray-600">
                   You can now log in to your account with your new password.
                 </p>
@@ -169,33 +170,33 @@ function ResetPasswordContent() {
 
   // Show reset password form
   return (
-    <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+    <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
           <div className="bg-gradient-to-r from-gray-900 to-gray-600 px-8 py-10 text-center">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="mb-2 text-3xl font-bold text-white">
               <FontAwesomeIcon icon={faShoppingBag} className="mr-2" />
               3A Softwares
             </h1>
-            <p className="text-blue-100 text-sm">Create a new password</p>
+            <p className="text-sm text-blue-100">Create a new password</p>
           </div>
 
           <div className="px-8 py-10">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
-                <FontAwesomeIcon icon={faLock} className="text-gray-600 text-xl" />
+            <div className="mb-6 text-center">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                <FontAwesomeIcon icon={faLock} className="text-xl text-gray-600" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Reset Password</h2>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">Reset Password</h2>
               {email && (
-                <p className="text-gray-600 text-sm">
+                <p className="text-sm text-gray-600">
                   Creating new password for <strong>{email}</strong>
                 </p>
               )}
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 text-sm font-medium">{error}</p>
+              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                <p className="text-sm font-medium text-red-700">{error}</p>
               </div>
             )}
 
@@ -238,7 +239,7 @@ function ResetPasswordContent() {
 
               <div className="mt-4 text-sm text-gray-500">
                 <p>Password must:</p>
-                <ul className="list-disc list-inside mt-1 space-y-1">
+                <ul className="mt-1 list-inside list-disc space-y-1">
                   <li className={password.length >= 6 ? 'text-green-600' : ''}>
                     Be at least 6 characters
                   </li>
@@ -254,16 +255,16 @@ function ResetPasswordContent() {
                 </ul>
               </div>
 
-              <Button type="submit" disabled={isLoading} className="w-full mt-6">
+              <Button type="submit" disabled={isLoading} className="mt-6 w-full">
                 {isLoading ? 'Resetting...' : 'Reset Password'}
               </Button>
             </form>
           </div>
 
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-100 text-center">
+          <div className="border-t border-gray-100 bg-gray-50 px-8 py-6 text-center">
             <p className="text-sm text-gray-600">
               Remember your password?{' '}
-              <Link href="/login" className="text-gray-600 font-semibold hover:text-gray-900">
+              <Link href="/login" className="font-semibold text-gray-600 hover:text-gray-900">
                 Sign in
               </Link>
             </p>
@@ -278,11 +279,11 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+        <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+            <div className="overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
               <div className="flex flex-col items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+                <div className="mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
                 <p className="text-gray-600">Loading...</p>
               </div>
             </div>

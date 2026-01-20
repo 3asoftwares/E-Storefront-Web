@@ -96,7 +96,7 @@ describe('Recommendations Component', () => {
     it('should have proper image dimensions', () => {
       render(<Recommendations products={mockProducts} />);
       const images = screen.getAllByRole('img');
-      images.forEach(img => {
+      images.forEach((img) => {
         expect(img).toHaveClass('w-20');
         expect(img).toHaveClass('h-20');
       });
@@ -105,7 +105,7 @@ describe('Recommendations Component', () => {
     it('should have object-cover on images', () => {
       render(<Recommendations products={mockProducts} />);
       const images = screen.getAllByRole('img');
-      images.forEach(img => {
+      images.forEach((img) => {
         expect(img).toHaveClass('object-cover');
       });
     });
@@ -113,7 +113,7 @@ describe('Recommendations Component', () => {
     it('should have rounded corners on images', () => {
       render(<Recommendations products={mockProducts} />);
       const images = screen.getAllByRole('img');
-      images.forEach(img => {
+      images.forEach((img) => {
         expect(img).toHaveClass('rounded');
       });
     });
@@ -150,12 +150,14 @@ describe('Recommendations Component', () => {
 
   describe('Many Products', () => {
     it('should render many products correctly', () => {
-      const manyProducts = Array(10).fill(null).map((_, i) => ({
-        _id: { $oid: String(i) },
-        name: `Product ${i}`,
-        price: 10 * i,
-        images: [`https://example.com/image${i}.jpg`],
-      }));
+      const manyProducts = Array(10)
+        .fill(null)
+        .map((_, i) => ({
+          _id: { $oid: String(i) },
+          name: `Product ${i}`,
+          price: 10 * i,
+          images: [`https://example.com/image${i}.jpg`],
+        }));
       render(<Recommendations products={manyProducts} />);
       expect(screen.getByText('Product 0')).toBeInTheDocument();
       expect(screen.getByText('Product 9')).toBeInTheDocument();

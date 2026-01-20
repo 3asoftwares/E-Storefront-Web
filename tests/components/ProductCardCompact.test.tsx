@@ -49,10 +49,10 @@ describe('ProductCardCompact Component', () => {
     it('should handle image error gracefully', () => {
       render(<ProductCardCompact product={defaultProduct} />);
       const image = screen.getByAltText('Test Product');
-      
+
       // Simulate image error
       fireEvent.error(image);
-      
+
       // Image should be hidden after error
       expect(image).toHaveStyle({ display: 'none' });
     });

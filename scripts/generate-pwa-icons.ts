@@ -1,14 +1,14 @@
 /**
  * PWA Icon Generator Script
- * 
+ *
  * This script generates all required PWA icons from a source image.
- * 
+ *
  * Usage:
  *   1. Place your source logo (at least 512x512px) as 'logo-source.png' in the public folder
  *   2. Run: npx ts-node scripts/generate-pwa-icons.ts
  *   OR if using Node.js directly:
  *   3. Run: node scripts/generate-pwa-icons.js
- * 
+ *
  * Requirements:
  *   npm install sharp --save-dev
  */
@@ -31,8 +31,8 @@ const SPLASH_SCREENS = [
   { width: 1536, height: 2048, name: 'apple-splash-1536-2048' }, // 9.7" iPad
   { width: 1125, height: 2436, name: 'apple-splash-1125-2436' }, // iPhone X/XS
   { width: 1242, height: 2208, name: 'apple-splash-1242-2208' }, // iPhone 8 Plus
-  { width: 750, height: 1334, name: 'apple-splash-750-1334' },   // iPhone 8
-  { width: 640, height: 1136, name: 'apple-splash-640-1136' },   // iPhone SE
+  { width: 750, height: 1334, name: 'apple-splash-750-1334' }, // iPhone 8
+  { width: 640, height: 1136, name: 'apple-splash-640-1136' }, // iPhone SE
 ];
 
 const SOURCE_IMAGE = path.join(__dirname, '../public/3A.png');
@@ -53,7 +53,7 @@ async function generateIcons() {
     console.error('❌ Source image not found!');
     console.log('   Please place your logo as "logo-source.png" in the public folder.');
     console.log('   The image should be at least 512x512 pixels for best results.\n');
-    
+
     // Create placeholder SVG icons instead
     console.log('📝 Creating placeholder SVG icons instead...\n');
     await generatePlaceholderIcons();
@@ -79,16 +79,19 @@ async function generateIcons() {
   for (const size of MASKABLE_SIZES) {
     const outputPath = path.join(ICONS_DIR, `maskable-icon-${size}x${size}.png`);
     const padding = Math.floor(size * 0.1); // 10% padding for safe zone
-    const innerSize = size - (padding * 2);
-    
+    const innerSize = size - padding * 2;
+
     await sharp(SOURCE_IMAGE)
-      .resize(innerSize, innerSize, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+      .resize(innerSize, innerSize, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      })
       .extend({
         top: padding,
         bottom: padding,
         left: padding,
         right: padding,
-        background: { r: 255, g: 255, b: 255, alpha: 1 }
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
       })
       .png()
       .toFile(outputPath);
@@ -100,26 +103,28 @@ async function generateIcons() {
   for (const splash of SPLASH_SCREENS) {
     const outputPath = path.join(SPLASH_DIR, `${splash.name}.png`);
     const logoSize = Math.min(splash.width, splash.height) * 0.3;
-    
+
     // Create splash screen with centered logo
     const logo = await sharp(SOURCE_IMAGE)
       .resize(Math.floor(logoSize), Math.floor(logoSize), { fit: 'contain' })
       .toBuffer();
-    
+
     await sharp({
       create: {
         width: splash.width,
         height: splash.height,
         channels: 4,
-        background: { r: 31, g: 41, b: 55, alpha: 1 } // gray-800 color
-      }
+        background: { r: 31, g: 41, b: 55, alpha: 1 }, // gray-800 color
+      },
     })
-    .composite([{
-      input: logo,
-      gravity: 'center'
-    }])
-    .png()
-    .toFile(outputPath);
+      .composite([
+        {
+          input: logo,
+          gravity: 'center',
+        },
+      ])
+      .png()
+      .toFile(outputPath);
     console.log(`   ✓ ${splash.name}.png`);
   }
 
@@ -130,19 +135,19 @@ async function generateIcons() {
 
 async function generatePlaceholderIcons() {
   await ensureDirectoryExists(ICONS_DIR);
-  
+
   // Create SVG placeholder for each size
   for (const size of ICON_SIZES) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <rect width="${size}" height="${size}" fill="#1f2937"/>
       <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-family="system-ui" font-size="${size * 0.3}" font-weight="bold">3A</text>
     </svg>`;
-    
+
     const outputPath = path.join(ICONS_DIR, `icon-${size}x${size}.png`);
     await sharp(Buffer.from(svg)).png().toFile(outputPath);
     console.log(`   ✓ icon-${size}x${size}.png (placeholder)`);
   }
-  
+
   // Create maskable placeholders
   for (const size of MASKABLE_SIZES) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
@@ -150,12 +155,12 @@ async function generatePlaceholderIcons() {
       <rect x="${size * 0.1}" y="${size * 0.1}" width="${size * 0.8}" height="${size * 0.8}" rx="${size * 0.1}" fill="#1f2937"/>
       <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-family="system-ui" font-size="${size * 0.25}" font-weight="bold">3A</text>
     </svg>`;
-    
+
     const outputPath = path.join(ICONS_DIR, `maskable-icon-${size}x${size}.png`);
     await sharp(Buffer.from(svg)).png().toFile(outputPath);
     console.log(`   ✓ maskable-icon-${size}x${size}.png (placeholder)`);
   }
-  
+
   console.log('\n⚠️  Placeholder icons created. Replace with actual logo for production!');
 }
 

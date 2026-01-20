@@ -18,7 +18,9 @@ on:
         required: true
         default: 'production'
         type: choice
-        options: [staging, production]
+        options:
+          - staging
+          - production
 
 env:
   NODE_VERSION: '20'

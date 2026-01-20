@@ -20,9 +20,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('@fortawesome/react-fontawesome', () => ({
-  FontAwesomeIcon: ({ icon }: { icon: string }) => (
-    <span data-testid="fa-icon">{icon}</span>
-  ),
+  FontAwesomeIcon: ({ icon }: { icon: string }) => <span data-testid="fa-icon">{icon}</span>,
 }));
 
 jest.mock('@3asoftwares/ui', () => ({
@@ -75,9 +73,7 @@ jest.mock('../../components', () => ({
   ProductCardCompact: () => <div data-testid="product-card-compact">Compact Card</div>,
   ProductSlider: () => <div data-testid="product-slider">Product Slider</div>,
   LoadingProductGrid: () => <div data-testid="loading-grid">Loading...</div>,
-  SectionHeader: ({ title }: { title: string }) => (
-    <div data-testid="section-header">{title}</div>
-  ),
+  SectionHeader: ({ title }: { title: string }) => <div data-testid="section-header">{title}</div>,
 }));
 
 // Mock HomePage

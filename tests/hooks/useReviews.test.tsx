@@ -29,7 +29,11 @@ jest.mock('../../lib/hooks/useReviews', () => ({
   })),
 }));
 
-import { useProductReviews, useCreateReview, useMarkReviewHelpful } from '../../lib/hooks/useReviews';
+import {
+  useProductReviews,
+  useCreateReview,
+  useMarkReviewHelpful,
+} from '../../lib/hooks/useReviews';
 
 const createWrapper = () => {
   const queryClient = new QueryClient({

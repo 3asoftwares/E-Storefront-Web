@@ -1,0 +1,73 @@
+# =============================================================================
+# Docker Compose for Docker Hub Images
+# Use this file to run the app from pre-built Docker Hub images
+# =============================================================================
+# This allows consistent setup across all machines (Windows, Mac, Linux)
+# without needing to build locally.
+#
+# Development: docker-compose -f docker-compose.hub.yml up storefront-dev
+# Production:  docker-compose -f docker-compose.hub.yml up storefront-prod
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # =========================================================================
+  # Development Environment
+  # =========================================================================
+  # Pre-built development image with all dependencies
+  # Hot-reload enabled for local development
+  storefront-dev:
+    image: 3asoftwares/storefront:dev
+    container_name: storefront-dev
+    ports:
+      - '3004:3004'
+    volumes:
+      # Mount source code for hot-reload
+      - .:/app
+      # Exclude node_modules (use container's pre-installed)
+      - /app/node_modules
+      # Exclude .next (use container's)
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_ENV=development
+      - NEXT_PUBLIC_AUTH_SERVICE_URL=${NEXT_PUBLIC_AUTH_SERVICE_URL:-http://host.docker.internal:3011}
+      - NEXT_PUBLIC_GRAPHQL_URL=${NEXT_PUBLIC_GRAPHQL_URL:-http://host.docker.internal:4000/graphql}
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      # File watching for Windows/Mac
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - storefront-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  # =========================================================================
+  # Production Environment
+  # =========================================================================
+  # Optimized production image (~100MB)
+  # Use for staging or production-like local testing
+  storefront-prod:
+    image: 3asoftwares/storefront:latest
+    container_name: storefront-prod
+    ports:
+      - '3004:3004'
+    environment:
+      - NODE_ENV=production
+    networks:
+      - storefront-network
+    restart: always
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3004']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    profiles:
+      - production
+
+networks:
+  storefront-network:
+    driver: bridge

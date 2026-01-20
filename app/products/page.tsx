@@ -147,57 +147,64 @@ export default function ProductsPage() {
     setPage((prev) => prev + 1);
   };
 
-  const handleAddToCart = useCallback((product: any) => {
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      image: product.imageUrl || '/placeholder.png',
-      productId: product.id,
-      sellerId: product.sellerId,
-    });
-    showToast(`${product.name} added to cart!`, 'success');
-  }, [addItem, showToast]);
-
-  const handleWishlistToggle = useCallback((product: any) => {
-    if (isInWishlist(product.id)) {
-      removeFromWishlist(product.id);
-      showToast('Removed from wishlist', 'info');
-    } else {
-      addToWishlist({
-        productId: product.id,
+  const handleAddToCart = useCallback(
+    (product: any) => {
+      addItem({
+        id: product.id,
         name: product.name,
         price: product.price,
+        quantity: 1,
         image: product.imageUrl || '/placeholder.png',
-        addedAt: Date.now(),
+        productId: product.id,
+        sellerId: product.sellerId,
       });
-      showToast('Added to wishlist', 'success');
-    }
-  }, [isInWishlist, removeFromWishlist, addToWishlist, showToast]);
+      showToast(`${product.name} added to cart!`, 'success');
+    },
+    [addItem, showToast]
+  );
+
+  const handleWishlistToggle = useCallback(
+    (product: any) => {
+      if (isInWishlist(product.id)) {
+        removeFromWishlist(product.id);
+        showToast('Removed from wishlist', 'info');
+      } else {
+        addToWishlist({
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.imageUrl || '/placeholder.png',
+          addedAt: Date.now(),
+        });
+        showToast('Added to wishlist', 'success');
+      }
+    },
+    [isInWishlist, removeFromWishlist, addToWishlist, showToast]
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 safe:pt-safe-top">
-        <div className="max-w-7xl mx-auto px-3 xs:px-5 sm:px-6 lg:px-8 py-3 xs:py-4 sm:py-5">
+      <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/95 backdrop-blur-sm safe:pt-safe-top">
+        <div className="mx-auto max-w-7xl px-3 py-3 xs:px-5 xs:py-4 sm:px-6 sm:py-5 lg:px-8">
           <div className="flex items-center justify-between gap-2">
-            <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600">
+            <h1 className="bg-gradient-to-r from-black to-gray-600 bg-clip-text text-xl font-extrabold text-transparent xs:text-2xl sm:text-3xl">
               Discover Products
             </h1>
-            <div className="flex gap-1 px-2.5 xs:px-3 sm:px-4 py-1 xs:py-1.5 sm:py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full text-xs xs:text-sm font-bold text-indigo-700 whitespace-nowrap">
-              {data?.pagination.total || 0}<span className='hidden sm:block'> Products</span>
+            <div className="flex gap-1 whitespace-nowrap rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 px-2.5 py-1 text-xs font-bold text-indigo-700 xs:px-3 xs:py-1.5 xs:text-sm sm:px-4 sm:py-2">
+              {data?.pagination.total || 0}
+              <span className="hidden sm:block"> Products</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 xs:py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 xs:gap-6 lg:gap-8">
+      <div className="mx-auto max-w-7xl px-3 py-4 xs:py-6 sm:px-4 sm:py-8 lg:px-8">
+        <div className="grid grid-cols-1 gap-4 xs:gap-6 lg:grid-cols-4 lg:gap-8">
           {/* Filters - Collapsible on mobile */}
           <div className="lg:col-span-1">
-            <details className="lg:hidden group">
-              <summary className="flex items-center justify-between p-4 bg-white rounded-xl shadow-md cursor-pointer list-none border border-gray-200 min-h-[52px]">
+            <details className="group lg:hidden">
+              <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-md">
                 <span className="flex items-center gap-2 font-bold text-gray-900">
                   <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
                   Filters
@@ -207,7 +214,7 @@ export default function ProductsPage() {
                   className="text-gray-500 transition-transform group-open:rotate-180"
                 />
               </summary>
-              <div className="mt-3 bg-white rounded-xl shadow-md p-4 xs:p-5 border border-gray-200">
+              <div className="mt-3 rounded-xl border border-gray-200 bg-white p-4 shadow-md xs:p-5">
                 {/* Mobile Filter Content */}
                 <Input
                   type="text"
@@ -229,8 +236,8 @@ export default function ProductsPage() {
                 />
 
                 <div className="my-4">
-                  <label className="block text-sm font-bold text-gray-700 mb-3">Price Range</label>
-                  <div className="flex gap-2 -mb-4">
+                  <label className="mb-3 block text-sm font-bold text-gray-700">Price Range</label>
+                  <div className="-mb-4 flex gap-2">
                     <Input
                       size="sm"
                       type="number"
@@ -280,7 +287,7 @@ export default function ProductsPage() {
                     setPage(1);
                     router.push('/products');
                   }}
-                  className="w-full mt-4 min-h-[44px]"
+                  className="mt-4 min-h-[44px] w-full"
                 >
                   <FontAwesomeIcon icon={faRedo} className="mr-2" />
                   Reset Filters
@@ -289,8 +296,8 @@ export default function ProductsPage() {
             </details>
 
             {/* Desktop Filters */}
-            <div className="hidden lg:block bg-white rounded-2xl shadow-xl p-6 sticky top-32 border border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="sticky top-32 hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-xl lg:block">
+              <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
                 <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
                 Filters
               </h2>
@@ -317,10 +324,10 @@ export default function ProductsPage() {
               />
 
               <div className="my-4">
-                <label className="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <label className="mb-3 block flex items-center gap-2 text-sm font-bold text-gray-700">
                   Price Range
                 </label>
-                <div className="flex gap-2 -mb-4">
+                <div className="-mb-4 flex gap-2">
                   <Input
                     size="sm"
                     type="number"
@@ -377,7 +384,7 @@ export default function ProductsPage() {
                     setPage(1);
                     router.push('/products');
                   }}
-                  className="w-full min-h-[44px]"
+                  className="min-h-[44px] w-full"
                 >
                   <FontAwesomeIcon icon={faRedo} className="mr-2" />
                   Reset Filters
@@ -389,18 +396,18 @@ export default function ProductsPage() {
           {/* Product Grid */}
           <div className="lg:col-span-3">
             {error ? (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm xs:text-base">
+              <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 xs:text-base">
                 Error loading products. Please try again.
               </div>
             ) : isLoading && page === 1 ? (
               <ProductCardSkeleton count={6} />
             ) : allProducts.length === 0 ? (
-              <div className="text-center py-8 xs:py-12">
-                <p className="text-gray-500 text-base xs:text-lg">No products found.</p>
+              <div className="py-8 text-center xs:py-12">
+                <p className="text-base text-gray-500 xs:text-lg">No products found.</p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-4 sm:gap-6 lg:gap-8 mb-4 sm:mb-8">
+                <div className="mb-4 grid grid-cols-1 gap-3 xs:grid-cols-2 xs:gap-4 sm:mb-8 sm:gap-6 lg:grid-cols-2 lg:gap-8 xl:grid-cols-3">
                   {sortedProducts.map((product) => (
                     <ProductCard
                       key={product.id}
@@ -414,15 +421,15 @@ export default function ProductsPage() {
                 </div>
 
                 {hasMore && allProducts.length > 0 && (
-                  <div className="flex justify-center mb-2 sm:mb-12">
+                  <div className="mb-2 flex justify-center sm:mb-12">
                     <Button
                       disabled={isLoading}
                       onClick={handleLoadMore}
-                      className="px-6 xs:px-8 py-3 bg-gradient-to-r from-gray-800 to-gray-600 hover:from-gray-500 hover:to-gray-300 disabled:opacity-50 text-white font-semibold min-h-[48px] text-sm xs:text-base"
+                      className="min-h-[48px] bg-gradient-to-r from-gray-800 to-gray-600 px-6 py-3 text-sm font-semibold text-white hover:from-gray-500 hover:to-gray-300 disabled:opacity-50 xs:px-8 xs:text-base"
                     >
                       {isLoading ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></div>
+                          <div className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
                           Loading...
                         </>
                       ) : (
@@ -436,9 +443,9 @@ export default function ProductsPage() {
                 )}
 
                 {!hasMore && allProducts.length > 0 && (
-                  <div className="text-center py-8 xs:py-12">
-                    <p className="text-gray-500 font-medium text-sm xs:text-base">
-                      You've reached the end! ({allProducts.length} products shown)
+                  <div className="py-8 text-center xs:py-12">
+                    <p className="text-sm font-medium text-gray-500 xs:text-base">
+                      You&apos;ve reached the end! ({allProducts.length} products shown)
                     </p>
                   </div>
                 )}

@@ -9,14 +9,14 @@
     --color-primary: 99 102 241; /* indigo-500 */
     --color-secondary: 168 85 247; /* purple-500 */
     --color-accent: 236 72 153; /* pink-500 */
-    
+
     /* Safe area insets for PWA */
     --sat: env(safe-area-inset-top);
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
   }
-  
+
   /* PWA specific styles */
   html {
     /* Prevent pull-to-refresh on PWA */
@@ -27,13 +27,14 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
-  
+
   body {
     @apply antialiased;
     /* Prevent overscroll bounce effect on iOS */
     overscroll-behavior: none;
     /* Safe area padding for notched devices */
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
     /* Prevent text selection on touch */
     -webkit-user-select: none;
     user-select: none;
@@ -41,42 +42,45 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   /* Allow text selection in input fields */
-  input, textarea, [contenteditable] {
+  input,
+  textarea,
+  [contenteditable] {
     -webkit-user-select: text;
     user-select: text;
   }
-  
+
   /* Minimum touch target size for accessibility */
-  button, [role="button"] {
+  button,
+  [role='button'] {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* Responsive font sizes */
   html {
     font-size: 14px;
   }
-  
+
   @media (min-width: 375px) {
     html {
       font-size: 15px;
     }
   }
-  
+
   @media (min-width: 640px) {
     html {
       font-size: 16px;
     }
   }
-  
+
   /* Fix for 100vh on mobile browsers */
   .min-h-screen-safe {
     min-height: 100vh;
     min-height: 100dvh;
   }
-  
+
   .h-screen-safe {
     height: 100vh;
     height: 100dvh;
@@ -85,108 +89,108 @@
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-3 xs:px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform active:scale-95 touch:hover:scale-100 touch:active:scale-95;
+    @apply transform rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 px-4 py-3 font-bold text-white transition-all hover:shadow-2xl hover:shadow-purple-500/50 active:scale-95 xs:px-6 touch:hover:scale-100 touch:active:scale-95;
   }
-  
+
   .btn-secondary {
-    @apply px-4 py-3 xs:px-6 border-2 border-indigo-600 text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-all active:scale-95;
+    @apply rounded-xl border-2 border-indigo-600 px-4 py-3 font-bold text-indigo-600 transition-all hover:bg-indigo-50 active:scale-95 xs:px-6;
   }
-  
+
   .card {
-    @apply rounded-2xl bg-white border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300;
+    @apply rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:shadow-2xl;
   }
-  
+
   .input-modern {
-    @apply w-full px-4 py-3 xs:px-5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all bg-gray-50 focus:bg-white text-base;
+    @apply w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-base transition-all focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-200 xs:px-5;
   }
-  
+
   /* Responsive container */
   .container-responsive {
-    @apply w-full mx-auto px-4 xs:px-5 sm:px-6 lg:px-8 max-w-7xl;
+    @apply mx-auto w-full max-w-7xl px-4 xs:px-5 sm:px-6 lg:px-8;
   }
-  
+
   /* Responsive grid layouts */
   .grid-responsive-products {
-    @apply grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 xs:gap-4 sm:gap-6;
+    @apply grid grid-cols-1 gap-3 xs:grid-cols-2 xs:gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4;
   }
-  
+
   .grid-responsive-compact {
-    @apply grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4;
+    @apply grid grid-cols-2 gap-2 xs:grid-cols-2 xs:gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6;
   }
-  
+
   .grid-responsive-features {
-    @apply grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4 lg:gap-8;
   }
-  
+
   /* Responsive text sizes */
   .text-responsive-xs {
     @apply text-xs xs:text-sm;
   }
-  
+
   .text-responsive-sm {
     @apply text-sm xs:text-base;
   }
-  
+
   .text-responsive-base {
     @apply text-base xs:text-lg sm:text-xl;
   }
-  
+
   .text-responsive-lg {
     @apply text-lg xs:text-xl sm:text-2xl;
   }
-  
+
   .text-responsive-xl {
     @apply text-xl xs:text-2xl sm:text-3xl md:text-4xl;
   }
-  
+
   .text-responsive-hero {
     @apply text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
   }
-  
+
   /* Touch-friendly buttons */
   .btn-touch {
-    @apply min-h-[44px] min-w-[44px] px-4 py-3 flex items-center justify-center touch:hover:bg-opacity-100 active:scale-95 transition-transform;
+    @apply flex min-h-[44px] min-w-[44px] items-center justify-center px-4 py-3 transition-transform active:scale-95 touch:hover:bg-opacity-100;
   }
-  
+
   /* PWA bottom navigation bar */
   .pwa-bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 pb-safe-bottom z-50 shadow-lg;
+    @apply fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-gray-200 bg-white pb-safe-bottom shadow-lg;
   }
-  
+
   /* PWA header with safe area */
   .pwa-header {
-    @apply sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm pt-safe-top;
+    @apply sticky top-0 z-50 border-b border-gray-200 bg-white pt-safe-top shadow-sm;
   }
-  
+
   /* Mobile drawer/modal */
   .mobile-drawer {
     @apply fixed inset-0 z-50 bg-black/50 backdrop-blur-sm;
   }
-  
+
   .mobile-drawer-content {
-    @apply fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[90vh] overflow-y-auto pb-safe-bottom animate-slide-up;
+    @apply fixed bottom-0 left-0 right-0 max-h-[90vh] animate-slide-up overflow-y-auto rounded-t-3xl bg-white pb-safe-bottom;
   }
-  
+
   /* Skeleton loading */
   .skeleton {
-    @apply bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-pulse rounded;
+    @apply animate-pulse rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%];
   }
-  
+
   /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Horizontal scroll container */
   .scroll-container {
-    @apply flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory;
+    @apply scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4;
   }
-  
+
   .scroll-item {
     @apply flex-shrink-0 snap-start;
   }
@@ -207,11 +211,11 @@
       opacity: 1;
     }
   }
-  
+
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out;
   }
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -222,71 +226,73 @@
       transform: translateY(0);
     }
   }
-  
+
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600;
+    @apply bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent;
   }
-  
+
   .gradient-border {
     @apply border-2 border-transparent bg-clip-padding;
-    background-image: linear-gradient(white, white), linear-gradient(to right, rgb(99, 102, 241), rgb(168, 85, 247), rgb(236, 72, 153));
+    background-image:
+      linear-gradient(white, white),
+      linear-gradient(to right, rgb(99, 102, 241), rgb(168, 85, 247), rgb(236, 72, 153));
     background-origin: border-box;
     background-clip: padding-box, border-box;
   }
-  
+
   /* Safe area utilities */
   .pt-safe-top {
     padding-top: env(safe-area-inset-top);
   }
-  
+
   .pb-safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  
+
   .px-safe {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
-  
+
   .mb-safe-bottom {
     margin-bottom: env(safe-area-inset-bottom);
   }
-  
+
   /* Prevent zoom on input focus (iOS) */
   .no-zoom {
     font-size: 16px !important;
   }
-  
+
   /* Touch action utilities */
   .touch-pan-x {
     touch-action: pan-x;
   }
-  
+
   .touch-pan-y {
     touch-action: pan-y;
   }
-  
+
   .touch-none {
     touch-action: none;
   }
-  
+
   /* Responsive spacing utilities */
   .p-responsive {
     @apply p-4 xs:p-5 sm:p-6 lg:p-8;
   }
-  
+
   .px-responsive {
     @apply px-4 xs:px-5 sm:px-6 lg:px-8;
   }
-  
+
   .py-responsive {
     @apply py-4 xs:py-6 sm:py-8 lg:py-12;
   }
-  
+
   .gap-responsive {
     @apply gap-3 xs:gap-4 sm:gap-6;
   }
-  
+
   /* Truncate text with ellipsis */
   .truncate-2 {
     display: -webkit-box;
@@ -294,7 +300,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .truncate-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;

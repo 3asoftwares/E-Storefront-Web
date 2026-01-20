@@ -60,17 +60,31 @@ jest.mock('../../app/contact/page', () => ({
           </div>
           <div>
             <label htmlFor="message">Message</label>
-            <textarea id="message" data-testid="message-input" placeholder="Your message"></textarea>
+            <textarea
+              id="message"
+              data-testid="message-input"
+              placeholder="Your message"
+            ></textarea>
           </div>
-          <button type="submit" data-testid="submit-button">Send Message</button>
+          <button type="submit" data-testid="submit-button">
+            Send Message
+          </button>
         </form>
       </section>
       <section data-testid="social-section">
         <h2>Follow Us</h2>
-        <a href="https://facebook.com" data-testid="facebook-link">Facebook</a>
-        <a href="https://twitter.com" data-testid="twitter-link">Twitter</a>
-        <a href="https://instagram.com" data-testid="instagram-link">Instagram</a>
-        <a href="https://linkedin.com" data-testid="linkedin-link">LinkedIn</a>
+        <a href="https://facebook.com" data-testid="facebook-link">
+          Facebook
+        </a>
+        <a href="https://twitter.com" data-testid="twitter-link">
+          Twitter
+        </a>
+        <a href="https://instagram.com" data-testid="instagram-link">
+          Instagram
+        </a>
+        <a href="https://linkedin.com" data-testid="linkedin-link">
+          LinkedIn
+        </a>
       </section>
     </div>
   ),

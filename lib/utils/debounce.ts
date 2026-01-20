@@ -1,7 +1,7 @@
 /**
  * Debounces a function call - delays execution until after a specified delay
  * Useful for search inputs, form validation, etc.
- * 
+ *
  * @param func - The function to debounce
  * @param delay - The delay in milliseconds
  * @returns A debounced version of the function

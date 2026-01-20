@@ -1,21 +1,20 @@
-
-
 export const Recommendations: React.FC<{ products: any[] }> = ({ products }) => (
   <div>
-    <h2 className="text-xl font-bold mb-4">Recommended for You</h2>
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <h2 className="mb-4 text-xl font-bold">Recommended for You</h2>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
       {products.map((product) => (
         <div
           key={product._id.$oid}
-          className="bg-white rounded-lg shadow p-4 flex flex-col items-center"
+          className="flex flex-col items-center rounded-lg bg-white p-4 shadow"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-20 h-20 object-cover mb-2 rounded"
+            className="mb-2 h-20 w-20 rounded object-cover"
           />
-          <span className="font-semibold text-lg">{product.name}</span>
-          <span className="text-primary-600 font-bold mt-1">${product.price}</span>
+          <span className="text-lg font-semibold">{product.name}</span>
+          <span className="mt-1 font-bold text-primary-600">${product.price}</span>
         </div>
       ))}
     </div>

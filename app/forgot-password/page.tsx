@@ -36,37 +36,38 @@ export default function ForgotPasswordPage() {
       }
     } catch (err: any) {
       // Extract error message from GraphQL response
-      const graphqlError = err?.graphQLErrors?.[0]?.message
-        || err?.networkError?.result?.errors?.[0]?.message
-        || err?.message
-        || 'Failed to send reset email';
+      const graphqlError =
+        err?.graphQLErrors?.[0]?.message ||
+        err?.networkError?.result?.errors?.[0]?.message ||
+        err?.message ||
+        'Failed to send reset email';
       setError(graphqlError);
     }
   };
 
   if (success) {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
             <div className="bg-gradient-to-r from-green-600 to-green-500 px-8 py-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                <FontAwesomeIcon icon={faCheckCircle} className="text-white text-3xl" />
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Check Your Email</h1>
-              <p className="text-green-100 text-sm">
-                We've sent password reset instructions to your email
+              <h1 className="mb-2 text-2xl font-bold text-white">Check Your Email</h1>
+              <p className="text-sm text-green-100">
+                We&apos;ve sent password reset instructions to your email
               </p>
             </div>
 
             <div className="px-8 py-10">
-              <div className="text-center mb-6">
-                <p className="text-gray-600 mb-4">
+              <div className="mb-6 text-center">
+                <p className="mb-4 text-gray-600">
                   If an account exists for <strong className="text-gray-900">{email}</strong>, you
                   will receive an email with instructions to reset your password.
                 </p>
                 <p className="text-sm text-gray-500">
-                  Didn't receive the email? Check your spam folder or try again.
+                  Didn&apos;t receive the email? Check your spam folder or try again.
                 </p>
               </div>
 
@@ -90,28 +91,28 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+    <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
           <div className="bg-gradient-to-r from-gray-900 to-gray-600 px-8 py-10 text-center">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="mb-2 text-3xl font-bold text-white">
               <FontAwesomeIcon icon={faShoppingBag} className="mr-2" />
               3A Softwares
             </h1>
-            <p className="text-blue-100 text-sm">Reset your password</p>
+            <p className="text-sm text-blue-100">Reset your password</p>
           </div>
 
           <div className="px-8 py-10">
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Forgot Password?</h2>
-              <p className="text-gray-600 text-sm">
-                Enter your email address and we'll send you a link to reset your password.
+            <div className="mb-6 text-center">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">Forgot Password?</h2>
+              <p className="text-sm text-gray-600">
+                Enter your email address and we&apos;ll send you a link to reset your password.
               </p>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 text-sm font-medium">{error}</p>
+              <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                <p className="text-sm font-medium text-red-700">{error}</p>
               </div>
             )}
 
@@ -124,16 +125,16 @@ export default function ForgotPasswordPage() {
                 label="Email Address"
                 placeholder="your@email.com"
               />
-              <Button type="submit" disabled={isLoading} className="w-full mt-4">
+              <Button type="submit" disabled={isLoading} className="mt-4 w-full">
                 {isLoading ? 'Sending...' : 'Send Reset Link'}
               </Button>
             </form>
           </div>
 
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-100 text-center">
+          <div className="border-t border-gray-100 bg-gray-50 px-8 py-6 text-center">
             <p className="text-sm text-gray-600">
               Remember your password?{' '}
-              <Link href="/login" className="text-gray-600 font-semibold hover:text-gray-900">
+              <Link href="/login" className="font-semibold text-gray-600 hover:text-gray-900">
                 Sign in
               </Link>
             </p>

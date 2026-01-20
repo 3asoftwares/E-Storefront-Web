@@ -1,10 +1,23 @@
 # =============================================================================
-# Storefront Production Dockerfile (Next.js)
-# Single repo standalone build
+# E-Storefront Production Docker Image
+# 3A Softwares - E-Commerce Storefront
+# =============================================================================
+# Multi-stage build for optimized production image (~100MB)
+#
+# Build: docker build -f Dockerfile.prod -t 3asoftwares/storefront:latest .
+# Push:  docker push 3asoftwares/storefront:latest
+# Pull:  docker pull 3asoftwares/storefront:latest
 # =============================================================================
 
 # ===== Stage 1: Dependencies =====
-FROM node:20-alpine AS deps
+FROM node:20.10.0-alpine3.19 AS deps
+
+# Metadata
+LABEL maintainer="3A Softwares <dev@3asoftwares.com>"
+LABEL version="1.1.0"
+LABEL description="E-Storefront Production Build"
+LABEL org.opencontainers.image.source="https://github.com/3asoftwares/E-Storefront-Web"
+
 WORKDIR /app
 
 # Install dependencies for native modules
@@ -77,5 +90,10 @@ EXPOSE 3004
 ENV PORT=3004
 ENV HOSTNAME="0.0.0.0"
 
+# Health check for container orchestration
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3004 || exit 1
+
 # Start production server
+CMD ["node", "server.js"]
 CMD ["node", "server.js"]

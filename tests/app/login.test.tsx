@@ -20,9 +20,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('@fortawesome/react-fontawesome', () => ({
-  FontAwesomeIcon: ({ icon }: { icon: string }) => (
-    <span data-testid="fa-icon">{icon}</span>
-  ),
+  FontAwesomeIcon: ({ icon }: { icon: string }) => <span data-testid="fa-icon">{icon}</span>,
 }));
 
 // Mock LoginPage
@@ -34,20 +32,20 @@ jest.mock('../../app/login/page', () => ({
       <form data-testid="login-form">
         <div>
           <label htmlFor="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
+          <input
+            type="email"
+            id="email"
+            name="email"
             data-testid="email-input"
             placeholder="Enter your email"
           />
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
+          <input
+            type="password"
+            id="password"
+            name="password"
             data-testid="password-input"
             placeholder="Enter your password"
           />
@@ -60,7 +58,10 @@ jest.mock('../../app/login/page', () => ({
         Forgot Password?
       </a>
       <p>
-        Don't have an account? <a href="/signup" data-testid="signup-link">Sign Up</a>
+        Don't have an account?{' '}
+        <a href="/signup" data-testid="signup-link">
+          Sign Up
+        </a>
       </p>
       <div data-testid="social-login">
         <button data-testid="google-signin">Sign in with Google</button>
@@ -131,7 +132,10 @@ describe('LoginPage', () => {
   describe('Navigation Links', () => {
     it('should render forgot password link', () => {
       render(<LoginPage />);
-      expect(screen.getByTestId('forgot-password-link')).toHaveAttribute('href', '/forgot-password');
+      expect(screen.getByTestId('forgot-password-link')).toHaveAttribute(
+        'href',
+        '/forgot-password'
+      );
     });
 
     it('should render signup link', () => {

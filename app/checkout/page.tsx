@@ -167,7 +167,16 @@ export default function CheckoutPage() {
       if (result?.success && result?.address) {
         setSelectedAddressId(result.address.id);
         setUseNewAddress(false);
-        setNewAddress({ name: '', mobile: '', email: '', street: '', city: '', state: '', zip: '', country: '' });
+        setNewAddress({
+          name: '',
+          mobile: '',
+          email: '',
+          street: '',
+          city: '',
+          state: '',
+          zip: '',
+          country: '',
+        });
         setAddressErrors({});
         showToastMessage('Address added successfully!', 'success');
       } else {
@@ -175,10 +184,11 @@ export default function CheckoutPage() {
       }
     } catch (error: any) {
       // Extract error message from GraphQL response
-      const graphqlError = error?.graphQLErrors?.[0]?.message
-        || error?.networkError?.result?.errors?.[0]?.message
-        || error?.message
-        || 'Failed to add address';
+      const graphqlError =
+        error?.graphQLErrors?.[0]?.message ||
+        error?.networkError?.result?.errors?.[0]?.message ||
+        error?.message ||
+        'Failed to add address';
       showToastMessage(graphqlError, 'error');
     }
   };
@@ -214,10 +224,11 @@ export default function CheckoutPage() {
       }
     } catch (error: any) {
       // Extract error message from GraphQL response
-      const graphqlError = error?.graphQLErrors?.[0]?.message
-        || error?.networkError?.result?.errors?.[0]?.message
-        || error?.message
-        || 'Failed to validate coupon. Please try again.';
+      const graphqlError =
+        error?.graphQLErrors?.[0]?.message ||
+        error?.networkError?.result?.errors?.[0]?.message ||
+        error?.message ||
+        'Failed to validate coupon. Please try again.';
       setCouponError(graphqlError);
       setAppliedCoupon(null);
     } finally {
@@ -325,23 +336,31 @@ export default function CheckoutPage() {
     } catch (error: any) {
       Logger.error('Order creation error', error, 'Checkout');
       // Extract error message from GraphQL response
-      const graphqlError = error?.graphQLErrors?.[0]?.message
-        || error?.networkError?.result?.errors?.[0]?.message
-        || error?.message
-        || 'Error creating order. Please try again.';
+      const graphqlError =
+        error?.graphQLErrors?.[0]?.message ||
+        error?.networkError?.result?.errors?.[0]?.message ||
+        error?.message ||
+        'Error creating order. Please try again.';
       showToastMessage(graphqlError, 'error');
     }
   };
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30 flex items-center justify-center px-4">
-        <div className="bg-white rounded-xl xs:rounded-2xl shadow-lg xs:shadow-2xl p-6 xs:p-8 sm:p-12 max-w-md w-full text-center border border-gray-200">
-          <div className="inline-block p-4 xs:p-5 sm:p-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-4 xs:mb-5 sm:mb-6">
-            <FontAwesomeIcon icon={faShoppingCart} className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 text-indigo-600" />
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 via-indigo-50/30 to-purple-50/30 px-4">
+        <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 text-center shadow-lg xs:rounded-2xl xs:p-8 xs:shadow-2xl sm:p-12">
+          <div className="mb-4 inline-block rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 p-4 xs:mb-5 xs:p-5 sm:mb-6 sm:p-6">
+            <FontAwesomeIcon
+              icon={faShoppingCart}
+              className="h-10 w-10 text-indigo-600 xs:h-12 xs:w-12 sm:h-16 sm:w-16"
+            />
           </div>
-          <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2 xs:mb-3">Cart is Empty</h1>
-          <p className="text-gray-600 mb-6 xs:mb-8 text-sm xs:text-base sm:text-lg">Add items to your cart before checking out.</p>
+          <h1 className="mb-2 text-xl font-extrabold text-gray-900 xs:mb-3 xs:text-2xl sm:text-3xl">
+            Cart is Empty
+          </h1>
+          <p className="mb-6 text-sm text-gray-600 xs:mb-8 xs:text-base sm:text-lg">
+            Add items to your cart before checking out.
+          </p>
           <Button variant="ghost" onClick={() => router.push('/products')} className="min-h-[48px]">
             Continue Shopping
           </Button>
@@ -359,11 +378,11 @@ export default function CheckoutPage() {
         iconGradient="from-gray-700 to-gray-900"
         titleGradient="from-gray-900 to-black"
       />
-      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 xs:gap-5 sm:gap-6 lg:gap-8">
-          <div className="lg:col-span-2 space-y-4 xs:space-y-5 sm:space-y-6">
-            <div className="bg-white rounded-xl xs:rounded-2xl shadow-lg xs:shadow-xl p-4 xs:p-5 sm:p-6 border border-gray-200">
-              <h2 className="text-lg xs:text-xl font-bold text-gray-900 mb-4 xs:mb-5 flex items-center gap-2">
+      <div className="mx-auto max-w-7xl px-3 py-4 xs:px-4 xs:py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="grid grid-cols-1 gap-4 xs:gap-5 sm:gap-6 lg:grid-cols-3 lg:gap-8">
+          <div className="space-y-4 xs:space-y-5 sm:space-y-6 lg:col-span-2">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-lg xs:rounded-2xl xs:p-5 xs:shadow-xl sm:p-6">
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-gray-900 xs:mb-5 xs:text-xl">
                 <FontAwesomeIcon icon={faShippingFast} className="text-indigo-600" />
                 Shipping Address
               </h2>
@@ -372,16 +391,16 @@ export default function CheckoutPage() {
                 <div className="flex items-center justify-center py-8">
                   <FontAwesomeIcon
                     icon={faSpinner}
-                    className="w-6 h-6 animate-spin text-indigo-600"
+                    className="h-6 w-6 animate-spin text-indigo-600"
                   />
                   <span className="ml-2 text-gray-600">Loading addresses...</span>
                 </div>
               ) : addresses && addresses.length > 0 && !useNewAddress ? (
-                <div className="space-y-3 mb-4">
+                <div className="mb-4 space-y-3">
                   {addresses.map((address: Address) => (
                     <label
                       key={address.id}
-                      className="flex items-start p-5 border-2 rounded-xl cursor-pointer transition-all hover:bg-indigo-50 hover:scale-[1.02]"
+                      className="flex cursor-pointer items-start rounded-xl border-2 p-5 transition-all hover:scale-[1.02] hover:bg-indigo-50"
                       style={{
                         borderColor:
                           selectedAddressId === address.id ? 'rgb(99, 102, 241)' : '#e5e7eb',
@@ -396,12 +415,12 @@ export default function CheckoutPage() {
                         value={address.id}
                         checked={selectedAddressId === address.id}
                         onChange={() => setSelectedAddressId(address.id)}
-                        className="mt-1 w-5 h-5 text-indigo-600"
+                        className="mt-1 h-5 w-5 text-indigo-600"
                       />
                       <div className="ml-3">
                         <p className="font-medium text-gray-900">
                           {address.label && (
-                            <span className="text-indigo-600 mr-2">[{address.label}]</span>
+                            <span className="mr-2 text-indigo-600">[{address.label}]</span>
                           )}
                           {address.name || 'No name'}
                         </p>
@@ -409,14 +428,14 @@ export default function CheckoutPage() {
                           {address.mobile && <span className="mr-2">📱 {address.mobile}</span>}
                           {address.email && <span>✉️ {address.email}</span>}
                         </p>
-                        <p className="text-sm text-gray-700 mt-1">
+                        <p className="mt-1 text-sm text-gray-700">
                           {address.street}, {address.city}
                         </p>
                         <p className="text-sm text-gray-600">
                           {address.state}, {address.zip}, {address.country}
                         </p>
                         {address.isDefault && (
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-1 inline-block">
+                          <span className="mt-1 inline-block rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
                             Default
                           </span>
                         )}
@@ -426,7 +445,7 @@ export default function CheckoutPage() {
                 </div>
               ) : (
                 !useNewAddress && (
-                  <p className="text-gray-500 mb-4">
+                  <p className="mb-4 text-gray-500">
                     No saved addresses. Please add a new address.
                   </p>
                 )
@@ -437,14 +456,14 @@ export default function CheckoutPage() {
                 variant="ghost"
                 size="sm"
                 fullWidth={false}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm mb-4"
+                className="mb-4 text-sm font-medium text-blue-600 hover:text-blue-700"
               >
                 {useNewAddress ? '← Use saved address' : '+ Add new address'}
               </Button>
 
               {useNewAddress && (
-                <div className="space-y-3 xs:space-y-4 pt-4 border-t">
-                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
+                <div className="space-y-3 border-t pt-4 xs:space-y-4">
+                  <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xs:gap-4">
                     <Input
                       size="md"
                       type="text"
@@ -457,7 +476,9 @@ export default function CheckoutPage() {
                       type="tel"
                       placeholder="Mobile Number *"
                       value={newAddress.mobile}
-                      onChange={(e: any) => setNewAddress({ ...newAddress, mobile: e.target.value })}
+                      onChange={(e: any) =>
+                        setNewAddress({ ...newAddress, mobile: e.target.value })
+                      }
                     />
                   </div>
                   <Input
@@ -474,7 +495,7 @@ export default function CheckoutPage() {
                     value={newAddress.street}
                     onChange={(e: any) => setNewAddress({ ...newAddress, street: e.target.value })}
                   />
-                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
+                  <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xs:gap-4">
                     <Input
                       type="text"
                       placeholder="City"
@@ -488,7 +509,7 @@ export default function CheckoutPage() {
                       onChange={(e: any) => setNewAddress({ ...newAddress, state: e.target.value })}
                     />
                   </div>
-                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 xs:gap-4">
+                  <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 xs:gap-4">
                     <Input
                       type="text"
                       placeholder="ZIP Code"
@@ -507,11 +528,11 @@ export default function CheckoutPage() {
 
                   {/* Address validation errors */}
                   {Object.keys(addressErrors).length > 0 && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-3">
-                      <ul className="text-sm text-red-600 space-y-1">
+                    <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3">
+                      <ul className="space-y-1 text-sm text-red-600">
                         {Object.values(addressErrors).map((error, index) => (
                           <li key={index} className="flex items-center gap-2">
-                            <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
+                            <FontAwesomeIcon icon={faTimes} className="h-3 w-3" />
                             {error}
                           </li>
                         ))}
@@ -520,7 +541,7 @@ export default function CheckoutPage() {
                   )}
 
                   {/* Save Address Button */}
-                  <div className="flex justify-end mt-4">
+                  <div className="mt-4 flex justify-end">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -530,12 +551,12 @@ export default function CheckoutPage() {
                     >
                       {addingAddress ? (
                         <>
-                          <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin" />
+                          <FontAwesomeIcon icon={faSpinner} className="h-4 w-4 animate-spin" />
                           Saving...
                         </>
                       ) : (
                         <>
-                          <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+                          <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
                           Save Address
                         </>
                       )}
@@ -545,7 +566,7 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
+            <div className="rounded-lg bg-white p-4 shadow-md xs:p-5 sm:p-6">
               <Radio
                 name="delivery"
                 label="Delivery Method"
@@ -567,7 +588,7 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
+            <div className="rounded-lg bg-white p-4 shadow-md xs:p-5 sm:p-6">
               <Radio
                 name="payment"
                 label="Payment Method"
@@ -594,43 +615,52 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6">
-              <h2 className="text-base xs:text-lg font-semibold text-gray-900 mb-3 xs:mb-4">Order Notes</h2>
+            <div className="rounded-lg bg-white p-4 shadow-md xs:p-5 sm:p-6">
+              <h2 className="mb-3 text-base font-semibold text-gray-900 xs:mb-4 xs:text-lg">
+                Order Notes
+              </h2>
               <textarea
                 value={orderNotes}
                 onChange={(e: any) => setOrderNotes(e.target.value)}
                 placeholder="Add any special instructions for delivery..."
-                className="w-full px-3 py-2 xs:px-4 xs:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-transparent focus:ring-2 focus:ring-blue-500 xs:px-4 xs:py-3"
                 rows={3}
               />
             </div>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-4 xs:p-5 sm:p-6 lg:sticky lg:top-24">
-              <h2 className="text-base xs:text-lg font-semibold text-gray-900 mb-4 xs:mb-6">Order Summary</h2>
+            <div className="rounded-lg bg-white p-4 shadow-md xs:p-5 sm:p-6 lg:sticky lg:top-24">
+              <h2 className="mb-4 text-base font-semibold text-gray-900 xs:mb-6 xs:text-lg">
+                Order Summary
+              </h2>
 
-              <div className="space-y-2 mb-4 xs:mb-6 pb-4 xs:pb-6 border-b max-h-36 xs:max-h-48 overflow-y-auto">
+              <div className="mb-4 max-h-36 space-y-2 overflow-y-auto border-b pb-4 xs:mb-6 xs:max-h-48 xs:pb-6">
                 {items.map((item: any) => (
-                  <div key={item.id} className="flex justify-between text-xs xs:text-sm text-gray-700">
-                    <span className="line-clamp-1 flex-1 mr-2">
+                  <div
+                    key={item.id}
+                    className="flex justify-between text-xs text-gray-700 xs:text-sm"
+                  >
+                    <span className="mr-2 line-clamp-1 flex-1">
                       {item.name} x {item.quantity}
                     </span>
-                    <span className="font-medium whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
+                    <span className="whitespace-nowrap font-medium">
+                      {formatPrice(item.price * item.quantity)}
+                    </span>
                   </div>
                 ))}
               </div>
 
               {/* Coupon Code Section */}
-              <div className="mb-4 xs:mb-6 pb-4 xs:pb-6 border-b">
-                <h3 className="text-xs xs:text-sm font-medium text-gray-700 mb-2 xs:mb-3 flex items-center gap-2">
+              <div className="mb-4 border-b pb-4 xs:mb-6 xs:pb-6">
+                <h3 className="mb-2 flex items-center gap-2 text-xs font-medium text-gray-700 xs:mb-3 xs:text-sm">
                   <FontAwesomeIcon icon={faTag} className="text-indigo-600" />
                   Have a coupon?
                 </h3>
 
                 {appliedCoupon?.valid ? (
-                  <div className="flex justify-between bg-green-50 border border-green-200 rounded-lg p-3">
-                    <div className="flex text-left flex-col justify-center">
+                  <div className="flex justify-between rounded-lg border border-green-200 bg-green-50 p-3">
+                    <div className="flex flex-col justify-center text-left">
                       <div className="flex items-center gap-2">
                         <FontAwesomeIcon icon={faCheck} size="sm" className="text-green-600" />
                         <span className="text-sm font-medium text-green-700">
@@ -638,21 +668,21 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                       <div className="text-xs text-green-600">
-                      {appliedCoupon.discountType === 'percentage' ? (
-                        <span>
-                          {appliedCoupon.discountValue}% off - You save{' '}
-                          {formatPrice(appliedCoupon.discount)}
-                        </span>
-                      ) : (
-                        <span>Flat {formatPrice(appliedCoupon.discount)} off</span>
-                      )}
-                    </div>
+                        {appliedCoupon.discountType === 'percentage' ? (
+                          <span>
+                            {appliedCoupon.discountValue}% off - You save{' '}
+                            {formatPrice(appliedCoupon.discount)}
+                          </span>
+                        ) : (
+                          <span>Flat {formatPrice(appliedCoupon.discount)} off</span>
+                        )}
+                      </div>
                     </div>
                     <button
                       onClick={handleRemoveCoupon}
-                      className="text-red-500 hover:text-red-700 text-sm font-medium"
+                      className="text-sm font-medium text-red-500 hover:text-red-700"
                     >
-                      <FontAwesomeIcon icon={faTimes} size='lg' />
+                      <FontAwesomeIcon icon={faTimes} size="lg" />
                     </button>
                   </div>
                 ) : (
@@ -678,8 +708,8 @@ export default function CheckoutPage() {
                       </Button>
                     </div>
                     {couponError && (
-                      <p className="text-xs text-red-500 flex items-center gap-1">
-                        <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
+                      <p className="flex items-center gap-1 text-xs text-red-500">
+                        <FontAwesomeIcon icon={faTimes} className="h-3 w-3" />
                         {couponError}
                       </p>
                     )}
@@ -688,7 +718,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-2 xs:space-y-3 mb-4 xs:mb-6 pb-4 xs:pb-6 border-b text-xs xs:text-sm">
+              <div className="mb-4 space-y-2 border-b pb-4 text-xs xs:mb-6 xs:space-y-3 xs:pb-6 xs:text-sm">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
@@ -696,7 +726,7 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-gray-700">
                   <span>Shipping</span>
                   {shipping === 0 ? (
-                    <span className="text-green-600 font-semibold">Free</span>
+                    <span className="font-semibold text-green-600">Free</span>
                   ) : (
                     <span>{formatPrice(shipping)}</span>
                   )}
@@ -708,7 +738,7 @@ export default function CheckoutPage() {
                 {appliedCoupon?.valid && discount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span className="flex items-center gap-1">
-                      <FontAwesomeIcon icon={faTag} className="w-3 h-3" />
+                      <FontAwesomeIcon icon={faTag} className="h-3 w-3" />
                       Discount ({appliedCoupon.code})
                     </span>
                     <span>-{formatPrice(discount)}</span>
@@ -716,9 +746,11 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <div className="flex justify-between items-baseline mb-4 xs:mb-6">
-                <span className="font-semibold text-gray-700 text-sm xs:text-base">Total</span>
-                <span className="text-2xl xs:text-3xl font-bold text-gray-900">{formatPrice(total)}</span>
+              <div className="mb-4 flex items-baseline justify-between xs:mb-6">
+                <span className="text-sm font-semibold text-gray-700 xs:text-base">Total</span>
+                <span className="text-2xl font-bold text-gray-900 xs:text-3xl">
+                  {formatPrice(total)}
+                </span>
               </div>
 
               <Button onClick={handleSubmitOrder} disabled={loading} className="min-h-[48px]">
@@ -727,7 +759,7 @@ export default function CheckoutPage() {
 
               <Button
                 variant="ghost"
-                className="mt-2 !no-underline min-h-[44px]"
+                className="mt-2 min-h-[44px] !no-underline"
                 onClick={() => router.push('/cart')}
               >
                 ← Back to Cart

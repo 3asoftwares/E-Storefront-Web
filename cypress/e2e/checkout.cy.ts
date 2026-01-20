@@ -5,9 +5,11 @@ describe('Checkout Flow', () => {
     // Add product to cart before each test
     cy.visit('/products');
     cy.waitForPageLoad();
-    cy.get('[data-testid="product-card"]').first().within(() => {
-      cy.get('[data-testid="quick-add-button"]').click();
-    });
+    cy.get('[data-testid="product-card"]')
+      .first()
+      .within(() => {
+        cy.get('[data-testid="quick-add-button"]').click();
+      });
   });
 
   describe('Guest Checkout', () => {
@@ -96,7 +98,7 @@ describe('Checkout Flow', () => {
 
       cy.visit('/checkout');
       cy.get('[data-testid="guest-checkout"]').click();
-      
+
       // Fill checkout form
       cy.get('[data-testid="email-input"]').type('test@example.com');
       cy.get('[data-testid="first-name"]').type('John');

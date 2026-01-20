@@ -11,11 +11,11 @@ interface ProductSliderProps {
   autoplayDelay?: number;
 }
 
-function ProductSliderComponent({ 
-  children, 
-  itemsPerView = 4, 
-  autoplay = false, 
-  autoplayDelay = 5000 
+function ProductSliderComponent({
+  children,
+  itemsPerView = 4,
+  autoplay = false,
+  autoplayDelay = 5000,
 }: ProductSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [responsive, setResponsive] = useState(itemsPerView);
@@ -72,7 +72,7 @@ function ProductSliderComponent({
       Array.from({ length: Math.ceil(totalItems / responsive) }).map((_, slideIndex) => (
         <div
           key={slideIndex}
-          className="w-full flex-shrink-0 grid gap-3 xs:gap-4 sm:gap-5 md:gap-6 px-1 xs:px-2 sm:px-0"
+          className="grid w-full flex-shrink-0 gap-3 px-1 xs:gap-4 xs:px-2 sm:gap-5 sm:px-0 md:gap-6"
           style={{
             gridTemplateColumns: `repeat(${responsive}, minmax(0, 1fr))`,
           }}
@@ -87,7 +87,7 @@ function ProductSliderComponent({
     <div className="relative px-2 xs:px-4 sm:px-6 md:px-8">
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-out py-3 xs:py-4 sm:py-5"
+          className="flex py-3 transition-transform duration-500 ease-out xs:py-4 sm:py-5"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -100,31 +100,34 @@ function ProductSliderComponent({
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 xs:-translate-x-2 sm:-translate-x-4 md:-translate-x-6 w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110 active:scale-95"
+            className="absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-1 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-700 shadow-xl transition-all hover:scale-110 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white active:scale-95 xs:h-9 xs:w-9 xs:-translate-x-2 sm:h-10 sm:w-10 sm:-translate-x-4 md:h-12 md:w-12 md:-translate-x-6"
             aria-label="Previous slide"
           >
-            <FontAwesomeIcon icon={faChevronLeft} className="w-3 h-3 xs:w-4 xs:h-4 md:w-5 md:h-5" />
+            <FontAwesomeIcon icon={faChevronLeft} className="h-3 w-3 xs:h-4 xs:w-4 md:h-5 md:w-5" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 xs:translate-x-2 sm:translate-x-4 md:translate-x-6 w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-full shadow-xl flex items-center justify-center text-gray-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white transition-all z-10 hover:scale-110 active:scale-95"
+            className="absolute right-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 translate-x-1 items-center justify-center rounded-full bg-white text-gray-700 shadow-xl transition-all hover:scale-110 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white active:scale-95 xs:h-9 xs:w-9 xs:translate-x-2 sm:h-10 sm:w-10 sm:translate-x-4 md:h-12 md:w-12 md:translate-x-6"
             aria-label="Next slide"
           >
-            <FontAwesomeIcon icon={faChevronRight} className="w-3 h-3 xs:w-4 xs:h-4 md:w-5 md:h-5" />
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className="h-3 w-3 xs:h-4 xs:w-4 md:h-5 md:w-5"
+            />
           </button>
         </>
       )}
 
       {maxIndex > 0 && (
-        <div className="flex justify-center gap-1.5 xs:gap-2 mt-4 xs:mt-6 sm:mt-8">
+        <div className="mt-4 flex justify-center gap-1.5 xs:mt-6 xs:gap-2 sm:mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all min-h-[10px] min-w-[10px] xs:min-h-3 xs:min-w-3 sm:min-h-4 sm:min-w-4 ${
+              className={`min-h-[10px] min-w-[10px] transition-all xs:min-h-3 xs:min-w-3 sm:min-h-4 sm:min-w-4 ${
                 index === currentIndex
-                ? 'bg-gradient-to-r from-black to-gray-400 scale-110'
-                : 'bg-gray-300 hover:bg-gray-400'
+                  ? 'scale-110 bg-gradient-to-r from-black to-gray-400'
+                  : 'bg-gray-300 hover:bg-gray-400'
               } rounded-full`}
               aria-label={`Go to slide ${index + 1}`}
             />

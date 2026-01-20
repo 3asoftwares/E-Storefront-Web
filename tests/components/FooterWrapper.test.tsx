@@ -4,9 +4,7 @@ import { render, screen } from '@testing-library/react';
 // Mock the Footer wrapper and component
 jest.mock('../../components/FooterWrapper', () => ({
   __esModule: true,
-  default: () => (
-    <div data-testid="footer-wrapper">Footer Content</div>
-  ),
+  default: () => <div data-testid="footer-wrapper">Footer Content</div>,
 }));
 
 import FooterWrapper from '../../components/FooterWrapper';

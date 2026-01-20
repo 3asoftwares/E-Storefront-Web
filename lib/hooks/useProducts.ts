@@ -1,5 +1,3 @@
-
-
 import { useQuery } from '@tanstack/react-query';
 import { apolloClient } from '../apollo/client';
 import { GQL_QUERIES } from '../apollo/queries/queries';
@@ -43,7 +41,7 @@ export function useProduct(id: string) {
       return data.product;
     },
     enabled: !!id,
-    staleTime: 1000 * 60 * 5, 
+    staleTime: 1000 * 60 * 5,
   });
 }
 

@@ -28,51 +28,46 @@ jest.mock('../../app/signup/page', () => ({
       <form data-testid="signup-form">
         <div>
           <label htmlFor="name">Full Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            name="name" 
+          <input
+            type="text"
+            id="name"
+            name="name"
             data-testid="name-input"
             placeholder="Enter your name"
           />
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
+          <input
+            type="email"
+            id="email"
+            name="email"
             data-testid="email-input"
             placeholder="Enter your email"
           />
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
+          <input
+            type="password"
+            id="password"
+            name="password"
             data-testid="password-input"
             placeholder="Create a password"
           />
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input 
-            type="password" 
-            id="confirmPassword" 
-            name="confirmPassword" 
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
             data-testid="confirm-password-input"
             placeholder="Confirm your password"
           />
         </div>
         <div>
-          <input 
-            type="checkbox" 
-            id="terms" 
-            name="terms" 
-            data-testid="terms-checkbox"
-          />
+          <input type="checkbox" id="terms" name="terms" data-testid="terms-checkbox" />
           <label htmlFor="terms">I agree to the Terms and Conditions</label>
         </div>
         <button type="submit" data-testid="signup-button">
@@ -80,7 +75,10 @@ jest.mock('../../app/signup/page', () => ({
         </button>
       </form>
       <p>
-        Already have an account? <a href="/login" data-testid="login-link">Login</a>
+        Already have an account?{' '}
+        <a href="/login" data-testid="login-link">
+          Login
+        </a>
       </p>
       <div data-testid="social-signup">
         <button data-testid="google-signup">Sign up with Google</button>

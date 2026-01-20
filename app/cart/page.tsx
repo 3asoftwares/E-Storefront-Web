@@ -64,7 +64,7 @@ export default function CartPage() {
           titleGradient="from-gray-900 to-black"
         />
 
-        <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 xs:py-8 sm:py-12">
+        <div className="mx-auto max-w-7xl px-3 py-6 xs:px-4 xs:py-8 sm:px-6 sm:py-12 lg:px-8">
           {items.length === 0 ? (
             <EmptyState
               icon={faShoppingCart}
@@ -76,43 +76,51 @@ export default function CartPage() {
               iconBgColor="from-indigo-100 to-purple-100"
             />
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 xs:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 gap-4 xs:gap-6 lg:grid-cols-3 lg:gap-8">
               <div className="lg:col-span-2">
-                <div className="bg-white rounded-xl xs:rounded-2xl shadow-lg xs:shadow-xl overflow-hidden border border-gray-200">
+                <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg xs:rounded-2xl xs:shadow-xl">
                   {items.map((item: any, index: number) => (
                     <div
                       key={`${item.id}-${index}`}
-                      className="flex flex-col xs:flex-row gap-3 xs:gap-4 p-4 xs:p-5 sm:p-6 border-b border-gray-100 hover:bg-gray-50 transition"
+                      className="flex flex-col gap-3 border-b border-gray-100 p-4 transition hover:bg-gray-50 xs:flex-row xs:gap-4 xs:p-5 sm:p-6"
                     >
-                      <div className="flex-shrink-0 flex justify-center xs:justify-start">
-                        <div className="w-20 h-20 xs:w-24 xs:h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                      <div className="flex flex-shrink-0 justify-center xs:justify-start">
+                        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 xs:h-24 xs:w-24">
                           {item.image ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
                             <img
                               src={item.image}
                               alt={item.name}
                               loading="lazy"
-                              className="w-full h-full object-cover"
+                              className="h-full w-full object-cover"
                               onError={handleImageError}
                             />
                           ) : (
-                            <FontAwesomeIcon icon={faBox} className="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 text-gray-400" />
+                            <FontAwesomeIcon
+                              icon={faBox}
+                              className="h-10 w-10 text-gray-400 xs:h-12 xs:w-12 sm:h-16 sm:w-16"
+                            />
                           )}
                         </div>
                       </div>
 
-                      <div className="flex-grow min-w-0 text-center xs:text-left">
+                      <div className="min-w-0 flex-grow text-center xs:text-left">
                         <Link
                           href={`/products/${item.productId}`}
-                          className="font-semibold text-gray-900 hover:text-blue-600 block mb-1 text-sm xs:text-base line-clamp-2"
+                          className="mb-1 line-clamp-2 block text-sm font-semibold text-gray-900 hover:text-blue-600 xs:text-base"
                         >
                           {item.name}
                         </Link>
-                        <p className="text-xs xs:text-sm text-gray-600 mb-2 xs:mb-3 hidden xs:block">SKU: {item.productId}</p>
-                        <p className="text-base xs:text-lg font-bold text-blue-600">{formatPrice(item.price)}</p>
+                        <p className="mb-2 hidden text-xs text-gray-600 xs:mb-3 xs:block xs:text-sm">
+                          SKU: {item.productId}
+                        </p>
+                        <p className="text-base font-bold text-blue-600 xs:text-lg">
+                          {formatPrice(item.price)}
+                        </p>
                       </div>
 
-                      <div className="flex flex-row xs:flex-col items-center xs:items-end justify-between xs:justify-between mt-2 xs:mt-0 gap-2">
-                        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                      <div className="mt-2 flex flex-row items-center justify-between gap-2 xs:mt-0 xs:flex-col xs:items-end xs:justify-between">
+                        <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
                           <Button
                             onClick={() => {
                               updateQuantity(item.id, Math.max(1, item.quantity - 1));
@@ -122,12 +130,12 @@ export default function CartPage() {
                             }}
                             variant="ghost"
                             size="sm"
-                            className="!no-underline min-h-[36px] min-w-[36px] xs:min-h-[40px] xs:min-w-[40px]"
+                            className="min-h-[36px] min-w-[36px] !no-underline xs:min-h-[40px] xs:min-w-[40px]"
                             disabled={item.quantity <= 1}
                           >
-                            <FontAwesomeIcon icon={faMinus} className="w-3 h-3" />
+                            <FontAwesomeIcon icon={faMinus} className="h-3 w-3" />
                           </Button>
-                          <span className="px-2 xs:px-3 py-1 font-semibold text-gray-900 min-w-[2rem] xs:min-w-[2.5rem] text-center text-sm xs:text-base">
+                          <span className="min-w-[2rem] px-2 py-1 text-center text-sm font-semibold text-gray-900 xs:min-w-[2.5rem] xs:px-3 xs:text-base">
                             {item.quantity}
                           </span>
                           <Button
@@ -137,15 +145,15 @@ export default function CartPage() {
                             }}
                             variant="ghost"
                             size="sm"
-                            className="!no-underline min-h-[36px] min-w-[36px] xs:min-h-[40px] xs:min-w-[40px]"
+                            className="min-h-[36px] min-w-[36px] !no-underline xs:min-h-[40px] xs:min-w-[40px]"
                             disabled={item.quantity >= 99}
                           >
-                            <FontAwesomeIcon icon={faPlus} className="w-3 h-3" />
+                            <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
                           </Button>
                         </div>
 
-                        <div className="text-right flex xs:flex-col items-center xs:items-end gap-2 xs:gap-0">
-                          <p className="text-base xs:text-lg font-bold text-gray-900 xs:mb-2">
+                        <div className="flex items-center gap-2 text-right xs:flex-col xs:items-end xs:gap-0">
+                          <p className="text-base font-bold text-gray-900 xs:mb-2 xs:text-lg">
                             {formatPrice(item.price * item.quantity)}
                           </p>
                           <Button
@@ -156,7 +164,7 @@ export default function CartPage() {
                             variant="ghost"
                             size="sm"
                             fullWidth={false}
-                            className="text-red-600 hover:text-red-700 text-xs xs:text-sm font-medium hover:underline min-h-[36px]"
+                            className="min-h-[36px] text-xs font-medium text-red-600 hover:text-red-700 hover:underline xs:text-sm"
                           >
                             Remove
                           </Button>
@@ -165,7 +173,7 @@ export default function CartPage() {
                     </div>
                   ))}
 
-                    <div className="p-4 xs:p-5 sm:p-6 bg-gray-50 border-t border-gray-100 text-right">
+                  <div className="border-t border-gray-100 bg-gray-50 p-4 text-right xs:p-5 sm:p-6">
                     <Button
                       onClick={() => {
                         if (confirm('Are you sure you want to clear the cart?')) {
@@ -176,7 +184,7 @@ export default function CartPage() {
                       variant="ghost"
                       size="sm"
                       fullWidth={false}
-                        className="text-red-600 hover:text-red-700 text-xs xs:text-sm font-medium hover:underline min-h-[44px]"
+                      className="min-h-[44px] text-xs font-medium text-red-600 hover:text-red-700 hover:underline xs:text-sm"
                     >
                       Clear Cart
                     </Button>
@@ -193,22 +201,24 @@ export default function CartPage() {
               </div>
 
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-xl shadow-md p-4 xs:p-5 sm:p-6 sticky top-20 xs:top-24">
-                  <h2 className="text-xl xs:text-2xl font-bold text-gray-900 mb-4 xs:mb-6">Order Summary</h2>
+                <div className="sticky top-20 rounded-xl bg-white p-4 shadow-md xs:top-24 xs:p-5 sm:p-6">
+                  <h2 className="mb-4 text-xl font-bold text-gray-900 xs:mb-6 xs:text-2xl">
+                    Order Summary
+                  </h2>
 
-                  <div className="space-y-3 xs:space-y-4 mb-4 xs:mb-6 pb-4 xs:pb-6 border-b border-gray-200">
-                    <div className="flex justify-between text-gray-700 text-sm xs:text-base">
+                  <div className="mb-4 space-y-3 border-b border-gray-200 pb-4 xs:mb-6 xs:space-y-4 xs:pb-6">
+                    <div className="flex justify-between text-sm text-gray-700 xs:text-base">
                       <span className="font-medium">Subtotal</span>
                       <span className="font-semibold">{formatPrice(subtotal)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-700 text-sm xs:text-base">
+                    <div className="flex justify-between text-sm text-gray-700 xs:text-base">
                       <span className="font-medium">Tax (8%)</span>
                       <span className="font-semibold">{formatPrice(tax)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-700 text-sm xs:text-base">
+                    <div className="flex justify-between text-sm text-gray-700 xs:text-base">
                       <span className="font-medium">Shipping</span>
                       {shipping === 0 ? (
-                        <span className="text-green-600 font-bold flex items-center gap-1">
+                        <span className="flex items-center gap-1 font-bold text-green-600">
                           FREE <FontAwesomeIcon icon={faCheckCircle} className="text-green-600" />
                         </span>
                       ) : (
@@ -218,8 +228,8 @@ export default function CartPage() {
                   </div>
 
                   {shipping > 0 && subtotal < 100 && (
-                    <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6">
-                      <p className="font-semibold text-blue-900 mb-1">
+                    <div className="mb-6 rounded-lg border-2 border-blue-200 bg-blue-50 p-4">
+                      <p className="mb-1 font-semibold text-blue-900">
                         <FontAwesomeIcon icon={faSmile} className="mr-2" />
                         Free Shipping Alert!
                       </p>
@@ -229,25 +239,31 @@ export default function CartPage() {
                     </div>
                   )}
 
-                  <div className="mb-4 xs:mb-6 p-3 xs:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
-                    <p className="text-gray-700 text-xs xs:text-sm font-medium mb-1">Total Amount</p>
-                    <p className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900">{formatPrice(total)}</p>
+                  <div className="mb-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 p-3 xs:mb-6 xs:p-4">
+                    <p className="mb-1 text-xs font-medium text-gray-700 xs:text-sm">
+                      Total Amount
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900 xs:text-3xl sm:text-4xl">
+                      {formatPrice(total)}
+                    </p>
                   </div>
 
-                  <Button onClick={handleCheckout} className="min-h-[48px]">Proceed to Checkout</Button>
+                  <Button onClick={handleCheckout} className="min-h-[48px]">
+                    Proceed to Checkout
+                  </Button>
 
-                  <div className="bg-gray-50 rounded-lg p-3 mb-3 xs:mb-4">
-                    <p className="font-semibold text-gray-900 text-sm mb-2">We Accept:</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="text-xs bg-white px-2 py-1 rounded border border-gray-200 flex items-center gap-1">
+                  <div className="mb-3 rounded-lg bg-gray-50 p-3 xs:mb-4">
+                    <p className="mb-2 text-sm font-semibold text-gray-900">We Accept:</p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="flex items-center gap-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs">
                         <FontAwesomeIcon icon={faCreditCard} />
                         Card
                       </span>
-                      <span className="text-xs bg-white px-2 py-1 rounded border border-gray-200 flex items-center gap-1">
+                      <span className="flex items-center gap-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs">
                         <FontAwesomeIcon icon={faBuilding} />
                         Bank
                       </span>
-                      <span className="text-xs bg-white px-2 py-1 rounded border border-gray-200 flex items-center gap-1">
+                      <span className="flex items-center gap-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs">
                         <FontAwesomeIcon icon={faMobileAlt} />
                         UPI
                       </span>
@@ -256,15 +272,15 @@ export default function CartPage() {
 
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-start gap-2">
-                      <FontAwesomeIcon icon={faCheckCircle} className="text-green-600 mt-0.5" />
+                      <FontAwesomeIcon icon={faCheckCircle} className="mt-0.5 text-green-600" />
                       <span>Secure SSL encrypted checkout</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <FontAwesomeIcon icon={faCheckCircle} className="text-green-600 mt-0.5" />
+                      <FontAwesomeIcon icon={faCheckCircle} className="mt-0.5 text-green-600" />
                       <span>Free returns within 30 days</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <FontAwesomeIcon icon={faCheckCircle} className="text-green-600 mt-0.5" />
+                      <FontAwesomeIcon icon={faCheckCircle} className="mt-0.5 text-green-600" />
                       <span>24/7 customer support</span>
                     </div>
                   </div>

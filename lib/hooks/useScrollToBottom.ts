@@ -4,11 +4,11 @@ import { useThrottle } from './useThrottle';
 /**
  * React hook for detecting when user scrolls near bottom of page
  * Useful for implementing infinite scroll functionality
- * 
+ *
  * @param callback - Function to call when near bottom
  * @param threshold - Distance from bottom in pixels to trigger (default: 300px)
  * @param throttleMs - Throttle delay in milliseconds (default: 300ms)
- * 
+ *
  * @example
  * useScrollToBottom(() => {
  *   loadMoreProducts();
@@ -20,7 +20,7 @@ export function useScrollToBottom(
   throttleMs: number = 300
 ) {
   const callbackRef = useRef(callback);
-  
+
   // Keep callback ref up to date
   useEffect(() => {
     callbackRef.current = callback;

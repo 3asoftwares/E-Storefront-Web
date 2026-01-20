@@ -20,7 +20,12 @@
     "cy:run": "cypress run",
     "cy:run:headed": "cypress run --headed",
     "cy:component": "cypress run --component",
-    "cy:e2e": "start-server-and-test dev http://localhost:3004 cy:run"
+    "cy:e2e": "start-server-and-test dev http://localhost:3004 cy:run",
+    "docker:dev": "docker-compose -f docker-compose.hub.yml up storefront-dev",
+    "docker:prod": "docker-compose -f docker-compose.hub.yml --profile production up storefront-prod",
+    "docker:pull": "docker pull 3asoftwares/storefront:dev && docker pull 3asoftwares/storefront:latest",
+    "docker:build:dev": "docker build -f Dockerfile.dev -t 3asoftwares/storefront:dev .",
+    "docker:build:prod": "docker build -f Dockerfile.prod -t 3asoftwares/storefront:latest ."
   },
   "dependencies": {
     "@3asoftwares/types": "1.0.3",

@@ -86,10 +86,11 @@ function VerifyEmailContent() {
       } catch (error: any) {
         setStatus('error');
         // Extract error message from GraphQL response
-        const graphqlError = error?.graphQLErrors?.[0]?.message
-          || error?.networkError?.result?.errors?.[0]?.message
-          || error?.message
-          || 'An error occurred while verifying your email. Please try again.';
+        const graphqlError =
+          error?.graphQLErrors?.[0]?.message ||
+          error?.networkError?.result?.errors?.[0]?.message ||
+          error?.message ||
+          'An error occurred while verifying your email. Please try again.';
         setMessage(graphqlError);
       }
     };
@@ -99,11 +100,11 @@ function VerifyEmailContent() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
             <div className="bg-gradient-to-r from-gray-900 to-gray-600 px-8 py-10 text-center">
-              <h1 className="text-3xl font-bold text-white mb-2">
+              <h1 className="mb-2 text-3xl font-bold text-white">
                 <FontAwesomeIcon icon={faShoppingBag} className="mr-2" />
                 3A Softwares
               </h1>
@@ -111,9 +112,9 @@ function VerifyEmailContent() {
             <div className="px-8 py-16 text-center">
               <FontAwesomeIcon
                 icon={faSpinner}
-                className="text-blue-500 text-5xl animate-spin mb-6"
+                className="mb-6 animate-spin text-5xl text-blue-500"
               />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Verifying Your Email</h2>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">Verifying Your Email</h2>
               <p className="text-gray-600">Please wait while we verify your email address...</p>
             </div>
           </div>
@@ -124,23 +125,23 @@ function VerifyEmailContent() {
 
   if (status === 'success' || status === 'already-verified') {
     return (
-      <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+      <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
             <div className="bg-gradient-to-r from-green-600 to-green-500 px-8 py-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                <FontAwesomeIcon icon={faCheckCircle} className="text-white text-3xl" />
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">
+              <h1 className="mb-2 text-2xl font-bold text-white">
                 {status === 'success' ? 'Email Verified!' : 'Already Verified'}
               </h1>
-              <p className="text-green-100 text-sm">{message}</p>
+              <p className="text-sm text-green-100">{message}</p>
             </div>
 
             <div className="px-8 py-10">
-              <div className="text-center mb-6">
+              <div className="mb-6 text-center">
                 {userEmail && (
-                  <p className="text-gray-600 mb-4">
+                  <p className="mb-4 text-gray-600">
                     Your email <strong className="text-gray-900">{userEmail}</strong> has been
                     verified.
                   </p>
@@ -171,20 +172,20 @@ function VerifyEmailContent() {
 
   // Error state
   return (
-    <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+    <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-xl">
           <div className="bg-gradient-to-r from-red-600 to-red-500 px-8 py-10 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-              <FontAwesomeIcon icon={faExclamationTriangle} className="text-white text-3xl" />
+            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+              <FontAwesomeIcon icon={faExclamationTriangle} className="text-3xl text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Verification Failed</h1>
-            <p className="text-red-100 text-sm">{message}</p>
+            <h1 className="mb-2 text-2xl font-bold text-white">Verification Failed</h1>
+            <p className="text-sm text-red-100">{message}</p>
           </div>
 
           <div className="px-8 py-10">
-            <div className="text-center mb-6">
-              <p className="text-gray-600 mb-4">
+            <div className="mb-6 text-center">
+              <p className="mb-4 text-gray-600">
                 The verification link may have expired or is invalid. Verification links are valid
                 for 24 hours.
               </p>
@@ -213,11 +214,11 @@ export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-[calc(100vh_-_80px)] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+        <div className="flex min-h-[calc(100vh_-_80px)] items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+            <div className="overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
               <div className="flex flex-col items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+                <div className="mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
                 <p className="text-gray-600">Loading...</p>
               </div>
             </div>

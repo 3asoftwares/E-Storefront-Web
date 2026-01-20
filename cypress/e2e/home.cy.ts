@@ -47,7 +47,7 @@ describe('Home Page', () => {
         win.performance.mark('start');
       },
     });
-    
+
     cy.window().then((win) => {
       win.performance.mark('end');
       win.performance.measure('pageLoad', 'start', 'end');

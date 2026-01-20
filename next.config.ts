@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
       '@3asoftwares/ui': path.resolve(__dirname, 'node_modules/@3asoftwares/ui/dist/index.js'),
     };
-    
+
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,

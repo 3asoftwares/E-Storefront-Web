@@ -21,10 +21,20 @@ jest.mock('@3asoftwares/ui', () => ({
 // Mock the ProductForm component itself for simpler testing
 jest.mock('../../components/ProductForm', () => ({
   ProductForm: ({ onSubmit, isLoading, initialData }: any) => (
-    <form data-testid="product-form" onSubmit={(e) => { e.preventDefault(); onSubmit && onSubmit({}); }}>
+    <form
+      data-testid="product-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit && onSubmit({});
+      }}
+    >
       <input name="name" defaultValue={initialData?.name || ''} placeholder="Product name" />
       <input name="price" defaultValue={initialData?.price || ''} placeholder="Price" />
-      <textarea name="description" defaultValue={initialData?.description || ''} placeholder="Description" />
+      <textarea
+        name="description"
+        defaultValue={initialData?.description || ''}
+        placeholder="Description"
+      />
       <button type="submit" disabled={isLoading}>
         {isLoading ? 'Saving...' : 'Save Product'}
       </button>
@@ -92,7 +102,7 @@ describe('ProductForm Component', () => {
         description: 'Test description',
       };
       render(<ProductForm {...defaultProps} initialData={initialData} />);
-      
+
       expect(screen.getByPlaceholderText('Product name')).toHaveValue('Test Product');
     });
   });

@@ -1,7 +1,7 @@
 /**
  * Throttles a function call - limits execution to once per specified interval
  * Useful for scroll events, resize events, etc.
- * 
+ *
  * @param func - The function to throttle
  * @param limit - The minimum time between executions in milliseconds
  * @returns A throttled version of the function

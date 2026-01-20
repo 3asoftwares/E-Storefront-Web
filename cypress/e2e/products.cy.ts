@@ -14,11 +14,13 @@ describe('Products Page', () => {
     });
 
     it('should display product information correctly', () => {
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="product-name"]').should('be.visible');
-        cy.get('[data-testid="product-price"]').should('be.visible');
-        cy.get('[data-testid="product-image"]').should('be.visible');
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="product-name"]').should('be.visible');
+          cy.get('[data-testid="product-price"]').should('be.visible');
+          cy.get('[data-testid="product-image"]').should('be.visible');
+        });
     });
 
     it('should show loading state initially', () => {

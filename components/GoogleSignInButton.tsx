@@ -125,7 +125,7 @@ export default function GoogleSignInButton({
 
   if (error || authError) {
     return (
-      <div className="text-red-600 text-sm text-center p-3 bg-red-50 rounded-lg border border-red-200">
+      <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-600">
         {authError || 'Google sign-in failed. Please try again.'}
       </div>
     );
@@ -134,7 +134,7 @@ export default function GoogleSignInButton({
   return (
     <div className="flex w-full flex-col items-center">
       {isLoading ? (
-        <div className="flex items-center justify-center h-10 w-full">
+        <div className="flex h-10 w-full items-center justify-center">
           <span className="loading loading-spinner loading-sm"></span>
           <span className="ml-2 text-sm">Signing in with Google...</span>
         </div>

@@ -59,8 +59,8 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -68,10 +68,10 @@ export default function OrdersPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-            <h2 className="text-xl font-semibold text-red-800 mb-2">Error Loading Orders</h2>
-            <p className="text-red-700 mb-4">Failed to load your orders. Please try again later.</p>
+        <div className="mx-auto max-w-7xl px-4 py-8">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-8 text-center">
+            <h2 className="mb-2 text-xl font-semibold text-red-800">Error Loading Orders</h2>
+            <p className="mb-4 text-red-700">Failed to load your orders. Please try again later.</p>
             <Button className="!no-underline" onClick={() => router.push('/')}>
               Go Home
             </Button>
@@ -91,7 +91,7 @@ export default function OrdersPage() {
         titleGradient="from-gray-900 to-black"
       />
 
-      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-4 xs:py-6 sm:py-8">
+      <div className="mx-auto max-w-7xl px-3 py-4 xs:px-4 xs:py-6 sm:px-6 sm:py-8 lg:px-8">
         {orders.length === 0 ? (
           <EmptyState
             icon={faShoppingBag}
@@ -103,19 +103,19 @@ export default function OrdersPage() {
             iconBgColor="from-gray-100 to-gray-200"
           />
         ) : (
-            <div className="space-y-3 xs:space-y-4">
+          <div className="space-y-3 xs:space-y-4">
             {orders.map((order: any) => (
               <div
                 key={order.id}
-                className="bg-white rounded-lg xs:rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+                className="overflow-hidden rounded-lg bg-white shadow-md transition hover:shadow-lg xs:rounded-xl"
               >
                 <div className="p-4 xs:p-5 sm:p-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 xs:mb-4">
+                  <div className="mb-3 flex flex-col xs:mb-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <h3 className="text-base xs:text-lg font-semibold text-gray-900">
+                      <h3 className="text-base font-semibold text-gray-900 xs:text-lg">
                         Order #{order.orderNumber}
                       </h3>
-                      <p className="text-xs xs:text-sm text-gray-600 mt-1">
+                      <p className="mt-1 text-xs text-gray-600 xs:text-sm">
                         {new Date(order.createdAt).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -128,7 +128,7 @@ export default function OrdersPage() {
                     <div className="mt-4 sm:mt-0">
                       {isValidStatus(order.status) && (
                         <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium gap-2 ${
+                          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${
                             STATUS_COLORS[order.status as OrderStatus]
                           }`}
                         >
@@ -139,53 +139,55 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 xs:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 mb-4 xs:mb-5 sm:mb-6 pb-4 xs:pb-5 sm:pb-6 border-b">
+                  <div className="mb-4 grid grid-cols-2 gap-2 border-b pb-4 xs:mb-5 xs:grid-cols-3 xs:gap-3 xs:pb-5 sm:mb-6 sm:gap-4 sm:pb-6">
                     <div>
-                      <p className="text-xs xs:text-sm text-gray-600">Items</p>
-                      <p className="text-base xs:text-lg font-semibold text-gray-900">
+                      <p className="text-xs text-gray-600 xs:text-sm">Items</p>
+                      <p className="text-base font-semibold text-gray-900 xs:text-lg">
                         {order.items.reduce((sum: number, item: any) => sum + item.quantity, 0)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs xs:text-sm text-gray-600">Total Amount</p>
-                      <p className="text-base xs:text-lg font-semibold text-gray-900">
+                      <p className="text-xs text-gray-600 xs:text-sm">Total Amount</p>
+                      <p className="text-base font-semibold text-gray-900 xs:text-lg">
                         {formatPrice(order.total)}
                       </p>
                     </div>
                     <div className="col-span-2 xs:col-span-1">
-                      <p className="text-xs xs:text-sm text-gray-600">Order Date</p>
-                      <p className="text-base xs:text-lg font-semibold text-gray-900">
+                      <p className="text-xs text-gray-600 xs:text-sm">Order Date</p>
+                      <p className="text-base font-semibold text-gray-900 xs:text-lg">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
                   <div className="mb-4 xs:mb-5 sm:mb-6">
-                    <p className="text-xs xs:text-sm font-semibold text-gray-900 mb-2 xs:mb-3">
+                    <p className="mb-2 text-xs font-semibold text-gray-900 xs:mb-3 xs:text-sm">
                       Items ({order.items.length})
                     </p>
-                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2 xs:gap-3">
+                    <div className="grid grid-cols-1 gap-2 xs:grid-cols-2 xs:gap-3 lg:grid-cols-3">
                       {order.items.slice(0, 3).map((item: any, idx: number) => (
                         <div
                           key={idx}
-                          className="flex justify-between items-center gap-2 text-sm text-gray-700 bg-gray-50 p-2 rounded"
+                          className="flex items-center justify-between gap-2 rounded bg-gray-50 p-2 text-sm text-gray-700"
                         >
                           <span className="">{item.productName}</span>
-                          <span className="text-gray-500 font-bold"><FontAwesomeIcon icon={faClose}/> {item.quantity}</span>
+                          <span className="font-bold text-gray-500">
+                            <FontAwesomeIcon icon={faClose} /> {item.quantity}
+                          </span>
                         </div>
                       ))}
                       {order.items.length > 3 && (
-                        <div className="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 p-2 rounded">
+                        <div className="flex items-center gap-2 rounded bg-gray-50 p-2 text-sm text-gray-700">
                           <span className="font-medium">+{order.items.length - 3} more</span>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
+                  <div className="flex flex-col gap-2 xs:flex-row xs:gap-3">
                     <Button
                       onClick={() => router.push(`/orders/${order.id}`)}
-                      className="flex-1 min-h-[44px]"
+                      className="min-h-[44px] flex-1"
                       size="sm"
                     >
                       View Details
@@ -217,7 +219,7 @@ export default function OrdersPage() {
             ))}
 
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="mt-8 flex justify-center gap-2">
                 <Button
                   onClick={() => setPage(Math.max(1, page - 1))}
                   disabled={page === 1}

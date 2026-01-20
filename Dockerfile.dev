@@ -1,0 +1,68 @@
+# =============================================================================
+# E-Storefront Development Docker Image
+# 3A Softwares - E-Commerce Storefront
+# =============================================================================
+# This image provides a consistent development environment across all platforms
+# (Windows, Mac, Linux) with all dependencies pre-installed.
+#
+# Build: docker build -f Dockerfile.dev -t 3asoftwares/storefront:dev .
+# Push:  docker push 3asoftwares/storefront:dev
+# Pull:  docker pull 3asoftwares/storefront:dev
+# =============================================================================
+
+FROM node:20.10.0-alpine3.19
+
+# Metadata
+LABEL maintainer="3A Softwares <dev@3asoftwares.com>"
+LABEL version="1.1.0"
+LABEL description="E-Storefront Development Environment"
+LABEL org.opencontainers.image.source="https://github.com/3asoftwares/E-Storefront-Web"
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies required for native modules
+# libc6-compat: Required for Alpine compatibility with glibc packages
+# git: For some npm packages that use git
+RUN apk add --no-cache \
+    libc6-compat \
+    git \
+    curl \
+    && rm -rf /var/cache/apk/*
+
+# Copy package files for dependency installation
+COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
+
+# Install ALL dependencies (including devDependencies)
+RUN \
+  if [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else npm install; \
+  fi
+
+# Copy source code
+COPY . .
+
+# Create .next directory for build cache
+RUN mkdir -p .next && chmod 777 .next
+
+# Expose development port
+EXPOSE 3004
+
+# Environment variables
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3004
+
+# Enable polling for file watching (required for Windows/Mac with Docker)
+ENV WATCHPACK_POLLING=true
+ENV CHOKIDAR_USEPOLLING=true
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:3004 || exit 1
+
+# Start development server with hot reload
+CMD ["npm", "run", "dev"]

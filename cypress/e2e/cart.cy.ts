@@ -10,9 +10,11 @@ describe('Shopping Cart', () => {
   describe('Add to Cart', () => {
     it('should add product to cart from product listing', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.get('[data-testid="cart-count"]').should('contain', '1');
     });
 
@@ -33,9 +35,11 @@ describe('Shopping Cart', () => {
 
     it('should show success notification after adding to cart', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.get('[data-testid="toast-success"]').should('be.visible');
     });
   });
@@ -44,9 +48,11 @@ describe('Shopping Cart', () => {
     beforeEach(() => {
       // Add a product to cart first
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.visit('/cart');
     });
 
@@ -84,19 +90,23 @@ describe('Shopping Cart', () => {
   describe('Cart Persistence', () => {
     it('should persist cart after page reload', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.reload();
       cy.get('[data-testid="cart-count"]').should('contain', '1');
     });
 
     it('should persist cart across browser sessions', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
-      
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
+
       // Simulate new session by clearing session storage but keeping local storage
       cy.window().then((win) => {
         win.sessionStorage.clear();
@@ -109,18 +119,22 @@ describe('Shopping Cart', () => {
   describe('Cart Drawer', () => {
     it('should open cart drawer when clicking cart icon', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.get('[data-testid="cart-icon"]').click();
       cy.get('[data-testid="cart-drawer"]').should('be.visible');
     });
 
     it('should close cart drawer when clicking outside', () => {
       cy.visit('/products');
-      cy.get('[data-testid="product-card"]').first().within(() => {
-        cy.get('[data-testid="quick-add-button"]').click();
-      });
+      cy.get('[data-testid="product-card"]')
+        .first()
+        .within(() => {
+          cy.get('[data-testid="quick-add-button"]').click();
+        });
       cy.get('[data-testid="cart-icon"]').click();
       cy.get('[data-testid="cart-drawer-overlay"]').click({ force: true });
       cy.get('[data-testid="cart-drawer"]').should('not.be.visible');

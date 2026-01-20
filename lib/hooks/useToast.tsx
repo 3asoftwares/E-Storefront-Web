@@ -2,7 +2,12 @@
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimesCircle, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheckCircle,
+  faTimesCircle,
+  faExclamationTriangle,
+  faInfoCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -69,13 +74,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={`${getToastStyles(
               toast.type
-            )} px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px] max-w-md animate-slide-in`}
+            )} animate-slide-in flex min-w-[300px] max-w-md items-center gap-3 rounded-lg px-6 py-3 shadow-lg`}
           >
             <FontAwesomeIcon icon={getToastIcon(toast.type)} className="text-lg" />
             <p className="flex-1">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-white hover:text-gray-200 font-bold"
+              className="font-bold text-white hover:text-gray-200"
             >
               ×
             </button>

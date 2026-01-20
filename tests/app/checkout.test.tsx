@@ -36,7 +36,7 @@ jest.mock('../../app/checkout/page', () => ({
           <input data-testid="country" placeholder="Country" />
           <input data-testid="phone" placeholder="Phone" />
         </section>
-        
+
         <section data-testid="payment-section">
           <h2>Payment Information</h2>
           <input data-testid="card-number" placeholder="Card Number" />
@@ -44,7 +44,7 @@ jest.mock('../../app/checkout/page', () => ({
           <input data-testid="cvv" placeholder="CVV" />
           <input data-testid="card-name" placeholder="Name on Card" />
         </section>
-        
+
         <section data-testid="order-summary">
           <h2>Order Summary</h2>
           <div data-testid="summary-item">
@@ -56,12 +56,14 @@ jest.mock('../../app/checkout/page', () => ({
           <div data-testid="summary-tax">Tax: $16.00</div>
           <div data-testid="summary-total">Total: $225.97</div>
         </section>
-        
+
         <button type="submit" data-testid="place-order-button">
           Place Order
         </button>
       </form>
-      <a href="/cart" data-testid="back-to-cart">Back to Cart</a>
+      <a href="/cart" data-testid="back-to-cart">
+        Back to Cart
+      </a>
     </div>
   ),
 }));

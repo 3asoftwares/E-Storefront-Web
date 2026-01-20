@@ -6,35 +6,35 @@ interface ProductCardSkeletonProps {
 
 function SingleSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+    <div className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-lg">
       {/* Image skeleton */}
       <div className="h-56 bg-gray-200" />
 
       {/* Content skeleton */}
       <div className="p-5">
         {/* Category badge */}
-        <div className="h-5 w-20 bg-gray-200 rounded-full mb-3" />
+        <div className="mb-3 h-5 w-20 rounded-full bg-gray-200" />
 
         {/* Title */}
-        <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+        <div className="mb-2 h-6 w-3/4 rounded bg-gray-200" />
 
         {/* Rating */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="mb-3 flex items-center gap-2">
           <div className="flex gap-1">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-4 w-4 bg-gray-200 rounded" />
+              <div key={i} className="h-4 w-4 rounded bg-gray-200" />
             ))}
           </div>
-          <div className="h-4 w-16 bg-gray-200 rounded" />
+          <div className="h-4 w-16 rounded bg-gray-200" />
         </div>
 
         {/* Price */}
-        <div className="h-7 w-24 bg-gray-200 rounded mb-4" />
+        <div className="mb-4 h-7 w-24 rounded bg-gray-200" />
 
         {/* Buttons */}
         <div className="flex gap-2">
-          <div className="h-10 flex-1 bg-gray-200 rounded-lg" />
-          <div className="h-10 w-10 bg-gray-200 rounded-lg" />
+          <div className="h-10 flex-1 rounded-lg bg-gray-200" />
+          <div className="h-10 w-10 rounded-lg bg-gray-200" />
         </div>
       </div>
     </div>
@@ -43,7 +43,7 @@ function SingleSkeleton() {
 
 export default function ProductCardSkeleton({ count = 6 }: ProductCardSkeletonProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 mb-8">
+    <div className="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
       {[...Array(count)].map((_, index) => (
         <SingleSkeleton key={index} />
       ))}
