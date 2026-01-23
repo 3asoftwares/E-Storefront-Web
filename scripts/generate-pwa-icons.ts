@@ -46,16 +46,8 @@ async function ensureDirectoryExists(dir: string) {
 }
 
 async function generateIcons() {
-  console.log('🎨 Starting PWA icon generation...\n');
-
   // Check if source image exists
   if (!fs.existsSync(SOURCE_IMAGE)) {
-    console.error('❌ Source image not found!');
-    console.log('   Please place your logo as "logo-source.png" in the public folder.');
-    console.log('   The image should be at least 512x512 pixels for best results.\n');
-
-    // Create placeholder SVG icons instead
-    console.log('📝 Creating placeholder SVG icons instead...\n');
     await generatePlaceholderIcons();
     return;
   }
@@ -63,19 +55,14 @@ async function generateIcons() {
   await ensureDirectoryExists(ICONS_DIR);
   await ensureDirectoryExists(SPLASH_DIR);
 
-  // Generate regular icons
-  console.log('📱 Generating regular icons...');
   for (const size of ICON_SIZES) {
     const outputPath = path.join(ICONS_DIR, `icon-${size}x${size}.png`);
     await sharp(SOURCE_IMAGE)
       .resize(size, size, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
       .png()
       .toFile(outputPath);
-    console.log(`   ✓ icon-${size}x${size}.png`);
   }
 
-  // Generate maskable icons (with padding for safe zone)
-  console.log('\n😷 Generating maskable icons...');
   for (const size of MASKABLE_SIZES) {
     const outputPath = path.join(ICONS_DIR, `maskable-icon-${size}x${size}.png`);
     const padding = Math.floor(size * 0.1); // 10% padding for safe zone
@@ -95,11 +82,8 @@ async function generateIcons() {
       })
       .png()
       .toFile(outputPath);
-    console.log(`   ✓ maskable-icon-${size}x${size}.png`);
   }
 
-  // Generate splash screens
-  console.log('\n🌊 Generating splash screens...');
   for (const splash of SPLASH_SCREENS) {
     const outputPath = path.join(SPLASH_DIR, `${splash.name}.png`);
     const logoSize = Math.min(splash.width, splash.height) * 0.3;
@@ -125,12 +109,7 @@ async function generateIcons() {
       ])
       .png()
       .toFile(outputPath);
-    console.log(`   ✓ ${splash.name}.png`);
   }
-
-  console.log('\n✅ PWA icon generation complete!');
-  console.log('   Icons saved to: public/icons/');
-  console.log('   Splash screens saved to: public/splash/\n');
 }
 
 async function generatePlaceholderIcons() {
@@ -145,7 +124,6 @@ async function generatePlaceholderIcons() {
 
     const outputPath = path.join(ICONS_DIR, `icon-${size}x${size}.png`);
     await sharp(Buffer.from(svg)).png().toFile(outputPath);
-    console.log(`   ✓ icon-${size}x${size}.png (placeholder)`);
   }
 
   // Create maskable placeholders
@@ -158,10 +136,7 @@ async function generatePlaceholderIcons() {
 
     const outputPath = path.join(ICONS_DIR, `maskable-icon-${size}x${size}.png`);
     await sharp(Buffer.from(svg)).png().toFile(outputPath);
-    console.log(`   ✓ maskable-icon-${size}x${size}.png (placeholder)`);
   }
-
-  console.log('\n⚠️  Placeholder icons created. Replace with actual logo for production!');
 }
 
 generateIcons().catch(console.error);

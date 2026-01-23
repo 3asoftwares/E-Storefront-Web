@@ -11,9 +11,6 @@ const ICON_SIZES = [72, 96, 128, 144, 152, 167, 180, 192, 384, 512];
 const MASKABLE_SIZES = [192, 512];
 
 async function generateFavicons() {
-  console.log('🎨 Generating favicons and icons from 3A.png...\n');
-
-  // Ensure icons directory exists
   if (!fs.existsSync(ICONS_DIR)) {
     fs.mkdirSync(ICONS_DIR, { recursive: true });
   }
@@ -21,29 +18,21 @@ async function generateFavicons() {
   // Read the source image
   const sourceBuffer = fs.readFileSync(SOURCE_IMAGE);
 
-  // Generate favicon.ico (multi-size ICO file) - using 32x32 PNG as favicon
-  console.log('📁 Generating favicon.ico...');
   await sharp(sourceBuffer)
     .resize(32, 32, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
     .png()
     .toFile(path.join(PUBLIC_DIR, 'favicon.ico'));
 
-  // Generate favicon-16x16.png
-  console.log('📁 Generating favicon-16x16.png...');
   await sharp(sourceBuffer)
     .resize(16, 16, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
     .png()
     .toFile(path.join(PUBLIC_DIR, 'favicon-16x16.png'));
 
-  // Generate favicon-32x32.png
-  console.log('📁 Generating favicon-32x32.png...');
   await sharp(sourceBuffer)
     .resize(32, 32, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
     .png()
     .toFile(path.join(PUBLIC_DIR, 'favicon-32x32.png'));
 
-  // Generate apple-touch-icon.png (180x180)
-  console.log('📁 Generating apple-touch-icon.png...');
   await sharp(sourceBuffer)
     .resize(180, 180, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
     .png()
@@ -51,7 +40,6 @@ async function generateFavicons() {
 
   // Generate regular icons
   for (const size of ICON_SIZES) {
-    console.log(`📁 Generating icon-${size}x${size}.png...`);
     await sharp(sourceBuffer)
       .resize(size, size, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
       .png()
@@ -60,7 +48,6 @@ async function generateFavicons() {
 
   // Generate maskable icons (with padding for safe zone)
   for (const size of MASKABLE_SIZES) {
-    console.log(`📁 Generating maskable-icon-${size}x${size}.png...`);
     const padding = Math.floor(size * 0.1); // 10% padding for safe zone
     const innerSize = size - padding * 2;
 
@@ -79,8 +66,6 @@ async function generateFavicons() {
       .png()
       .toFile(path.join(ICONS_DIR, `maskable-icon-${size}x${size}.png`));
   }
-
-  console.log('\n✅ All favicons and icons generated successfully!');
 }
 
 generateFavicons().catch(console.error);

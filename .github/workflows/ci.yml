@@ -38,7 +38,7 @@ jobs:
       - name: Label PR based on file paths
         uses: actions/labeler@v5
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
           sync-labels: true
 
   # ==========================================================================
@@ -139,7 +139,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Needed to get changed files in PR
+          fetch-depth: 0 # Needed to get changed files in PR
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -163,31 +163,31 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           echo "📊 Checking coverage for changed files in PR..."
-          
+
           # Get list of changed .ts/.tsx files (excluding tests)
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | \
             grep -E '\.(ts|tsx)$' | \
             grep -vE '\.test\.(ts|tsx)$|\.spec\.(ts|tsx)$|tests/|__mocks__/' | \
             tr '\n' ' ')
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "✅ No source files changed, skipping coverage check"
             exit 0
           fi
-          
+
           echo "Changed source files:"
           echo "$CHANGED_FILES" | tr ' ' '\n'
-          
+
           # Parse coverage from lcov.info for changed files
           if [ ! -f coverage/lcov.info ]; then
             echo "::error::Coverage report not found"
             exit 1
           fi
-          
+
           # Calculate coverage for changed files
           TOTAL_LINES=0
           COVERED_LINES=0
-          
+
           for FILE in $CHANGED_FILES; do
             # Find the file in lcov.info and extract coverage
             FILE_COVERAGE=$(awk -v file="$FILE" '
@@ -214,22 +214,22 @@ jobs:
               echo "  $FILE: No coverage data (new file without tests)"
             fi
           done
-          
+
           if [ $TOTAL_LINES -eq 0 ]; then
             echo "⚠️ No coverage data for changed files"
             echo "::warning::Changed files have no coverage data. Add tests!"
             exit 0
           fi
-          
+
           # Calculate overall percentage for changed files
           COVERAGE_PERCENT=$(echo "scale=2; $COVERED_LINES * 100 / $TOTAL_LINES" | bc)
           echo ""
           echo "📈 Coverage on changed files: $COVERAGE_PERCENT% ($COVERED_LINES/$TOTAL_LINES lines)"
-          
+
           # Check against 10% threshold
           THRESHOLD=10
           PASS=$(echo "$COVERAGE_PERCENT >= $THRESHOLD" | bc)
-          
+
           if [ "$PASS" -eq 1 ]; then
             echo "✅ Coverage check passed: $COVERAGE_PERCENT% >= $THRESHOLD%"
           else
@@ -266,7 +266,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full git history for better analysis
+          fetch-depth: 0 # Full git history for better analysis
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -305,10 +305,6 @@ jobs:
                     return acc;
                   }, { found: 0, hit: 0 });
                   const coverage = total.found > 0 ? (total.hit / total.found * 100).toFixed(2) : 0;
-                  console.log(coverage);
-                } catch (e) {
-                  console.log('0');
-                }
               });
             " || echo "0")
             
@@ -447,7 +443,7 @@ jobs:
       - name: Run Dependency Review
         uses: actions/dependency-review-action@v4
         if: github.event_name == 'pull_request'
-        continue-on-error: true  # Don't fail CI if Dependency Graph is not enabled
+        continue-on-error: true # Don't fail CI if Dependency Graph is not enabled
 
   # ==========================================================================
   # CI Success Gate
@@ -503,7 +499,7 @@ jobs:
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "Commit: $COMMIT_MSG"
-          
+
           if echo "$COMMIT_MSG" | grep -qiE "^(breaking|major)"; then
             echo "bump=major" >> $GITHUB_OUTPUT
           elif echo "$COMMIT_MSG" | grep -qiE "^(feat|feature)"; then
