@@ -305,6 +305,10 @@ jobs:
                     return acc;
                   }, { found: 0, hit: 0 });
                   const coverage = total.found > 0 ? (total.hit / total.found * 100).toFixed(2) : 0;
+                   console.log(coverage);
+                } catch (e) {
+                  console.log('0');
+                }
               });
             " || echo "0")
             
